@@ -12,25 +12,16 @@ from Tkinter import *
 from datetime import datetime
 from initialClass import initialTests
 import json
+import client
 
 class makeGui:
 	def __init__(self, parent):
+		# Create a webBus instance
+		self.myBus = client.webBus("pi5",0)
 
 		# Create an instance of initialTests
 		self.initialTest = initialTests()
 		
-		# Create a list of QIECard slots:
-		self.cardSlots = ["Card 2", "Card 3", "Card 4", "Card 5", "Card 7",
-			     "Card 8","Card 9", "Card 10", "Card 18", "Card 19",
-			     "Card 20", "Card 21", "Card 23", "Card 24",
-			     "Card 25", "Card 26"]
-
-		# Create a list of nGCCme slots:
-		self.ngccmeSlots = ["nGCCme 1", "nGCCme 2"]
-
-		# Create a list of Readout Modules:
-		self.readoutSlots = ["RM 1", "RM 2", "RM 3", "RM 4"]
-
 		# Make an empty list that will eventually contain all of
 		# the active card slots
 		self.outSlotNumbers = []
@@ -39,7 +30,6 @@ class makeGui:
 		# and doesn't really get used too much.
 		self.myParent = parent
 
-		self.allCardSelection = IntVar()
 		self.nameChoiceVar  =  StringVar()
 		self.infoCommentVar =  StringVar()	
 		self.barcodeEntry   =  StringVar()
@@ -218,6 +208,17 @@ class makeGui:
                         pady=frame_pady
 			)
 
+		# Make top 2_5 subframe
+		self.experi_subTop2_5_frame = Frame(self.experiment_frame,background="white")
+		self.experi_subTop2_5_frame.pack(
+			side=TOP,
+                        ipadx=frame_ipadx,
+                        ipady=frame_ipady,
+                        padx=frame_padx,
+                        pady=frame_pady
+			)
+
+
 		# Make top 3 subframe
 		self.experi_subTop3_frame = Frame(self.experiment_frame,background="white")
 		self.experi_subTop3_frame.pack(
@@ -314,7 +315,7 @@ class makeGui:
 			)
 		self.experi_barcode_entry.pack(side=RIGHT)
 
-		# Make a label for the Barcode entry
+		# Make a label for the uniqueID entry
 		self.experi_uniqueID_lbl = Label(self.experi_subTop2_frame, text="Unique ID: ")
 		self.experi_uniqueID_lbl.configure(
 			background="white",
@@ -323,13 +324,18 @@ class makeGui:
 			)
 		self.experi_uniqueID_lbl.pack(side=LEFT)
 		
-		# Make an entry box for the barcode
+		# Make an entry box for the UniqueID
 		# Make a entrybox for testing comments
 		self.experi_uniqueID_entry = Entry(
 			self.experi_subTop2_frame,
 			textvariable=self.uniqueIDEntry
 			)
 		self.experi_uniqueID_entry.pack(side=RIGHT)
+
+		# Make a button to read the unique ID
+		self.experi_uniqueID_get = Button(self.experi_subTop2_5_frame, text ="Get Unique ID", command=self.getUniqueIDPress)
+		self.experi_uniqueID_get.configure(bg="salmon")
+		self.experi_uniqueID_get.pack()
 
 		for i in range(0,4):
 			self.testPassInfo = OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass")
@@ -390,13 +396,56 @@ class makeGui:
 		self.initialTest.uniqueID    = self.uniqueIDEntry.get()
 
 		for i in range(len(self.testPassList)):
-			if self.testPassList[i] == "Pass":
+			if self.testPassList[i].get() == "Pass":
 				self.initialTest.testResults[self.testLabelList[i-1]] = True
 			else:
 				self.initialTest.testResults[self.testLabelList[i-1]] = False
+		
+		fileString = self.uniqueIDEntry.get()+"_step1_raw.json"		
 	
-		with open("rawfile.json","w") as jsonFile:
+		with open(fileString,"w") as jsonFile:
 			json.dump(self.initialTest, jsonFile, default = self.jdefault)	
+		
+		print "Preliminary step recorded. Thank you!"
+
+	def reverseBytes(self, message):
+		message_list = message.split()
+		message_list.reverse()
+		s = " "
+		return s.join(message_list)
+
+	def serialNum(self, message):
+		message_list = message.split()
+		message_list = message_list[1:-1]
+		s = " "
+		return s.join(message_list)
+
+	def toHex(self, message, colon=0):
+	    message_list = message.split()
+	    for byte in xrange(len(message_list)):
+		message_list[byte] = hex(int(message_list[byte]))
+		message_list[byte] = message_list[byte][2:]
+		if len(message_list[byte]) == 1:
+		    message_list[byte] = '0' + message_list[byte]
+	    if colon == 2:
+		s = ":"
+		return s.join(message_list)
+	    if colon == 1:
+		s = " "
+		return s.join(message_list)
+	    s = ""
+	    return '0x' + s.join(message_list)
+
+	def getUniqueIDPress(self):
+		self.myBus.write(0x00,[0x06])
+		self.myBus.write(0x19,[0x11,0x04,0,0,0])
+		self.myBus.write(0x50,[0x00])
+		self.myBus.read(0x50, 8)
+		raw_bus = self.myBus.sendBatch()
+		print raw_bus
+		cooked_bus = self.reverseBytes(raw_bus[-1])
+		cooked_bus = self.serialNum(cooked_bus)
+		self.uniqueIDEntry.set(self.toHex(cooked_bus))
 
 root = Tk()
 myapp = makeGui(root)

@@ -10,13 +10,8 @@ class initialTests:
 				"Test 16" : False
 				}
 
-		self.testerName = ""
-		self.testComment = ""
-		self.barcode = ""
-		self.uniqueID = ""
-
-	def printJson(self):
-		print self.testResults
-		print self.testerName
-		print self.barcode
-		print self.uniqueID
+		self.User = ""
+		self.TestComment = ""
+		self.Barcode = ""
+		self.Unique_ID = ""
+		self.DateRun = ""

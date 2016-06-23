@@ -17,7 +17,7 @@ import client
 class makeGui:
 	def __init__(self, parent):
 		# Create a webBus instance
-		self.myBus = client.webBus("pi5",0)
+		self.myBus = client.webBus("pi6",0)
 
 		# Create an instance of initialTests
 		self.initialTest = initialTests()
@@ -30,10 +30,11 @@ class makeGui:
 		# and doesn't really get used too much.
 		self.myParent = parent
 
-		self.nameChoiceVar  =  StringVar()
-		self.infoCommentVar =  StringVar()	
-		self.barcodeEntry   =  StringVar()
-		self.uniqueIDEntry  =  StringVar()
+		self.nameChoiceVar    =  StringVar()
+		self.infoCommentVar   =  StringVar()	
+		self.barcodeEntry     =  StringVar()
+		self.uniqueIDEntry    =  StringVar()	
+		self.firmwareVerEntry = StringVar()
 	
 		# Place an all-encompassing frame in the parent window. All of the following
 		# frames will be placed here (topMost_frame) and not in the parent window.
@@ -89,6 +90,23 @@ class makeGui:
 			)
 		self.experiment_frame.pack_propagate=(False)
 		self.experiment_frame.pack(
+			side=LEFT,
+			ipadx=frame_ipadx,
+			ipady=frame_ipady,
+			padx=frame_padx,
+			pady=frame_pady
+			)
+
+		# Make a label for the entire right frame
+		self.experi_rightFrame = Frame(
+			self.topHalf_frame,
+			borderwidth=5, relief=RIDGE,
+			height=580, width=300,
+			background="white"
+			)
+		self.experi_rightFrame.pack_propagatte=(False)
+		self.experi_rightFrame.pack(
+			side=RIGHT,
 			ipadx=frame_ipadx,
 			ipady=frame_ipady,
 			padx=frame_padx,
@@ -147,10 +165,10 @@ class makeGui:
 
 		# Make and pack a listbox to pick which QIE card to talk to:
 		self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar,
-					      "shogan","csmith","asmith","jpotarf",
-					      "jlawrence","abaas")
+					      "Shaun Hogan","Caleb Smith","Adryanna Smith","Jordan Potarf",
+					      "John Lawrence","Andrew Baas")
 		self.info_nameBox.pack(side=LEFT)
-		self.nameChoiceVar.set("shogan") # initializes the OptionMenu
+		self.nameChoiceVar.set("Shaun Hogan") # initializes the OptionMenu
 
 		# Make a label for the name drop-down:
 		self.info_commentLabel = Label(self.info_subBot_frame, text="User Testing Comments: ")
@@ -170,7 +188,7 @@ class makeGui:
 
 		######################################
 		#####                            #####
-		#####  Experiment Setup Frm      #####
+		#####  Experiment Setup Frames   #####
 		#####				 #####
 		######################################
 
@@ -179,7 +197,7 @@ class makeGui:
 				      "Test 9","Test 10","Test 11","Test 12",
 				      "Test 13","Test 14","Test 15","Test 16"]
 
-		# Make a label for the entire frame
+		# Make a label for the entire left frame
 		self.experi_subFrame_lbl = Label(self.experiment_frame,text="Hardware Setup (Check boxes to add cards to test)")
 		self.experi_subFrame_lbl.configure(
 			padx=button_padx,
@@ -187,6 +205,9 @@ class makeGui:
 			background="white"
 			)
 		self.experi_subFrame_lbl.pack(side=TOP)
+
+
+	
 
 		# Make top 1 subframe
 		self.experi_subTop1_frame = Frame(self.experiment_frame,background="white")
@@ -208,6 +229,16 @@ class makeGui:
                         pady=frame_pady
 			)
 
+		# Make top 2_1 subframe
+		self.experi_subTop2_1_frame = Frame(self.experiment_frame,background="white")
+		self.experi_subTop2_1_frame.pack(
+			side=TOP,
+                        ipadx=frame_ipadx,
+                        ipady=frame_ipady,
+                        padx=frame_padx,
+                        pady=frame_pady
+			)
+
 		# Make top 2_5 subframe
 		self.experi_subTop2_5_frame = Frame(self.experiment_frame,background="white")
 		self.experi_subTop2_5_frame.pack(
@@ -218,9 +249,31 @@ class makeGui:
                         pady=frame_pady
 			)
 
+		###################################
+		### 				###
+		###   Subframes on right side   ###
+		###				###
+		###################################
+
+		# Make a buffer frame
+		self.experi_subTopBuffer_frame = Frame(self.experi_rightFrame,bg="white")
+		self.experi_subTopBuffer_frame.pack(
+			side=TOP,
+			ipady=frame_ipady,
+			ipadx=frame_ipadx,
+			padx=frame_padx,
+			pady=frame_pady
+			)
+
+		# Make an "inspections and tests" label
+		self.experi_inspections_label = Label(self.experi_subTopBuffer_frame,
+						text="Inspections and Tests")
+		self.experi_inspections_label.configure(bg="white")
+		self.experi_inspections_label.pack()
+
 
 		# Make top 3 subframe
-		self.experi_subTop3_frame = Frame(self.experiment_frame,background="white")
+		self.experi_subTop3_frame = Frame(self.experi_rightFrame,background="white")
 		self.experi_subTop3_frame.pack(
 			side=TOP,
                         ipadx=frame_ipadx,
@@ -228,7 +281,7 @@ class makeGui:
 			)
 
 		# Make top 3 subframe for text
-		self.experi_subTop3_fText = Frame(self.experiment_frame,background="white")
+		self.experi_subTop3_fText = Frame(self.experi_rightFrame,background="white")
 		self.experi_subTop3_fText.pack(
 			side=TOP,
                         ipadx=frame_ipadx,
@@ -236,7 +289,7 @@ class makeGui:
 			)
 
 		# Make top 4 subframe
-		self.experi_subTop4_frame = Frame(self.experiment_frame,background="white")
+		self.experi_subTop4_frame = Frame(self.experi_rightFrame,background="white")
 		self.experi_subTop4_frame.pack(
 			side=TOP,
                         ipadx=frame_ipadx,
@@ -244,7 +297,7 @@ class makeGui:
 			)
 
 		# Make top 4 subframe for text
-		self.experi_subTop4_fText = Frame(self.experiment_frame,background="white")
+		self.experi_subTop4_fText = Frame(self.experi_rightFrame,background="white")
 		self.experi_subTop4_fText.pack(
 			side=TOP,
                         ipadx=frame_ipadx,
@@ -252,7 +305,7 @@ class makeGui:
 			)
 
 		# Make top 5 subframe
-		self.experi_subTop5_frame = Frame(self.experiment_frame,background="white")
+		self.experi_subTop5_frame = Frame(self.experi_rightFrame,background="white")
 		self.experi_subTop5_frame.pack(
 			side=TOP,
                         ipadx=frame_ipadx,
@@ -260,7 +313,7 @@ class makeGui:
 			)
 
 		# Make top 5 subframe for text
-		self.experi_subTop5_fText = Frame(self.experiment_frame,background="white")
+		self.experi_subTop5_fText = Frame(self.experi_rightFrame,background="white")
 		self.experi_subTop5_fText.pack(
 			side=TOP,
                         ipadx=frame_ipadx,
@@ -268,7 +321,7 @@ class makeGui:
 			)
 
 		# Make top 6 subframe
-		self.experi_subTop6_frame = Frame(self.experiment_frame,background="white")
+		self.experi_subTop6_frame = Frame(self.experi_rightFrame,background="white")
 		self.experi_subTop6_frame.pack(
 			side=TOP,
                         ipadx=frame_ipadx,
@@ -276,7 +329,7 @@ class makeGui:
 			)
 
 		# Make top 6 subframe for text
-		self.experi_subTop6_fText = Frame(self.experiment_frame,background="white")
+		self.experi_subTop6_fText = Frame(self.experi_rightFrame,background="white")
 		self.experi_subTop6_fText.pack(
 			side=TOP,
                         ipadx=frame_ipadx,
@@ -284,7 +337,7 @@ class makeGui:
 			)
 
 		# Make top 7 subframe
-		self.experi_subTop7_frame = Frame(self.experiment_frame,background="white")
+		self.experi_subTop7_frame = Frame(self.experi_rightFrame,background="white")
 		self.experi_subTop7_frame.pack(
 			side=TOP,
                         ipadx=frame_ipadx,
@@ -297,6 +350,12 @@ class makeGui:
 		# Create variables for each manual check (16 placeholders for now)
 		self.testPassList = [StringVar() for i in range(0,17)]
 		self.testPassState = ("Pass","Fail")
+
+		#################################
+		###			      ###
+		###       Info for Card       ###
+		###			      ###
+		#################################
 
 		# Make a label for the Barcode entry
 		self.experi_barcode_lbl = Label(self.experi_subTop1_frame, text="Barcode: ")
@@ -332,10 +391,36 @@ class makeGui:
 			)
 		self.experi_uniqueID_entry.pack(side=RIGHT)
 
+		# Make a label for the uniqueID entry
+		self.experi_firmwareVer_lbl = Label(self.experi_subTop2_1_frame, text="Firmware Ver: ")
+		self.experi_firmwareVer_lbl.configure(
+			background="white",
+			padx=button_padx,
+			pady=button_pady,
+			)
+		self.experi_firmwareVer_lbl.pack(side=LEFT)
+		
+		# Make an entry box for the UniqueID
+		# Make a entrybox for testing comments
+		self.experi_firmwareVer_entry = Entry(
+			self.experi_subTop2_1_frame,
+			textvariable=self.firmwareVerEntry
+			)
+		self.experi_firmwareVer_entry.pack(side=RIGHT)
+
+
+
 		# Make a button to read the unique ID
-		self.experi_uniqueID_get = Button(self.experi_subTop2_5_frame, text ="Get Unique ID", command=self.getUniqueIDPress)
+		self.experi_uniqueID_get = Button(self.experi_subTop2_5_frame, text ="Get Unique ID & Firmware Ver.", command=self.getUniqueIDPress)
 		self.experi_uniqueID_get.configure(bg="salmon")
 		self.experi_uniqueID_get.pack()
+
+
+		################################
+		###			     ###
+		###     Visual Tests 	     ###
+		###			     ###
+		################################
 
 		for i in range(0,4):
 			self.testPassInfo = OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass")
@@ -390,10 +475,11 @@ class makeGui:
 		return o.__dict__
 	
 	def initSubmitBttnPress(self):
-		self.initialTest.testerName = self.nameChoiceVar.get()
-		self.initialTest.testComment = self.infoCommentVar.get()
-		self.initialTest.barcode     = self.barcodeEntry.get()
-		self.initialTest.uniqueID    = self.uniqueIDEntry.get()
+		self.initialTest.User = self.nameChoiceVar.get()
+		self.initialTest.TestComment = self.infoCommentVar.get()
+		self.initialTest.Barcode     = self.barcodeEntry.get()
+		self.initialTest.Unique_ID    = self.uniqueIDEntry.get()
+		self.initialTest.DateRun     = str(datetime.now())
 
 		for i in range(len(self.testPassList)):
 			if self.testPassList[i].get() == "Pass":
@@ -403,7 +489,7 @@ class makeGui:
 		
 		fileString = self.uniqueIDEntry.get()+"_step1_raw.json"		
 	
-		with open(fileString,"w") as jsonFile:
+		with open("/home/hep/jsonResults/"+fileString,"w") as jsonFile:
 			json.dump(self.initialTest, jsonFile, default = self.jdefault)	
 		
 		print "Preliminary step recorded. Thank you!"
@@ -446,6 +532,7 @@ class makeGui:
 		cooked_bus = self.reverseBytes(raw_bus[-1])
 		cooked_bus = self.serialNum(cooked_bus)
 		self.uniqueIDEntry.set(self.toHex(cooked_bus))
+		self.firmwareVerEntry.set("oh hi there")
 
 root = Tk()
 myapp = makeGui(root)

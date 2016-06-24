@@ -1,4 +1,4 @@
-# User-Interface.py
+#User-Interface.py
 #
 # This is the main Graphical User Interface for communicating
 # with the setup in the lab.
@@ -30,12 +30,14 @@ class makeGui:
 		# and doesn't really get used too much.
 		self.myParent = parent
 
-		self.nameChoiceVar    =  StringVar()
-		self.gpioChoiceVar    =  StringVar()
-		self.infoCommentVar   =  StringVar()	
-		self.barcodeEntry     =  StringVar()
-		self.uniqueIDEntry    =  StringVar()	
-		self.firmwareVerEntry = StringVar()
+    		self.nameChoiceVar         =  StringVar()
+    		self.gpioChoiceVar         =  StringVar()
+    		self.infoCommentVar        =  StringVar()	
+    		self.barcodeEntry          =  StringVar()
+    		self.uniqueIDEntry         =  StringVar()	
+    		self.firmwareVerEntry      =  StringVar()
+    		self.firmwareVerMinEntry   =  StringVar()
+		self.firmwareVerOtherEntry = StringVar()
 	
 		# Place an all-encompassing frame in the parent window. All of the following
 		# frames will be placed here (topMost_frame) and not in the parent window.
@@ -237,6 +239,28 @@ class makeGui:
                         pady=frame_pady
 			)
 
+		# Make top 2_2 subframe
+		self.experi_subTop2_2_frame = Frame(self.experiment_frame,background="white")
+		self.experi_subTop2_2_frame.pack(
+			side=TOP,
+                        ipadx=frame_ipadx,
+                        ipady=frame_ipady,
+                        padx=frame_padx,
+                        pady=frame_pady
+			)
+
+		# Make top 2_3 subframe
+		self.experi_subTop2_3_frame = Frame(self.experiment_frame,background="white")
+		self.experi_subTop2_3_frame.pack(
+			side=TOP,
+                        ipadx=frame_ipadx,
+                        ipady=frame_ipady,
+                        padx=frame_padx,
+                        pady=frame_pady
+			)
+
+
+
 		# Make top 2_5 subframe
 		self.experi_subTop2_5_frame = Frame(self.experiment_frame,background="white")
 		self.experi_subTop2_5_frame.pack(
@@ -409,12 +433,13 @@ class makeGui:
 		# Make a entrybox for testing comments
 		self.experi_uniqueID_entry = Entry(
 			self.experi_subTop2_frame,
-			textvariable=self.uniqueIDEntry
+			textvariable=self.uniqueIDEntry,
+			state="readonly"
 			)
 		self.experi_uniqueID_entry.pack(side=RIGHT)
 
 		# Make a label for the uniqueID entry
-		self.experi_firmwareVer_lbl = Label(self.experi_subTop2_1_frame, text="Firmware Ver: ")
+		self.experi_firmwareVer_lbl = Label(self.experi_subTop2_1_frame, text="Firmware Ver (Major): ")
 		self.experi_firmwareVer_lbl.configure(
 			background="white",
 			padx=button_padx,
@@ -426,9 +451,48 @@ class makeGui:
 		# Make a entrybox for testing comments
 		self.experi_firmwareVer_entry = Entry(
 			self.experi_subTop2_1_frame,
-			textvariable=self.firmwareVerEntry
+			textvariable=self.firmwareVerEntry,
+			state="readonly"
 			)
 		self.experi_firmwareVer_entry.pack(side=RIGHT)
+
+		# Make a label for the uniqueID entry
+		self.experi_firmwareVerMin_lbl = Label(self.experi_subTop2_2_frame, text="Firmware Ver (Minor): ")
+		self.experi_firmwareVerMin_lbl.configure(
+			background="white",
+			padx=button_padx,
+			pady=button_pady,
+			)
+		self.experi_firmwareVerMin_lbl.pack(side=LEFT)
+		
+		# Make an entry box for the UniqueID
+		# Make a entrybox for testing comments
+		self.experi_firmwareVerMin_entry = Entry(
+			self.experi_subTop2_2_frame,
+			textvariable=self.firmwareVerMinEntry,
+			state="readonly"
+			)
+		self.experi_firmwareVerMin_entry.pack(side=RIGHT)
+
+		# Make a label for the uniqueID entry
+		self.experi_firmwareVerOther_lbl = Label(self.experi_subTop2_3_frame, text="Firmware Ver (Other): ")
+		self.experi_firmwareVerOther_lbl.configure(
+			background="white",
+			padx=button_padx,
+			pady=button_pady,
+			)
+		self.experi_firmwareVerOther_lbl.pack(side=LEFT)
+		
+		# Make an entry box for the UniqueID
+		# Make a entrybox for testing comments
+		self.experi_firmwareVerOther_entry = Entry(
+			self.experi_subTop2_3_frame,
+			textvariable=self.firmwareVerOtherEntry,
+			state="readonly"
+			)
+		self.experi_firmwareVerOther_entry.pack(side=RIGHT)
+
+
 
 		# Make a button to read the unique ID
 		self.experi_uniqueID_get = Button(self.experi_subTop2_5_frame, text ="Get Unique ID & Firmware Ver.", command=self.getUniqueIDPress)
@@ -521,6 +585,9 @@ class makeGui:
 		self.initialTest.TestComment = self.infoCommentVar.get()
 		self.initialTest.Barcode     = self.barcodeEntry.get()
 		self.initialTest.Unique_ID    = self.uniqueIDEntry.get()
+		self.initialTest.FirmwareMaj = self.firmwareVerEntry.get()
+		self.initialTest.FirmwareMin = self.firmwareVerMinEntry.get()
+		self.initialTest.FirmwareOth = self.firmwareVerOtherEntry.get()
 		self.initialTest.DateRun     = str(datetime.now())
 
 		for i in range(len(self.testPassList)):
@@ -577,6 +644,7 @@ class makeGui:
 		print self.myBus.sendBatch()
 
 	def getUniqueIDPress(self):
+		# Getting unique ID
 		self.myBus.write(0x00,[0x06])
 		self.myBus.write(0x19,[0x11,0x04,0,0,0])
 		self.myBus.write(0x50,[0x00])
@@ -586,7 +654,20 @@ class makeGui:
 		cooked_bus = self.reverseBytes(raw_bus[-1])
 		cooked_bus = self.serialNum(cooked_bus)
 		self.uniqueIDEntry.set(self.toHex(cooked_bus))
-		self.firmwareVerEntry.set("oh hi there")
+
+	        # Getting bridge firmware	
+		self.myBus.write(0x00,[0x06])
+		self.myBus.write(0x19,[0x04])
+		self.myBus.read(0x19, 4)
+		raw_data = self.myBus.sendBatch()[-1]
+		med_rare_data = raw_data[2:]
+		cooked_data = self.reverseBytes(med_rare_data)
+		data_well_done = self.toHex(cooked_data)	# my apologies for the cooking references
+		data_well_done = data_well_done[2:]
+		print data_well_done
+		self.firmwareVerEntry.set("0x"+data_well_done[0:2])    #these are the worst (best?) variable names ever
+		self.firmwareVerMinEntry.set("0x"+data_well_done[2:4])
+		self.firmwareVerOtherEntry.set("0x"+data_well_done[4:8])
 
 root = Tk()
 myapp = makeGui(root)

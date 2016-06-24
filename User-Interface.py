@@ -195,10 +195,10 @@ class makeGui:
 		#####				 #####
 		######################################
 
-		self.testLabelList = ["Test 1","Test 2","Test 3","Test 4",
-		      		      "Test 5","Test 6","Test 7","Test 8",
-				      "Test 9","Test 10","Test 11","Test 12",
-				      "Test 13","Test 14","Test 15","Test 16"]
+		self.testLabelList = ["Res_1","Res_2","Res_3","Res_4",
+		      		      "Res_5","Res_6","Res_7","Res_8",
+				      "Res_9","Res_10","Res_11","SuplCur",
+				      "Visual","Test_14","Test_15","Test_16"]
 
 		# Make a label for the entire left frame
 		self.experi_subFrame_lbl = Label(self.experiment_frame,text="QIE Card Setup & Parameters")
@@ -555,6 +555,7 @@ class makeGui:
 			self.testPassLabel.configure(padx=12)
 			self.testPassLabel.pack(side=LEFT)
 
+#		This line should change if we add more tests
 		for i in range(12,16):
 			self.testPassInfo = OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass")
 			self.testPassList[i].set("Fail")
@@ -646,7 +647,7 @@ class makeGui:
 	def getUniqueIDPress(self):
 		# Getting unique ID
 		self.myBus.write(0x00,[0x06])
-		self.myBus.write(0x19,[0x11,0x04,0,0,0])
+		self.myBus.write(0x1c,[0x11,0x04,0,0,0])
 		self.myBus.write(0x50,[0x00])
 		self.myBus.read(0x50, 8)
 		raw_bus = self.myBus.sendBatch()
@@ -657,8 +658,8 @@ class makeGui:
 
 	        # Getting bridge firmware	
 		self.myBus.write(0x00,[0x06])
-		self.myBus.write(0x19,[0x04])
-		self.myBus.read(0x19, 4)
+		self.myBus.write(0x1c,[0x04])
+		self.myBus.read(0x1c, 4)
 		raw_data = self.myBus.sendBatch()[-1]
 		med_rare_data = raw_data[2:]
 		cooked_data = self.reverseBytes(med_rare_data)

@@ -13,6 +13,7 @@ from datetime import datetime
 from initialClass import initialTests
 import json
 import client
+import subprocess
 
 class makeGui:
 	def __init__(self, parent):
@@ -642,6 +643,8 @@ class makeGui:
 		self.myBus.write(0x74,[0x3F])	
 		self.myBus.write(0x70,[0x03, 0x00])
 		self.myBus.write(0x70,[0x01,jSlotDict[self.gpioChoiceVar.get()]])
+
+		subprocess.call("/home/hep/abaas/testing_database/uploader/upload.sh", shell=True)
 		print self.myBus.sendBatch()
 
 	def getUniqueIDPress(self):

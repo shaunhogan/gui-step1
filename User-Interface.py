@@ -17,7 +17,7 @@ import client
 class makeGui:
 	def __init__(self, parent):
 		# Create a webBus instance
-		self.myBus = client.webBus("pi6",0)
+		self.myBus = client.webBus("pi7",0)
 
 		# Create an instance of initialTests
 		self.initialTest = initialTests()
@@ -31,6 +31,7 @@ class makeGui:
 		self.myParent = parent
 
 		self.nameChoiceVar    =  StringVar()
+		self.gpioChoiceVar    =  StringVar()
 		self.infoCommentVar   =  StringVar()	
 		self.barcodeEntry     =  StringVar()
 		self.uniqueIDEntry    =  StringVar()	
@@ -198,16 +199,13 @@ class makeGui:
 				      "Test 13","Test 14","Test 15","Test 16"]
 
 		# Make a label for the entire left frame
-		self.experi_subFrame_lbl = Label(self.experiment_frame,text="Hardware Setup (Check boxes to add cards to test)")
+		self.experi_subFrame_lbl = Label(self.experiment_frame,text="QIE Card Setup & Parameters")
 		self.experi_subFrame_lbl.configure(
 			padx=button_padx,
 			pady=button_pady,
 			background="white"
 			)
 		self.experi_subFrame_lbl.pack(side=TOP)
-
-
-	
 
 		# Make top 1 subframe
 		self.experi_subTop1_frame = Frame(self.experiment_frame,background="white")
@@ -247,6 +245,30 @@ class makeGui:
                         ipady=frame_ipady,
                         padx=frame_padx,
                         pady=frame_pady
+			)
+
+		# Make top 2_6 subframe
+		self.experi_subTop2_6_frame = Frame(self.experiment_frame, bg="white")
+		self.experi_subTop2_6_frame.pack(
+			side=TOP,
+			ipadx=frame_ipadx, padx=frame_padx,
+			ipady=frame_ipady, pady=frame_pady,
+			)
+
+		# Make top 2_7 subframe
+		self.experi_subTop2_7_frame = Frame(self.experiment_frame, bg="white")
+		self.experi_subTop2_7_frame.pack(
+			side=TOP,
+			ipadx=frame_ipadx, padx=frame_padx,
+			ipady=frame_ipady, pady=frame_pady,
+			)
+		
+		# Make top 2_8 subframe
+		self.experi_subTop2_8_frame = Frame(self.experiment_frame, bg="white")
+		self.experi_subTop2_8_frame.pack(
+			side=TOP,
+			ipadx=frame_ipadx, padx=frame_padx,
+			ipady=frame_ipady, pady=frame_pady,
 			)
 
 		###################################
@@ -408,13 +430,33 @@ class makeGui:
 			)
 		self.experi_firmwareVer_entry.pack(side=RIGHT)
 
-
-
 		# Make a button to read the unique ID
 		self.experi_uniqueID_get = Button(self.experi_subTop2_5_frame, text ="Get Unique ID & Firmware Ver.", command=self.getUniqueIDPress)
 		self.experi_uniqueID_get.configure(bg="salmon")
 		self.experi_uniqueID_get.pack()
 
+		# Make a line of hypens
+		self.experi_hyphenLine = Label(self.experi_subTop2_6_frame, text="----------------------------------")
+		self.experi_hyphenLine.configure(bg="white",padx=button_padx,pady=button_pady)
+		self.experi_hyphenLine.pack()
+
+		# Make a label for the GPIO selection
+		self.gpioSelect_label = Label(self.experi_subTop2_7_frame, text="Select GPIO Option: ")
+		self.gpioSelect_label.configure(bg="white",padx=button_padx,pady=button_pady)
+		self.gpioSelect_label.pack(side=LEFT)
+
+		# Make a option menu for GPIO selection
+		self.gpioSelect_box = OptionMenu(self.experi_subTop2_7_frame, self.gpioChoiceVar,
+					      "J2 and J18","J3 and J19","J4 and J20","J5 and J21",
+					      "J7 and J23","J8 and J24","J9 and J25","J10 and J26")
+		self.gpioSelect_box.pack(side=LEFT)
+		self.gpioChoiceVar.set("J2 and J18")
+
+		# Make a button to submit GPIO option
+		self.gpioSelect_bttn = Button(self.experi_subTop2_8_frame, command=self.gpioBttnPress,
+					      text="Submit GPIO Choice")
+		self.gpioSelect_bttn.configure(bg="CadetBlue1")
+		self.gpioSelect_bttn.pack()
 
 		################################
 		###			     ###
@@ -460,7 +502,7 @@ class makeGui:
 
 		# Make a button to submit tests and information
 		self.initSubmitBttn = Button(self.experi_subTop7_frame, text="Submit Tests & Info", command=self.initSubmitBttnPress)
-		self.initSubmitBttn.configure(bg="turquoise")
+		self.initSubmitBttn.configure(bg="lemon chiffon")
 		self.initSubmitBttn.pack()
 
 
@@ -521,6 +563,18 @@ class makeGui:
 		return s.join(message_list)
 	    s = ""
 	    return '0x' + s.join(message_list)
+
+	def gpioBttnPress(self):
+		jSlotDict = {"J2 and J18" : 0x21, "J3 and J19" : 0x81, "J4 and J20" : 0xA1,
+			     "J5 and J21" : 0x41, "J7 and J23" : 0x22, "J8 and J24" : 0x82,
+			     "J9 and J25" : 0xA2, "J10 and J26" : 0x42}
+
+		print jSlotDict[self.gpioChoiceVar.get()]
+	
+		self.myBus.write(0x74,[0x3F])	
+		self.myBus.write(0x70,[0x03, 0x00])
+		self.myBus.write(0x70,[0x01,jSlotDict[self.gpioChoiceVar.get()]])
+		print self.myBus.sendBatch()
 
 	def getUniqueIDPress(self):
 		self.myBus.write(0x00,[0x06])

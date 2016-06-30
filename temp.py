@@ -2,7 +2,7 @@ from client import webBus
 import collections
 from checksumClass import Checksum
 # bus = webBus("pi5",0)
-bus = webBus("pi6",0)
+bus = webBus("pi7",0)
 
 # binDataHappy = '0 01110000 00111100 10000011'
 # intDataHappy = '0 112 60 131'

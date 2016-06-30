@@ -11,6 +11,8 @@
 from Tkinter import *
 from datetime import datetime
 from initialClass import initialTests
+from cardInfoClass import cardInformation
+import temp
 import json
 import client
 import subprocess
@@ -22,6 +24,9 @@ class makeGui:
 
 		# Create an instance of initialTests
 		self.initialTest = initialTests()
+
+		# Create an instance of cardInformation
+		self.cardInfo = cardInformation()
 		
 		# Make an empty list that will eventually contain all of
 		# the active card slots
@@ -31,11 +36,15 @@ class makeGui:
 		# and doesn't really get used too much.
 		self.myParent = parent
 
+		# Make a placeholder for the shortened unique ID
+		self.uniqueIDPass = ""
+
     		self.nameChoiceVar         =  StringVar()
     		self.gpioChoiceVar         =  StringVar()
     		self.infoCommentVar        =  StringVar()	
     		self.barcodeEntry          =  StringVar()
     		self.uniqueIDEntry         =  StringVar()	
+		self.tempEntry             =  StringVar()
     		self.firmwareVerEntry      =  StringVar()
     		self.firmwareVerMinEntry   =  StringVar()
 		self.firmwareVerOtherEntry = StringVar()
@@ -170,7 +179,7 @@ class makeGui:
 		# Make and pack a listbox to pick which QIE card to talk to:
 		self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar,
 					      "Shaun Hogan","Caleb Smith","Adryanna Smith","Jordan Potarf",
-					      "John Lawrence","Andrew Baas")
+					      "John Lawrence","Andrew Baas","Mason Dorseth","Josh Hiltbrand")
 		self.info_nameBox.pack(side=LEFT)
 		self.nameChoiceVar.set("Shaun Hogan") # initializes the OptionMenu
 
@@ -198,8 +207,8 @@ class makeGui:
 
 		self.testLabelList = ["Res_1","Res_2","Res_3","Res_4",
 		      		      "Res_5","Res_6","Res_7","Res_8",
-				      "Res_9","Res_10","Res_11","SuplCur",
-				      "Visual","Test_14","Test_15","Test_16"]
+				      "Res_9","Res_10","Res_11", "Res_12",
+				      "Res_13", "Res_14", "Res_15", "SuplCur", "Vis", "Program"]
 
 		# Make a label for the entire left frame
 		self.experi_subFrame_lbl = Label(self.experiment_frame,text="QIE Card Setup & Parameters")
@@ -210,9 +219,19 @@ class makeGui:
 			)
 		self.experi_subFrame_lbl.pack(side=TOP)
 
-		# Make top 1 subframe
-		self.experi_subTop1_frame = Frame(self.experiment_frame,background="white")
-		self.experi_subTop1_frame.pack(
+#		# Make top 1 subframe
+#		self.experi_subTop1_frame = Frame(self.experiment_frame,background="white")
+#		self.experi_subTop1_frame.pack(
+#			side=TOP,
+#                        ipadx=frame_ipadx,
+#                        ipady=frame_ipady,
+#                        padx=frame_padx,
+#                        pady=frame_pady
+#			)
+
+		# Make top 2 subframe
+		self.experi_subTop2_frame = Frame(self.experiment_frame,background="white")
+		self.experi_subTop2_frame.pack(
 			side=TOP,
                         ipadx=frame_ipadx,
                         ipady=frame_ipady,
@@ -220,9 +239,9 @@ class makeGui:
                         pady=frame_pady
 			)
 
-		# Make top 2 subframe
-		self.experi_subTop2_frame = Frame(self.experiment_frame,background="white")
-		self.experi_subTop2_frame.pack(
+		# Make top 2_0 subframe
+		self.experi_subTop2_0_frame = Frame(self.experiment_frame,background="white")
+		self.experi_subTop2_0_frame.pack(
 			side=TOP,
                         ipadx=frame_ipadx,
                         ipady=frame_ipady,
@@ -318,6 +337,42 @@ class makeGui:
 		self.experi_inspections_label.configure(bg="white")
 		self.experi_inspections_label.pack()
 
+		# Make a subframe for the barcode box
+		self.experi_barcode_frame = Frame(self.experi_rightFrame, bg="white")
+		self.experi_barcode_frame.pack(
+			side=TOP,
+			ipady=frame_ipady,
+			ipadx=frame_ipadx,
+			padx=frame_padx,
+			pady=frame_pady
+			)
+
+		# Make a label for the Barcode entry
+		self.experi_barcode_lbl = Label(self.experi_barcode_frame, text="Barcode: ")
+		self.experi_barcode_lbl.configure(
+			background="white",
+			padx=button_padx,
+			pady=button_pady,
+			)
+		self.experi_barcode_lbl.pack(side=LEFT)
+		
+		# Make an entry box for the barcode
+		# Make a entrybox for testing comments
+		self.experi_barcode_entry = Entry(
+			self.experi_barcode_frame,
+			textvariable=self.barcodeEntry
+			)
+		self.experi_barcode_entry.pack(side=RIGHT)
+
+		# Make another buffer frame
+		self.experi_subTopBuffer2_frame = Frame(self.experi_rightFrame,bg="white")
+		self.experi_subTopBuffer2_frame.pack(
+			side=TOP,
+			ipady=frame_ipady,
+			ipadx=frame_ipadx,
+			padx=frame_padx,
+			pady=frame_pady
+			)
 
 		# Make top 3 subframe
 		self.experi_subTop3_frame = Frame(self.experi_rightFrame,background="white")
@@ -395,7 +450,7 @@ class makeGui:
 
 
 		# Create variables for each manual check (16 placeholders for now)
-		self.testPassList = [StringVar() for i in range(0,17)]
+		self.testPassList = [StringVar() for i in range(0,18)]
 		self.testPassState = ("Pass","Fail")
 
 		#################################
@@ -404,22 +459,22 @@ class makeGui:
 		###			      ###
 		#################################
 
-		# Make a label for the Barcode entry
-		self.experi_barcode_lbl = Label(self.experi_subTop1_frame, text="Barcode: ")
-		self.experi_barcode_lbl.configure(
-			background="white",
-			padx=button_padx,
-			pady=button_pady,
-			)
-		self.experi_barcode_lbl.pack(side=LEFT)
-		
-		# Make an entry box for the barcode
-		# Make a entrybox for testing comments
-		self.experi_barcode_entry = Entry(
-			self.experi_subTop1_frame,
-			textvariable=self.barcodeEntry
-			)
-		self.experi_barcode_entry.pack(side=RIGHT)
+#		# Make a label for the Barcode entry
+#		self.experi_barcode_lbl = Label(self.experi_subTop1_frame, text="Barcode: ")
+#		self.experi_barcode_lbl.configure(
+#			background="white",
+#			padx=button_padx,
+#			pady=button_pady,
+#			)
+#		self.experi_barcode_lbl.pack(side=LEFT)
+#		
+#		# Make an entry box for the barcode
+#		# Make a entrybox for testing comments
+#		self.experi_barcode_entry = Entry(
+#			self.experi_subTop1_frame,
+#			textvariable=self.barcodeEntry
+#			)
+#		self.experi_barcode_entry.pack(side=RIGHT)
 
 		# Make a label for the uniqueID entry
 		self.experi_uniqueID_lbl = Label(self.experi_subTop2_frame, text="Unique ID: ")
@@ -439,7 +494,25 @@ class makeGui:
 			)
 		self.experi_uniqueID_entry.pack(side=RIGHT)
 
-		# Make a label for the uniqueID entry
+		# Make a label for the temperature entry
+		self.experi_temperature_lbl = Label(self.experi_subTop2_0_frame, text="Temperature: ")
+		self.experi_temperature_lbl.configure(
+			background="white",
+			padx=button_padx,
+			pady=button_pady,
+			)
+		self.experi_temperature_lbl.pack(side=LEFT)
+		
+		# Make an entry box for the temperature
+		# Make a entrybox for testing comments
+		self.experi_temperature_entry = Entry(
+			self.experi_subTop2_0_frame,
+			textvariable=self.tempEntry,
+			state="readonly"
+			)
+		self.experi_temperature_entry.pack(side=RIGHT)
+
+		# Make a label for the main firmware ver entry
 		self.experi_firmwareVer_lbl = Label(self.experi_subTop2_1_frame, text="Firmware Ver (Major): ")
 		self.experi_firmwareVer_lbl.configure(
 			background="white",
@@ -448,7 +521,7 @@ class makeGui:
 			)
 		self.experi_firmwareVer_lbl.pack(side=LEFT)
 		
-		# Make an entry box for the UniqueID
+		# Make an entry box for the main firmware ver
 		# Make a entrybox for testing comments
 		self.experi_firmwareVer_entry = Entry(
 			self.experi_subTop2_1_frame,
@@ -457,7 +530,7 @@ class makeGui:
 			)
 		self.experi_firmwareVer_entry.pack(side=RIGHT)
 
-		# Make a label for the uniqueID entry
+		# Make a label for the minor firmware ver entry
 		self.experi_firmwareVerMin_lbl = Label(self.experi_subTop2_2_frame, text="Firmware Ver (Minor): ")
 		self.experi_firmwareVerMin_lbl.configure(
 			background="white",
@@ -466,7 +539,7 @@ class makeGui:
 			)
 		self.experi_firmwareVerMin_lbl.pack(side=LEFT)
 		
-		# Make an entry box for the UniqueID
+		# Make an entry box for the minor firmware
 		# Make a entrybox for testing comments
 		self.experi_firmwareVerMin_entry = Entry(
 			self.experi_subTop2_2_frame,
@@ -475,7 +548,7 @@ class makeGui:
 			)
 		self.experi_firmwareVerMin_entry.pack(side=RIGHT)
 
-		# Make a label for the uniqueID entry
+		# Make a label for the other firmware entry
 		self.experi_firmwareVerOther_lbl = Label(self.experi_subTop2_3_frame, text="Firmware Ver (Other): ")
 		self.experi_firmwareVerOther_lbl.configure(
 			background="white",
@@ -484,7 +557,7 @@ class makeGui:
 			)
 		self.experi_firmwareVerOther_lbl.pack(side=LEFT)
 		
-		# Make an entry box for the UniqueID
+		# Make an entry box for the other firmware
 		# Make a entrybox for testing comments
 		self.experi_firmwareVerOther_entry = Entry(
 			self.experi_subTop2_3_frame,
@@ -493,13 +566,16 @@ class makeGui:
 			)
 		self.experi_firmwareVerOther_entry.pack(side=RIGHT)
 
-
-
-		# Make a button to read the unique ID
+		# Make a button to read the unique ID & firmware
 		self.experi_uniqueID_get = Button(self.experi_subTop2_5_frame, text ="Get Unique ID & Firmware Ver.", command=self.getUniqueIDPress)
 		self.experi_uniqueID_get.configure(bg="salmon")
-		self.experi_uniqueID_get.pack()
+		self.experi_uniqueID_get.pack(side=TOP)
 
+		# Make a button to submit the unique ID & firmware
+		self.experi_uniqueID_give = Button(self.experi_subTop2_5_frame, text ="Upload Unique ID & Firmware Ver.", command=self.infoSubmitButtonPress)
+		self.experi_uniqueID_give.configure(bg="salmon2")
+		self.experi_uniqueID_give.pack(side=TOP)
+		
 		# Make a line of hypens
 		self.experi_hyphenLine = Label(self.experi_subTop2_6_frame, text="----------------------------------")
 		self.experi_hyphenLine.configure(bg="white",padx=button_padx,pady=button_pady)
@@ -529,47 +605,64 @@ class makeGui:
 		###			     ###
 		################################
 
+		self.testDescDict = {"Res_1" : "Bkpln to GND", "Res_2" : "1.2V to GND", "Res_3" : "1.5V to GND",
+				     "Res_4" : "2.5V to GND", "Res_5" : "3.3V to GND", "Res_6" : "5.0V to GND",
+				     "Res_7" : "1.2V to 1.5V", "Res_8" : "1.2V to 2.5V", "Res_9" : "1.2V to 3.3V",
+				     "Res_10" : "1.2V to 5.0V", "Res_11" : "1.5V to 2.5V", "Res_12" : "1.5V to 5.0V",
+				     "Res_13" : "2.5V to 3.3V", "Res_14" : "2.5V to 5.0V", "Res_15" : "3.3V to 5.0V",
+				     "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK"}
+
+
 		for i in range(0,4):
 			self.testPassInfo = OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass")
+			self.testPassInfo.configure(width=15)
 			self.testPassList[i].set("Fail")
 			self.testPassInfo.pack(side=LEFT)
 
-			self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testLabelList[i]+"\n", bg="white")
-			self.testPassLabel.configure(padx=13)
+			self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg="white")
+			self.testPassLabel.configure(width=20)
 			self.testPassLabel.pack(side=LEFT)
 		
 		for i in range(4,8):
 			self.testPassInfo = OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass")
+			self.testPassInfo.configure(width=15)
 			self.testPassList[i].set("Fail")
 			self.testPassInfo.pack(side=LEFT)
 
-			self.testPassLabel=Label(self.experi_subTop4_fText, text=self.testLabelList[i]+"\n", bg="white")
-			self.testPassLabel.configure(padx=13)
+			self.testPassLabel=Label(self.experi_subTop4_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
+			self.testPassLabel.configure(width=20)
 			self.testPassLabel.pack(side=LEFT)
 
-		for i in range(8,12):
+		for i in range(8,13):
 			self.testPassInfo = OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass")
+			self.testPassInfo.configure(width=11)
 			self.testPassList[i].set("Fail")
 			self.testPassInfo.pack(side=LEFT)
 
-			self.testPassLabel=Label(self.experi_subTop5_fText, text=self.testLabelList[i]+"\n", bg="white")
-			self.testPassLabel.configure(padx=12)
+			self.testPassLabel=Label(self.experi_subTop5_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
+			self.testPassLabel.configure(width=15)
 			self.testPassLabel.pack(side=LEFT)
 
 #		This line should change if we add more tests
-		for i in range(12,16):
+		for i in range(13,18):
 			self.testPassInfo = OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass")
+			self.testPassInfo.configure(width=11)
 			self.testPassList[i].set("Fail")
 			self.testPassInfo.pack(side=LEFT)
 
-			self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testLabelList[i]+"\n", bg="white")
-			self.testPassLabel.configure(padx=12)
+			self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
+			self.testPassLabel.configure(width=15)
 			self.testPassLabel.pack(side=LEFT)
 
 		# Make a button to submit tests and information
-		self.initSubmitBttn = Button(self.experi_subTop7_frame, text="Submit Tests & Info", command=self.initSubmitBttnPress)
-		self.initSubmitBttn.configure(bg="lemon chiffon")
-		self.initSubmitBttn.pack()
+		self.initSubmitBttn = Button(self.experi_subTop7_frame, text="Submit Inspections & Tests", command=self.initSubmitBttnPress)
+		self.initSubmitBttn.configure(bg="lemon chiffon", width=40)
+		self.initSubmitBttn.pack(side=TOP)
+
+		# Make a button to clear all results
+		self.clearDataBttn = Button(self.experi_subTop7_frame, text="Clear Inspections, Tests, & Info", command=self.clearDataBttnPress)
+		self.clearDataBttn.configure(bg="orange", width=40)
+		self.clearDataBttn.pack(side=TOP)
 
 
 
@@ -586,6 +679,56 @@ class makeGui:
 		self.initialTest.User = self.nameChoiceVar.get()
 		self.initialTest.TestComment = self.infoCommentVar.get()
 		self.initialTest.Barcode     = self.barcodeEntry.get()
+
+		for i in range(len(self.testPassList)):
+			if self.testPassList[i].get() == "Pass":
+				self.initialTest.testResults[self.testLabelList[i-1]] = True
+			else:
+				self.initialTest.testResults[self.testLabelList[i-1]] = False
+		
+		fileString = self.barcodeEntry.get()+"_step1_raw.json"		
+	
+#		with open("/home/hep/abaas/testing_database/uploader/temp_json/"+fileString,"w") as jsonFile:
+		with open('/home/hep/jsonResults/'+fileString,'w') as jsonFile:
+			json.dump(self.initialTest, jsonFile, default = self.jdefault)	
+		
+#		subprocess.call("/home/django/testing_database/uploader/upload.sh", shell=True)
+		print "Preliminary step recorded. Thank you!"
+
+	def infoSubmitButtonPress(self):
+		self.cardInfo.Barcode = self.barcodeEntry.get()
+		self.cardInfo.Unique_ID = self.uniqueIDPass
+		self.cardInfo.DateRun = str(datetime.now())
+		self.cardInfo.FirmwareMaj = self.firmwareVerEntry.get()
+		self.cardInfo.FirmwareMin = self.firmwareVerMinEntry.get()
+		self.cardInfo.FirmwareOth = self.firmwareVerOtherEntry.get()
+
+		fileString = self.barcodeEntry.get()+"_step2_raw.json"
+
+#		with open("/home/hep/abaas/testing_database_uploader/temp_json/"+fileString, "w") as jsonFile:
+		with open('/home/hep/jsonResults/'+fileString,'w') as jsonFile:
+			json.dump(self.cardInfo, jsonFile, default = self.jdefault)
+
+#		subproccess.call("/home/django/testing_database/uploader/upload.sh", shell=True)
+		print "Secondary step recorded. Thank you!"
+
+
+	def clearDataBttnPress(self):
+		# Clear the data in the GUI displays:
+		self.infoCommentVar.set("")
+		self.barcodeEntry.set("")
+		self.uniqueIDEntry.set("")
+		self.firmwareVerEntry.set("")
+		self.firmwareVerMinEntry.set("")
+		self.firmwareVerOtherEntry.set("")
+
+		for i in range(len(self.testPassList)):
+			self.testPassList[i].set("Fail")
+
+		# Now, clear the stored, behind-the-scenes entries
+		self.initialTest.User = self.nameChoiceVar.get()
+		self.initialTest.TestComment = self.infoCommentVar.get()
+		self.initialTest.Barcode     = self.barcodeEntry.get()
 		self.initialTest.Unique_ID    = self.uniqueIDEntry.get()
 		self.initialTest.FirmwareMaj = self.firmwareVerEntry.get()
 		self.initialTest.FirmwareMin = self.firmwareVerMinEntry.get()
@@ -597,13 +740,7 @@ class makeGui:
 				self.initialTest.testResults[self.testLabelList[i-1]] = True
 			else:
 				self.initialTest.testResults[self.testLabelList[i-1]] = False
-		
-		fileString = self.uniqueIDEntry.get()+"_step1_raw.json"		
 	
-		with open("/home/hep/jsonResults/"+fileString,"w") as jsonFile:
-			json.dump(self.initialTest, jsonFile, default = self.jdefault)	
-		
-		print "Preliminary step recorded. Thank you!"
 
 	def reverseBytes(self, message):
 		message_list = message.split()
@@ -634,35 +771,52 @@ class makeGui:
 	    return '0x' + s.join(message_list)
 
 	def gpioBttnPress(self):
-		jSlotDict = {"J2 and J18" : 0x21, "J3 and J19" : 0x81, "J4 and J20" : 0xA1,
-			     "J5 and J21" : 0x41, "J7 and J23" : 0x22, "J8 and J24" : 0x82,
-			     "J9 and J25" : 0xA2, "J10 and J26" : 0x42}
+		jSlotDict = {"J2 and J18" : 0x29, "J3 and J19" : 0x89, "J4 and J20" : 0xA9,
+			     "J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
+			     "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
 
 		print jSlotDict[self.gpioChoiceVar.get()]
-	
-		self.myBus.write(0x74,[0x3F])	
-		self.myBus.write(0x70,[0x03, 0x00])
+
+		self.myBus.write(0x74,[0x08]) # PCA9538 is bit 3 on ngccm mux
+		# myBus.write(0x70,[0x01,0x00]) # GPIO PwrEn is register 3
+		#power on and reset
+		    #register 3 is control reg for i/o modes
+		self.myBus.write(0x70,[0x03,0x00]) # sets all GPIO pins to 'output' mode
+		self.myBus.write(0x70,[0x01,0x08])
+		self.myBus.write(0x70,[0x01,0x18]) # GPIO reset is 10
+		self.myBus.write(0x70,[0x01,0x08])
+
+		#jtag selectors finnagling for slot 26
 		self.myBus.write(0x70,[0x01,jSlotDict[self.gpioChoiceVar.get()]])
 
-		subprocess.call("/home/hep/abaas/testing_database/uploader/upload.sh", shell=True)
-		print self.myBus.sendBatch()
+		# myBus.write(0x70,[0x03,0x08])
+		self.myBus.read(0x70,1)
+		batch = self.myBus.sendBatch()
+		print 'initial = ', batch
 
-	def getUniqueIDPress(self):
+	def getUniqueIDPress(self):		
+		self.myBus.write(0x74,[0x09])
+		self.myBus.sendBatch()
+
+		slot = 0x1c
 		# Getting unique ID
+		# 0x05000000ea9c8b7000   <- From main gui
 		self.myBus.write(0x00,[0x06])
-		self.myBus.write(0x1c,[0x11,0x04,0,0,0])
+		self.myBus.write(slot,[0x11,0x04,0,0,0])
 		self.myBus.write(0x50,[0x00])
 		self.myBus.read(0x50, 8)
 		raw_bus = self.myBus.sendBatch()
 		print raw_bus
 		cooked_bus = self.reverseBytes(raw_bus[-1])
-		cooked_bus = self.serialNum(cooked_bus)
+		#cooked_bus = self.serialNum(cooked_bus)
 		self.uniqueIDEntry.set(self.toHex(cooked_bus))
+		self.uniqueIDPass = self.uniqueIDEntry.get()
+		self.uniqueIDEntry.set("0x"+self.uniqueIDPass[4:(len(self.uniqueIDPass)-4)])
 
 	        # Getting bridge firmware	
 		self.myBus.write(0x00,[0x06])
-		self.myBus.write(0x1c,[0x04])
-		self.myBus.read(0x1c, 4)
+		self.myBus.write(slot,[0x04])
+		self.myBus.read(slot, 4)
 		raw_data = self.myBus.sendBatch()[-1]
 		med_rare_data = raw_data[2:]
 		cooked_data = self.reverseBytes(med_rare_data)
@@ -672,6 +826,10 @@ class makeGui:
 		self.firmwareVerEntry.set("0x"+data_well_done[0:2])    #these are the worst (best?) variable names ever
 		self.firmwareVerMinEntry.set("0x"+data_well_done[2:4])
 		self.firmwareVerOtherEntry.set("0x"+data_well_done[4:8])
+
+		# Getting temperature
+		self.tempEntry.set(str(round(temp.readManyTemps(slot, 10, "Temperature", "nohold"),4)))
+		
 
 root = Tk()
 myapp = makeGui(root)

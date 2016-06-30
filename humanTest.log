@@ -1,0 +1,78 @@
+
+GENERAL INFO: 
+Temperature: 25.2069261068
+Humidity: 43.5452880859
+User: Shaun Hogan
+JSlot: 23
+DateRun: 2016-06-27 08:41:42.132212
+Unique_ID: 0x05000000ea9c8b7000
+
+
+BRIDGE TESTS: 
+Zeroes: [2, 0]
+Status: [2, 0]
+OrbHist_5: [0, 2]
+WTECount: [2, 0]
+OrbHist_3: [0, 2]
+HumiPass: [0, 0]
+ID_string_cont: [2, 0]
+Scratch: [2, 0]
+BkPln_2: [0, 2]
+OnesZeroes: [2, 0]
+QIECount: [2, 0]
+OrbHist_1: [0, 2]
+Ones: [2, 0]
+ID_string: [2, 0]
+Firmware_Ver: [0, 2]
+BkPln_1: [0, 2]
+OrbHist_4: [0, 2]
+BkPln_3: [0, 2]
+ClockCnt: [2, 0]
+OrbHist_2: [0, 2]
+TempPass: [0, 0]
+
+
+
+IGLOO TESTS: 
+statusReg: [2, 0]
+qie_ck_ph: [0, 0]
+link_test_mode: [0, 0]
+statFromSERDES: [0, 0]
+dataToSERDES: [0, 0]
+cntrRegDisplay: [2, 0]
+iglooZeros: [2, 0]
+inputSpy_512Reads: [2, 0]
+igloo_UID: [2, 0]
+iglooScratch: [0, 0]
+spy96Bits: [0, 0]
+fpgaMajVer: [2, 0]
+fifo_data: [0, 0]
+iglooOnes: [2, 0]
+link_test_pattern: [0, 0]
+rst_QIE_count: [2, 0]
+igloo_wte_count: [2, 0]
+dataFromSERDES: [0, 0]
+fpgaMinVer: [2, 0]
+CI_Mode_On: [2, 0]
+clk_count: [2, 0]
+fpgaTopOrBot: [2, 0]
+capIDErr_count: [2, 0]
+iglooUID: [0, 0]
+CI_Mode_Off: [2, 0]
+ctrlToSERDES: [0, 0]
+addrToSERDES: [0, 0]
+
+
+
+VTTX-1 TESTS: 
+vttxChange_1: [0, 0]
+vttxDisplay_1: [0, 2]
+vttxRwrWithRestore_1: [0, 2]
+
+
+
+VTTX_2 TESTS: 
+vttxChange_2: [0, 0]
+vttxRwrWithRestore_2: [0, 2]
+vttxDisplay_2: [0, 2]
+------------------------------------

@@ -13,3 +13,4 @@ class initialTests:
 		self.User = ""
 		self.TestComment = ""
 		self.Barcode = ""
+		self.DateRun = ""

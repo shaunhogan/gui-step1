@@ -615,7 +615,7 @@ class makeGui:
 
 		for i in range(0,4):
 			self.testPassInfo = OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass")
-			self.testPassInfo.configure(width=15)
+			self.testPassInfo.configure(width=15,bg="red")
 			self.testPassList[i].set("Fail")
 			self.testPassInfo.pack(side=LEFT)
 
@@ -625,7 +625,7 @@ class makeGui:
 		
 		for i in range(4,8):
 			self.testPassInfo = OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass")
-			self.testPassInfo.configure(width=15)
+			self.testPassInfo.configure(width=15, bg="red")
 			self.testPassList[i].set("Fail")
 			self.testPassInfo.pack(side=LEFT)
 
@@ -635,7 +635,7 @@ class makeGui:
 
 		for i in range(8,13):
 			self.testPassInfo = OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass")
-			self.testPassInfo.configure(width=11)
+			self.testPassInfo.configure(width=11,bg="red")
 			self.testPassList[i].set("Fail")
 			self.testPassInfo.pack(side=LEFT)
 
@@ -646,7 +646,7 @@ class makeGui:
 #		This line should change if we add more tests
 		for i in range(13,18):
 			self.testPassInfo = OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass")
-			self.testPassInfo.configure(width=11)
+			self.testPassInfo.configure(width=11,bg="red")
 			self.testPassList[i].set("Fail")
 			self.testPassInfo.pack(side=LEFT)
 
@@ -679,6 +679,7 @@ class makeGui:
 		self.initialTest.User = self.nameChoiceVar.get()
 		self.initialTest.TestComment = self.infoCommentVar.get()
 		self.initialTest.Barcode     = self.barcodeEntry.get()
+		self.initialTest.DateRun = str(datetime.now())
 
 		for i in range(len(self.testPassList)):
 			if self.testPassList[i].get() == "Pass":
@@ -688,28 +689,25 @@ class makeGui:
 		
 		fileString = self.barcodeEntry.get()+"_step1_raw.json"		
 	
-#		with open("/home/hep/abaas/testing_database/uploader/temp_json/"+fileString,"w") as jsonFile:
-		with open('/home/hep/jsonResults/'+fileString,'w') as jsonFile:
+		with open('/home/django/testing_database/uploader/temp_json/'+fileString,'w') as jsonFile:
 			json.dump(self.initialTest, jsonFile, default = self.jdefault)	
 		
-#		subprocess.call("/home/django/testing_database/uploader/upload.sh", shell=True)
+		subprocess.call("/home/django/testing_database/uploader/upload.sh", shell=True)
 		print "Preliminary step recorded. Thank you!"
 
 	def infoSubmitButtonPress(self):
 		self.cardInfo.Barcode = self.barcodeEntry.get()
 		self.cardInfo.Unique_ID = self.uniqueIDPass
-		self.cardInfo.DateRun = str(datetime.now())
 		self.cardInfo.FirmwareMaj = self.firmwareVerEntry.get()
 		self.cardInfo.FirmwareMin = self.firmwareVerMinEntry.get()
 		self.cardInfo.FirmwareOth = self.firmwareVerOtherEntry.get()
 
 		fileString = self.barcodeEntry.get()+"_step2_raw.json"
 
-#		with open("/home/hep/abaas/testing_database_uploader/temp_json/"+fileString, "w") as jsonFile:
-		with open('/home/hep/jsonResults/'+fileString,'w') as jsonFile:
+		with open('/home/django/testing_database/uploader/temp_json/'+fileString,'w') as jsonFile:
 			json.dump(self.cardInfo, jsonFile, default = self.jdefault)
 
-#		subproccess.call("/home/django/testing_database/uploader/upload.sh", shell=True)
+		subprocess.call("/home/django/testing_database/uploader/upload.sh", shell=True)
 		print "Secondary step recorded. Thank you!"
 
 
@@ -718,6 +716,7 @@ class makeGui:
 		self.infoCommentVar.set("")
 		self.barcodeEntry.set("")
 		self.uniqueIDEntry.set("")
+		self.tempEntry.set("")
 		self.firmwareVerEntry.set("")
 		self.firmwareVerMinEntry.set("")
 		self.firmwareVerOtherEntry.set("")
@@ -729,10 +728,11 @@ class makeGui:
 		self.initialTest.User = self.nameChoiceVar.get()
 		self.initialTest.TestComment = self.infoCommentVar.get()
 		self.initialTest.Barcode     = self.barcodeEntry.get()
-		self.initialTest.Unique_ID    = self.uniqueIDEntry.get()
-		self.initialTest.FirmwareMaj = self.firmwareVerEntry.get()
-		self.initialTest.FirmwareMin = self.firmwareVerMinEntry.get()
-		self.initialTest.FirmwareOth = self.firmwareVerOtherEntry.get()
+		self.cardInfo.Barcode     = self.barcodeEntry.get()
+		self.cardInfo.Unique_ID    = self.uniqueIDEntry.get()
+		self.cardInfo.FirmwareMaj = self.firmwareVerEntry.get()
+		self.cardInfo.FirmwareMin = self.firmwareVerMinEntry.get()
+		self.cardInfo.FirmwareOth = self.firmwareVerOtherEntry.get()
 		self.initialTest.DateRun     = str(datetime.now())
 
 		for i in range(len(self.testPassList)):
@@ -795,10 +795,10 @@ class makeGui:
 		print 'initial = ', batch
 
 	def getUniqueIDPress(self):		
-		self.myBus.write(0x74,[0x09])
+		self.myBus.write(0x74,[0x18])
 		self.myBus.sendBatch()
 
-		slot = 0x1c
+		slot = 0x19
 		# Getting unique ID
 		# 0x05000000ea9c8b7000   <- From main gui
 		self.myBus.write(0x00,[0x06])

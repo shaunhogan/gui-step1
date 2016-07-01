@@ -1,4 +1,4 @@
-#User-Interface.py
+# User-Interface.py
 #
 # This is the main Graphical User Interface for communicating
 # with the setup in the lab.
@@ -219,16 +219,6 @@ class makeGui:
 			)
 		self.experi_subFrame_lbl.pack(side=TOP)
 
-#		# Make top 1 subframe
-#		self.experi_subTop1_frame = Frame(self.experiment_frame,background="white")
-#		self.experi_subTop1_frame.pack(
-#			side=TOP,
-#                        ipadx=frame_ipadx,
-#                        ipady=frame_ipady,
-#                        padx=frame_padx,
-#                        pady=frame_pady
-#			)
-
 		# Make top 2 subframe
 		self.experi_subTop2_frame = Frame(self.experiment_frame,background="white")
 		self.experi_subTop2_frame.pack(
@@ -278,8 +268,6 @@ class makeGui:
                         padx=frame_padx,
                         pady=frame_pady
 			)
-
-
 
 		# Make top 2_5 subframe
 		self.experi_subTop2_5_frame = Frame(self.experiment_frame,background="white")
@@ -459,23 +447,6 @@ class makeGui:
 		###			      ###
 		#################################
 
-#		# Make a label for the Barcode entry
-#		self.experi_barcode_lbl = Label(self.experi_subTop1_frame, text="Barcode: ")
-#		self.experi_barcode_lbl.configure(
-#			background="white",
-#			padx=button_padx,
-#			pady=button_pady,
-#			)
-#		self.experi_barcode_lbl.pack(side=LEFT)
-#		
-#		# Make an entry box for the barcode
-#		# Make a entrybox for testing comments
-#		self.experi_barcode_entry = Entry(
-#			self.experi_subTop1_frame,
-#			textvariable=self.barcodeEntry
-#			)
-#		self.experi_barcode_entry.pack(side=RIGHT)
-
 		# Make a label for the uniqueID entry
 		self.experi_uniqueID_lbl = Label(self.experi_subTop2_frame, text="Unique ID: ")
 		self.experi_uniqueID_lbl.configure(
@@ -611,44 +582,44 @@ class makeGui:
 				     "Res_10" : "1.2V to 5.0V", "Res_11" : "1.5V to 2.5V", "Res_12" : "1.5V to 5.0V",
 				     "Res_13" : "2.5V to 3.3V", "Res_14" : "2.5V to 5.0V", "Res_15" : "3.3V to 5.0V",
 				     "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK"}
-
-
+		
+		self.testPassInfo = []
+		
 		for i in range(0,4):
-			self.testPassInfo = OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass")
-			self.testPassInfo.configure(width=15,bg="red")
+			self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass",command=self.infoValChange))
+			self.testPassInfo[i].configure(width=15,bg="#ff3333")
 			self.testPassList[i].set("Fail")
-			self.testPassInfo.pack(side=LEFT)
+			self.testPassInfo[i].pack(side=LEFT)
 
 			self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg="white")
 			self.testPassLabel.configure(width=20)
 			self.testPassLabel.pack(side=LEFT)
 		
 		for i in range(4,8):
-			self.testPassInfo = OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass")
-			self.testPassInfo.configure(width=15, bg="red")
+			self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass",command=self.infoValChange))
+			self.testPassInfo[i].configure(width=15, bg="#ff3333")
 			self.testPassList[i].set("Fail")
-			self.testPassInfo.pack(side=LEFT)
+			self.testPassInfo[i].pack(side=LEFT)
 
 			self.testPassLabel=Label(self.experi_subTop4_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
 			self.testPassLabel.configure(width=20)
 			self.testPassLabel.pack(side=LEFT)
 
 		for i in range(8,13):
-			self.testPassInfo = OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass")
-			self.testPassInfo.configure(width=11,bg="red")
+			self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass",command=self.infoValChange))
+			self.testPassInfo[i].configure(width=11,bg="#ff3333")
 			self.testPassList[i].set("Fail")
-			self.testPassInfo.pack(side=LEFT)
+			self.testPassInfo[i].pack(side=LEFT)
 
 			self.testPassLabel=Label(self.experi_subTop5_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
 			self.testPassLabel.configure(width=15)
 			self.testPassLabel.pack(side=LEFT)
 
-#		This line should change if we add more tests
 		for i in range(13,18):
-			self.testPassInfo = OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass")
-			self.testPassInfo.configure(width=11,bg="red")
+			self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass",command=self.infoValChange))
+			self.testPassInfo[i].configure(width=11,bg="#ff3333")
 			self.testPassList[i].set("Fail")
-			self.testPassInfo.pack(side=LEFT)
+			self.testPassInfo[i].pack(side=LEFT)
 
 			self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
 			self.testPassLabel.configure(width=15)
@@ -672,9 +643,13 @@ class makeGui:
 	###			      ###
 	#################################
 
+	# This function is needed to make the json dumps print properly
 	def jdefault(self,o):
 		return o.__dict__
+
+##########################################################################################
 	
+	# Dumps the results of the tests & inspections to a json file
 	def initSubmitBttnPress(self):
 		self.initialTest.User = self.nameChoiceVar.get()
 		self.initialTest.TestComment = self.infoCommentVar.get()
@@ -691,10 +666,14 @@ class makeGui:
 	
 		with open('/home/django/testing_database/uploader/temp_json/'+fileString,'w') as jsonFile:
 			json.dump(self.initialTest, jsonFile, default = self.jdefault)	
+
 		
 		subprocess.call("/home/django/testing_database/uploader/upload.sh", shell=True)
 		print "Preliminary step recorded. Thank you!"
 
+##########################################################################################
+
+	# Dumps the card UID and firmware version to a json file
 	def infoSubmitButtonPress(self):
 		self.cardInfo.Barcode = self.barcodeEntry.get()
 		self.cardInfo.Unique_ID = self.uniqueIDPass
@@ -710,6 +689,7 @@ class makeGui:
 		subprocess.call("/home/django/testing_database/uploader/upload.sh", shell=True)
 		print "Secondary step recorded. Thank you!"
 
+###########################################################################################
 
 	def clearDataBttnPress(self):
 		# Clear the data in the GUI displays:
@@ -721,6 +701,7 @@ class makeGui:
 		self.firmwareVerMinEntry.set("")
 		self.firmwareVerOtherEntry.set("")
 
+		# On the gui, change all the tests to "Fail"
 		for i in range(len(self.testPassList)):
 			self.testPassList[i].set("Fail")
 
@@ -735,12 +716,19 @@ class makeGui:
 		self.cardInfo.FirmwareOth = self.firmwareVerOtherEntry.get()
 		self.initialTest.DateRun     = str(datetime.now())
 
+		# Behind the scenes, change all the tests to "Fail"
 		for i in range(len(self.testPassList)):
 			if self.testPassList[i].get() == "Pass":
 				self.initialTest.testResults[self.testLabelList[i-1]] = True
 			else:
 				self.initialTest.testResults[self.testLabelList[i-1]] = False
+
+		# Change the buttons back to their red state
+		self.infoValChangeNonevent()
 	
+###########################################################################################
+
+''' Functions from the helpers.py class in the main GUI '''
 
 	def reverseBytes(self, message):
 		message_list = message.split()
@@ -754,6 +742,7 @@ class makeGui:
 		s = " "
 		return s.join(message_list)
 
+	# Converts decimal messages to Hex messages. Mostly used for UID
 	def toHex(self, message, colon=0):
 	    message_list = message.split()
 	    for byte in xrange(len(message_list)):
@@ -770,6 +759,28 @@ class makeGui:
 	    s = ""
 	    return '0x' + s.join(message_list)
 
+##############################################################################
+
+	# A function that changes the menu colors depending on if a test passes
+	# or fails. This function is for event cases (IE, changing a single menu value)
+	def infoValChange(self,event):
+		for i in range(len(self.testPassInfo)):
+			if (self.testPassList[i].get() == "Fail"):
+				self.testPassInfo[i].configure(bg="#ff3333")
+			else:
+				self.testPassInfo[i].configure(bg="green")
+
+	# Duplicate of above function, but for non-event cases (IE hitting the "Clear" button)
+	def infoValChangeNonevent(self):
+		for i in range(len(self.testPassInfo)):
+                         if (self.testPassList[i].get() == "Fail"):
+                                 self.testPassInfo[i].configure(bg="#ff3333")
+                         else:
+                                 self.testPassInfo[i].configure(bg="green")
+
+#############################################################################
+
+	# Opens the proper GPIO slot. Used for programming cards.
 	def gpioBttnPress(self):
 		jSlotDict = {"J2 and J18" : 0x29, "J3 and J19" : 0x89, "J4 and J20" : 0xA9,
 			     "J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
@@ -793,6 +804,8 @@ class makeGui:
 		self.myBus.read(0x70,1)
 		batch = self.myBus.sendBatch()
 		print 'initial = ', batch
+
+##################################################################################
 
 	def getUniqueIDPress(self):		
 		self.myBus.write(0x74,[0x18])

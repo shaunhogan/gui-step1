@@ -12,6 +12,7 @@ from Tkinter import *
 from datetime import datetime
 from initialClass import initialTests
 from cardInfoClass import cardInformation
+import igloo_test as it
 import temp
 import json
 import client
@@ -47,7 +48,9 @@ class makeGui:
 		self.tempEntry             =  StringVar()
     		self.firmwareVerEntry      =  StringVar()
     		self.firmwareVerMinEntry   =  StringVar()
-		self.firmwareVerOtherEntry = StringVar()
+		self.firmwareVerOtherEntry =  StringVar()
+		self.iglooMajVerEntry      =  StringVar()
+		self.iglooMinVerEntry      =  StringVar()
 	
 		# Place an all-encompassing frame in the parent window. All of the following
 		# frames will be placed here (topMost_frame) and not in the parent window.
@@ -181,7 +184,7 @@ class makeGui:
 					      "Shaun Hogan","Caleb Smith","Adryanna Smith","Jordan Potarf",
 					      "John Lawrence","Andrew Baas","Mason Dorseth","Josh Hiltbrand")
 		self.info_nameBox.pack(side=LEFT)
-		self.nameChoiceVar.set("Shaun Hogan") # initializes the OptionMenu
+		self.nameChoiceVar.set("Choose Name") # initializes the OptionMenu
 
 		# Make a label for the name drop-down:
 		self.info_commentLabel = Label(self.info_subBot_frame, text="User Testing Comments: ")
@@ -208,7 +211,8 @@ class makeGui:
 		self.testLabelList = ["Res_1","Res_2","Res_3","Res_4",
 		      		      "Res_5","Res_6","Res_7","Res_8",
 				      "Res_9","Res_10","Res_11", "Res_12",
-				      "Res_13", "Res_14", "Res_15", "SuplCur", "Vis", "Program"]
+				      "Res_13", "Res_14", "Res_15", "SuplCur", "Vis", "Program",
+				      "Res_16"]
 
 		# Make a label for the entire left frame
 		self.experi_subFrame_lbl = Label(self.experiment_frame,text="QIE Card Setup & Parameters")
@@ -262,6 +266,27 @@ class makeGui:
 		# Make top 2_3 subframe
 		self.experi_subTop2_3_frame = Frame(self.experiment_frame,background="white")
 		self.experi_subTop2_3_frame.pack(
+			side=TOP,
+                        ipadx=frame_ipadx,
+                        ipady=frame_ipady,
+                        padx=frame_padx,
+                        pady=frame_pady
+			)
+
+		# Make top 2_4 subframe
+		self.experi_subTop2_4_frame = Frame(self.experiment_frame,background="white")
+		self.experi_subTop2_4_frame.pack(
+			side=TOP,
+                        ipadx=frame_ipadx,
+                        ipady=frame_ipady,
+                        padx=frame_padx,
+                        pady=frame_pady
+			)
+
+
+		# Make top 2_4_5 subframe
+		self.experi_subTop2_4_5_frame = Frame(self.experiment_frame,background="white")
+		self.experi_subTop2_4_5_frame.pack(
 			side=TOP,
                         ipadx=frame_ipadx,
                         ipady=frame_ipady,
@@ -438,7 +463,7 @@ class makeGui:
 
 
 		# Create variables for each manual check (16 placeholders for now)
-		self.testPassList = [StringVar() for i in range(0,18)]
+		self.testPassList = [StringVar() for i in range(0,19)]
 		self.testPassState = ("Pass","Fail")
 
 		#################################
@@ -484,7 +509,7 @@ class makeGui:
 		self.experi_temperature_entry.pack(side=RIGHT)
 
 		# Make a label for the main firmware ver entry
-		self.experi_firmwareVer_lbl = Label(self.experi_subTop2_1_frame, text="Firmware Ver (Major): ")
+		self.experi_firmwareVer_lbl = Label(self.experi_subTop2_1_frame, text="Bridge Ver (Major): ")
 		self.experi_firmwareVer_lbl.configure(
 			background="white",
 			padx=button_padx,
@@ -502,7 +527,7 @@ class makeGui:
 		self.experi_firmwareVer_entry.pack(side=RIGHT)
 
 		# Make a label for the minor firmware ver entry
-		self.experi_firmwareVerMin_lbl = Label(self.experi_subTop2_2_frame, text="Firmware Ver (Minor): ")
+		self.experi_firmwareVerMin_lbl = Label(self.experi_subTop2_2_frame, text="Bridge Ver (Minor): ")
 		self.experi_firmwareVerMin_lbl.configure(
 			background="white",
 			padx=button_padx,
@@ -520,7 +545,7 @@ class makeGui:
 		self.experi_firmwareVerMin_entry.pack(side=RIGHT)
 
 		# Make a label for the other firmware entry
-		self.experi_firmwareVerOther_lbl = Label(self.experi_subTop2_3_frame, text="Firmware Ver (Other): ")
+		self.experi_firmwareVerOther_lbl = Label(self.experi_subTop2_3_frame, text="Bridge Ver (Other): ")
 		self.experi_firmwareVerOther_lbl.configure(
 			background="white",
 			padx=button_padx,
@@ -536,6 +561,45 @@ class makeGui:
 			state="readonly"
 			)
 		self.experi_firmwareVerOther_entry.pack(side=RIGHT)
+
+###################################################################################
+
+		# Make a label for the major igloo firmware entry
+		self.experi_iglooMajVer_lbl = Label(self.experi_subTop2_4_frame, text="Igloo Ver (Major): ")
+		self.experi_iglooMajVer_lbl.configure(
+			background="white",
+			padx=button_padx,
+			pady=button_pady,
+			)
+		self.experi_iglooMajVer_lbl.pack(side=LEFT)
+		
+		# Make an entry box for the major firmware
+		self.experi_iglooMajVer_entry = Entry(
+			self.experi_subTop2_4_frame,
+			textvariable=self.iglooMajVerEntry,
+			state="readonly"
+			)
+		self.experi_iglooMajVer_entry.pack(side=RIGHT)
+
+
+		# Make a label for the minor igloo firmware entry
+		self.experi_iglooMinVer_lbl = Label(self.experi_subTop2_4_5_frame, text="Igloo Ver (Minor): ")
+		self.experi_iglooMinVer_lbl.configure(
+			background="white",
+			padx=button_padx,
+			pady=button_pady,
+			)
+		self.experi_iglooMinVer_lbl.pack(side=LEFT)
+		
+		# Make an entry box for the minor firmware
+		self.experi_iglooMinVer_entry = Entry(
+			self.experi_subTop2_4_5_frame,
+			textvariable=self.iglooMinVerEntry,
+			state="readonly"
+			)
+		self.experi_iglooMinVer_entry.pack(side=RIGHT)
+
+####################################################################################
 
 		# Make a button to read the unique ID & firmware
 		self.experi_uniqueID_get = Button(self.experi_subTop2_5_frame, text ="Get Unique ID & Firmware Ver.", command=self.getUniqueIDPress)
@@ -581,12 +645,20 @@ class makeGui:
 				     "Res_7" : "1.2V to 1.5V", "Res_8" : "1.2V to 2.5V", "Res_9" : "1.2V to 3.3V",
 				     "Res_10" : "1.2V to 5.0V", "Res_11" : "1.5V to 2.5V", "Res_12" : "1.5V to 5.0V",
 				     "Res_13" : "2.5V to 3.3V", "Res_14" : "2.5V to 5.0V", "Res_15" : "3.3V to 5.0V",
-				     "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK"}
+				     "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK", "Res_16" : "1.5V to 3.3V"}
+
+#		self.testPassList = [StringVar() for i in range(0,19)]
+
+#		self.testLabelList = ["Res_1","Res_2","Res_3","Res_4",
+#		      		      "Res_5","Res_6","Res_7","Res_8",
+#				      "Res_9","Res_10","Res_11", "Res_12",
+#				      "Res_13", "Res_14", "Res_15", "SuplCur", "Vis", "Program",
+#				      "Res_16"]
 		
 		self.testPassInfo = []
 		
 		for i in range(0,4):
-			self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass",command=self.infoValChange))
+			self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
 			self.testPassInfo[i].configure(width=15,bg="#ff3333")
 			self.testPassList[i].set("Fail")
 			self.testPassInfo[i].pack(side=LEFT)
@@ -595,18 +667,18 @@ class makeGui:
 			self.testPassLabel.configure(width=20)
 			self.testPassLabel.pack(side=LEFT)
 		
-		for i in range(4,8):
-			self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass",command=self.infoValChange))
-			self.testPassInfo[i].configure(width=15, bg="#ff3333")
+		for i in range(4,9):
+			self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+			self.testPassInfo[i].configure(width=11, bg="#ff3333")
 			self.testPassList[i].set("Fail")
 			self.testPassInfo[i].pack(side=LEFT)
 
 			self.testPassLabel=Label(self.experi_subTop4_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
-			self.testPassLabel.configure(width=20)
+			self.testPassLabel.configure(width=15)
 			self.testPassLabel.pack(side=LEFT)
 
-		for i in range(8,13):
-			self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass",command=self.infoValChange))
+		for i in range(9,14):
+			self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
 			self.testPassInfo[i].configure(width=11,bg="#ff3333")
 			self.testPassList[i].set("Fail")
 			self.testPassInfo[i].pack(side=LEFT)
@@ -615,8 +687,8 @@ class makeGui:
 			self.testPassLabel.configure(width=15)
 			self.testPassLabel.pack(side=LEFT)
 
-		for i in range(13,18):
-			self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass",command=self.infoValChange))
+		for i in range(14,19):
+			self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
 			self.testPassInfo[i].configure(width=11,bg="#ff3333")
 			self.testPassList[i].set("Fail")
 			self.testPassInfo[i].pack(side=LEFT)
@@ -651,6 +723,10 @@ class makeGui:
 	
 	# Dumps the results of the tests & inspections to a json file
 	def initSubmitBttnPress(self):
+		if (self.nameChoiceVar.get() == "Choose Name"):
+			self.throwErrorBox()
+			return None
+	
 		self.initialTest.User = self.nameChoiceVar.get()
 		self.initialTest.TestComment = self.infoCommentVar.get()
 		self.initialTest.Barcode     = self.barcodeEntry.get()
@@ -658,18 +734,34 @@ class makeGui:
 
 		for i in range(len(self.testPassList)):
 			if self.testPassList[i].get() == "Pass":
-				self.initialTest.testResults[self.testLabelList[i-1]] = True
+				self.initialTest.testResults[self.testLabelList[i]] = True
+			elif self.testPassList[i].get() == "Fail":
+				self.initialTest.testResults[self.testLabelList[i]] = False
 			else:
-				self.initialTest.testResults[self.testLabelList[i-1]] = False
+				self.initialTest.testResults[self.testLabelList[i]] = "na"
 		
 		fileString = self.barcodeEntry.get()+"_step1_raw.json"		
 	
 		with open('/home/django/testing_database/uploader/temp_json/'+fileString,'w') as jsonFile:
+#		with open(fileString,'w') as jsonFile:     # Uncomment this line for debugging
 			json.dump(self.initialTest, jsonFile, default = self.jdefault)	
 
 		
 		subprocess.call("/home/django/testing_database/uploader/upload.sh", shell=True)
 		print "Preliminary step recorded. Thank you!"
+##########################################################################################
+
+	def throwErrorBox(self):
+		self.top = Toplevel()
+		self.top.title("Name Choice Error")
+		self.top.config(height=50, width=360)
+		self.top.pack_propagate(False)
+
+		self.msg = Label(self.top, text="Please select a name before continuing.")
+		self.msg.pack()
+
+		self.button = Button(self.top, text="Sorry...", command=self.top.destroy)
+		self.button.pack()	
 
 ##########################################################################################
 
@@ -680,6 +772,8 @@ class makeGui:
 		self.cardInfo.FirmwareMaj = self.firmwareVerEntry.get()
 		self.cardInfo.FirmwareMin = self.firmwareVerMinEntry.get()
 		self.cardInfo.FirmwareOth = self.firmwareVerOtherEntry.get()
+		self.cardInfo.IglooMinVer = self.iglooMinVerEntry.get()
+		self.cardInfo.IglooMajVer = self.iglooMajVerEntry.get()
 
 		fileString = self.barcodeEntry.get()+"_step2_raw.json"
 
@@ -700,6 +794,8 @@ class makeGui:
 		self.firmwareVerEntry.set("")
 		self.firmwareVerMinEntry.set("")
 		self.firmwareVerOtherEntry.set("")
+		self.iglooMajVerEntry.set("")
+		self.iglooMinVerEntry.set("")
 
 		# On the gui, change all the tests to "Fail"
 		for i in range(len(self.testPassList)):
@@ -715,6 +811,8 @@ class makeGui:
 		self.cardInfo.FirmwareMin = self.firmwareVerMinEntry.get()
 		self.cardInfo.FirmwareOth = self.firmwareVerOtherEntry.get()
 		self.initialTest.DateRun     = str(datetime.now())
+		self.cardInfo.IglooMinVer = self.iglooMinVerEntry.get()
+		self.cardInfo.IglooMajVer = self.iglooMajVerEntry.get()
 
 		# Behind the scenes, change all the tests to "Fail"
 		for i in range(len(self.testPassList)):
@@ -727,8 +825,6 @@ class makeGui:
 		self.infoValChangeNonevent()
 	
 ###########################################################################################
-
-''' Functions from the helpers.py class in the main GUI '''
 
 	def reverseBytes(self, message):
 		message_list = message.split()
@@ -767,16 +863,20 @@ class makeGui:
 		for i in range(len(self.testPassInfo)):
 			if (self.testPassList[i].get() == "Fail"):
 				self.testPassInfo[i].configure(bg="#ff3333")
-			else:
+			elif (self.testPassList[i].get() == "Pass"):
 				self.testPassInfo[i].configure(bg="green")
+			else:
+				self.testPassInfo[i].configure(bg="yellow")
 
 	# Duplicate of above function, but for non-event cases (IE hitting the "Clear" button)
 	def infoValChangeNonevent(self):
 		for i in range(len(self.testPassInfo)):
                          if (self.testPassList[i].get() == "Fail"):
                                  self.testPassInfo[i].configure(bg="#ff3333")
-                         else:
+                         elif (self.testPassList[i].get() == "Pass"):
                                  self.testPassInfo[i].configure(bg="green")
+			 else:
+				self.testPassInfo[i].configure(bg="yellow")
 
 #############################################################################
 
@@ -842,6 +942,19 @@ class makeGui:
 
 		# Getting temperature
 		self.tempEntry.set(str(round(temp.readManyTemps(slot, 10, "Temperature", "nohold"),4)))
+
+		# Getting IGLOO firmware info
+		majorIglooVer = it.readIgloo(slot, 0x00)
+		minorIglooVer = it.readIgloo(slot, 0x01)
+		# Parse IGLOO firmware info
+		majorIglooVer = self.toHex(self.reverseBytes(majorIglooVer))
+		minorIglooVer = self.toHex(self.reverseBytes(minorIglooVer))
+		# Trim the entries of their error codes
+		majorIglooVer = majorIglooVer[0:-2]
+		minorIglooVer = minorIglooVer[0:-2]
+		# Display igloo FW info on gui
+		self.iglooMajVerEntry.set(majorIglooVer)
+		self.iglooMinVerEntry.set(minorIglooVer)
 		
 
 root = Tk()

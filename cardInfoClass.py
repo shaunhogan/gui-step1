@@ -7,4 +7,6 @@ class cardInformation:
 		self.FirmwareMaj = ""
 		self.FirmwareMin = ""
 		self.FirmwareOth = ""
+		self.IglooMinVer = ""
+		self.IglooMajVer = ""
 		

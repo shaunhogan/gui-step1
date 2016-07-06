@@ -14,3 +14,4 @@ class initialTests:
 		self.TestComment = ""
 		self.Barcode = ""
 		self.DateRun = ""
+		self.Overwrite = False

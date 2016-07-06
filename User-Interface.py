@@ -51,6 +51,7 @@ class makeGui:
 		self.firmwareVerOtherEntry =  StringVar()
 		self.iglooMajVerEntry      =  StringVar()
 		self.iglooMinVerEntry      =  StringVar()
+		self.overwriteVar          =  IntVar()
 	
 		# Place an all-encompassing frame in the parent window. All of the following
 		# frames will be placed here (topMost_frame) and not in the parent window.
@@ -697,9 +698,18 @@ class makeGui:
 			self.testPassLabel.configure(width=15)
 			self.testPassLabel.pack(side=LEFT)
 
+		# Make a checkbox to overwrite/not overwrite pre-existing data
+		self.overwriteBox = Checkbutton(self.experi_subTop7_frame, text="Overwrite existing QIE Card data (if applicable)?", variable=self.overwriteVar)
+		self.overwriteBox.configure(bg="lemon chiffon")
+		self.overwriteBox.pack(side=TOP,
+				       padx = button_padx,
+				       pady = button_pady,
+				       ipady = button_pady*2,
+				       ipadx = button_padx*2)
+
 		# Make a button to submit tests and information
 		self.initSubmitBttn = Button(self.experi_subTop7_frame, text="Submit Inspections & Tests", command=self.initSubmitBttnPress)
-		self.initSubmitBttn.configure(bg="lemon chiffon", width=40)
+		self.initSubmitBttn.configure(bg="#FFCC66", width=40)
 		self.initSubmitBttn.pack(side=TOP)
 
 		# Make a button to clear all results
@@ -731,6 +741,9 @@ class makeGui:
 		self.initialTest.TestComment = self.infoCommentVar.get()
 		self.initialTest.Barcode     = self.barcodeEntry.get()
 		self.initialTest.DateRun = str(datetime.now())
+
+		if self.overwriteVar.get() == 1: self.initialTest.Overwrite = True
+		if self.overwriteVar.get() == 0: self.initialTest.Overwrite = False
 
 		for i in range(len(self.testPassList)):
 			if self.testPassList[i].get() == "Pass":
@@ -796,6 +809,7 @@ class makeGui:
 		self.firmwareVerOtherEntry.set("")
 		self.iglooMajVerEntry.set("")
 		self.iglooMinVerEntry.set("")
+		self.overwriteVar.set(0)
 
 		# On the gui, change all the tests to "Fail"
 		for i in range(len(self.testPassList)):
@@ -813,6 +827,7 @@ class makeGui:
 		self.initialTest.DateRun     = str(datetime.now())
 		self.cardInfo.IglooMinVer = self.iglooMinVerEntry.get()
 		self.cardInfo.IglooMajVer = self.iglooMajVerEntry.get()
+		self.initialTest.Overwrite = False
 
 		# Behind the scenes, change all the tests to "Fail"
 		for i in range(len(self.testPassList)):

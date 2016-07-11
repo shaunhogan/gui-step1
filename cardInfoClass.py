@@ -9,4 +9,4 @@ class cardInformation:
 		self.FirmwareOth = ""
 		self.IglooMinVer = ""
 		self.IglooMajVer = ""
-		
+		self.Igloo2_FPGA_Control = ""

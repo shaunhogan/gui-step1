@@ -23,6 +23,9 @@ class makeGui:
 		# Create a webBus instance
 		self.myBus = client.webBus("pi7",0)
 
+		# Create a permanent address of QCard
+		self.address = 0x19
+
 		# Create an instance of initialTests
 		self.initialTest = initialTests()
 
@@ -49,6 +52,7 @@ class makeGui:
     		self.firmwareVerEntry      =  StringVar()
     		self.firmwareVerMinEntry   =  StringVar()
 		self.firmwareVerOtherEntry =  StringVar()
+		self.iglooToggleEntry      =  StringVar()
 		self.iglooMajVerEntry      =  StringVar()
 		self.iglooMinVerEntry      =  StringVar()
 		self.overwriteVar          =  IntVar()
@@ -107,7 +111,7 @@ class makeGui:
 			)
 		self.experiment_frame.pack_propagate=(False)
 		self.experiment_frame.pack(
-			side=LEFT,
+			side=RIGHT,
 			ipadx=frame_ipadx,
 			ipady=frame_ipady,
 			padx=frame_padx,
@@ -123,7 +127,7 @@ class makeGui:
 			)
 		self.experi_rightFrame.pack_propagatte=(False)
 		self.experi_rightFrame.pack(
-			side=RIGHT,
+			side=LEFT,
 			ipadx=frame_ipadx,
 			ipady=frame_ipady,
 			padx=frame_padx,
@@ -224,6 +228,30 @@ class makeGui:
 			)
 		self.experi_subFrame_lbl.pack(side=TOP)
 
+		# Make top 2_7 subframe
+		self.experi_subTop2_7_frame = Frame(self.experiment_frame, bg="white")
+		self.experi_subTop2_7_frame.pack(
+			side=TOP,
+			ipadx=frame_ipadx, padx=frame_padx,
+			ipady=frame_ipady, pady=frame_pady,
+			)
+		
+		# Make top 2_8 subframe
+		self.experi_subTop2_8_frame = Frame(self.experiment_frame, bg="white")
+		self.experi_subTop2_8_frame.pack(
+			side=TOP,
+			ipadx=frame_ipadx, padx=frame_padx,
+			ipady=frame_ipady, pady=frame_pady,
+			)
+
+		# Make top 2_6 subframe
+		self.experi_subTop2_6_frame = Frame(self.experiment_frame, bg="white")
+		self.experi_subTop2_6_frame.pack(
+			side=TOP,
+			ipadx=frame_ipadx, padx=frame_padx,
+			ipady=frame_ipady, pady=frame_pady,
+			)
+
 		# Make top 2 subframe
 		self.experi_subTop2_frame = Frame(self.experiment_frame,background="white")
 		self.experi_subTop2_frame.pack(
@@ -295,6 +323,17 @@ class makeGui:
                         pady=frame_pady
 			)
 
+		# Make top 2_4_6 subframe
+		self.experi_subTop_2_4_6_frame = Frame(self.experiment_frame, background="white")
+		self.experi_subTop_2_4_6_frame.pack(
+			side=TOP,
+			ipadx=frame_ipadx,
+	                ipady=frame_ipady,
+                        padx=frame_padx,
+                        pady=frame_pady
+			)
+
+
 		# Make top 2_5 subframe
 		self.experi_subTop2_5_frame = Frame(self.experiment_frame,background="white")
 		self.experi_subTop2_5_frame.pack(
@@ -303,30 +342,6 @@ class makeGui:
                         ipady=frame_ipady,
                         padx=frame_padx,
                         pady=frame_pady
-			)
-
-		# Make top 2_6 subframe
-		self.experi_subTop2_6_frame = Frame(self.experiment_frame, bg="white")
-		self.experi_subTop2_6_frame.pack(
-			side=TOP,
-			ipadx=frame_ipadx, padx=frame_padx,
-			ipady=frame_ipady, pady=frame_pady,
-			)
-
-		# Make top 2_7 subframe
-		self.experi_subTop2_7_frame = Frame(self.experiment_frame, bg="white")
-		self.experi_subTop2_7_frame.pack(
-			side=TOP,
-			ipadx=frame_ipadx, padx=frame_padx,
-			ipady=frame_ipady, pady=frame_pady,
-			)
-		
-		# Make top 2_8 subframe
-		self.experi_subTop2_8_frame = Frame(self.experiment_frame, bg="white")
-		self.experi_subTop2_8_frame.pack(
-			side=TOP,
-			ipadx=frame_ipadx, padx=frame_padx,
-			ipady=frame_ipady, pady=frame_pady,
 			)
 
 		###################################
@@ -563,8 +578,6 @@ class makeGui:
 			)
 		self.experi_firmwareVerOther_entry.pack(side=RIGHT)
 
-###################################################################################
-
 		# Make a label for the major igloo firmware entry
 		self.experi_iglooMajVer_lbl = Label(self.experi_subTop2_4_frame, text="Igloo Ver (Major): ")
 		self.experi_iglooMajVer_lbl.configure(
@@ -600,7 +613,19 @@ class makeGui:
 			)
 		self.experi_iglooMinVer_entry.pack(side=RIGHT)
 
-####################################################################################
+		# Make a label for the igloo toggle check
+		self.iglooToggle_label = Label(self.experi_subTop_2_4_6_frame, text="Igloo Toggle Test: ")
+		self.iglooToggle_label.configure(bg="white",padx=button_padx,pady=button_pady)
+		self.iglooToggle_label.pack(side=LEFT)
+
+		# Make an entry box for the minor firmware
+		self.iglooToggle_entry = Entry(
+			self.experi_subTop_2_4_6_frame,
+			textvariable=self.iglooToggleEntry,
+			state="readonly"
+			)
+		self.iglooToggle_entry.pack(side=RIGHT)
+
 
 		# Make a button to read the unique ID & firmware
 		self.experi_uniqueID_get = Button(self.experi_subTop2_5_frame, text ="Get Unique ID & Firmware Ver.", command=self.getUniqueIDPress)
@@ -660,8 +685,8 @@ class makeGui:
 		
 		for i in range(0,4):
 			self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-			self.testPassInfo[i].configure(width=15,bg="#ff3333")
-			self.testPassList[i].set("Fail")
+			self.testPassInfo[i].configure(width=15,bg="#CCDDFF")
+			self.testPassList[i].set("N/A")
 			self.testPassInfo[i].pack(side=LEFT)
 
 			self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg="white")
@@ -670,8 +695,8 @@ class makeGui:
 		
 		for i in range(4,9):
 			self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-			self.testPassInfo[i].configure(width=11, bg="#ff3333")
-			self.testPassList[i].set("Fail")
+			self.testPassInfo[i].configure(width=11, bg="#CCDDFF")
+			self.testPassList[i].set("N/A")
 			self.testPassInfo[i].pack(side=LEFT)
 
 			self.testPassLabel=Label(self.experi_subTop4_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
@@ -680,8 +705,8 @@ class makeGui:
 
 		for i in range(9,14):
 			self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-			self.testPassInfo[i].configure(width=11,bg="#ff3333")
-			self.testPassList[i].set("Fail")
+			self.testPassInfo[i].configure(width=11,bg="#CCDDFF")
+			self.testPassList[i].set("N/A")
 			self.testPassInfo[i].pack(side=LEFT)
 
 			self.testPassLabel=Label(self.experi_subTop5_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
@@ -690,8 +715,8 @@ class makeGui:
 
 		for i in range(14,19):
 			self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-			self.testPassInfo[i].configure(width=11,bg="#ff3333")
-			self.testPassList[i].set("Fail")
+			self.testPassInfo[i].configure(width=11,bg="#CCDDFF")
+			self.testPassList[i].set("N/A")
 			self.testPassInfo[i].pack(side=LEFT)
 
 			self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
@@ -706,6 +731,11 @@ class makeGui:
 				       pady = button_pady,
 				       ipady = button_pady*2,
 				       ipadx = button_padx*2)
+
+		# Make a button to submit tests and information
+		self.passAllTestsBttn = Button(self.experi_subTop7_frame, text="Pass All Tests", command=self.throwPassAllBox)
+		self.passAllTestsBttn.configure(bg="#FFE699", width=40)
+		self.passAllTestsBttn.pack(side=TOP)
 
 		# Make a button to submit tests and information
 		self.initSubmitBttn = Button(self.experi_subTop7_frame, text="Submit Inspections & Tests", command=self.initSubmitBttnPress)
@@ -752,6 +782,8 @@ class makeGui:
 				self.initialTest.testResults[self.testLabelList[i]] = False
 			else:
 				self.initialTest.testResults[self.testLabelList[i]] = "na"
+
+		self.initSubmitBttn.configure(state=DISABLED)
 		
 		fileString = self.barcodeEntry.get()+"_step1_raw.json"		
 	
@@ -760,8 +792,9 @@ class makeGui:
 			json.dump(self.initialTest, jsonFile, default = self.jdefault)	
 
 		
-		subprocess.call("/home/django/testing_database/uploader/upload.sh", shell=True)
+		subprocess.call("/home/django/testing_database/uploader/step12.sh", shell=True)
 		print "Preliminary step recorded. Thank you!"
+
 ##########################################################################################
 
 	def throwErrorBox(self):
@@ -774,7 +807,33 @@ class makeGui:
 		self.msg.pack()
 
 		self.button = Button(self.top, text="Sorry...", command=self.top.destroy)
+		self.button.configure(bg="#ffbbbb")
 		self.button.pack()	
+
+##########################################################################################
+
+	def throwPassAllBox(self):
+		self.passBox = Toplevel()
+		self.passBox.title("Are you sure?")
+		self.passBox.config(height=85, width=360)
+		self.passBox.pack_propagate(False)
+
+		self.passMsg = Label(self.passBox, text="Are you sure you want to pass all tests?")
+		self.passMsg.pack()
+
+		self.yesButton = Button(self.passBox, text="Yes", command=self.passAllSelected)
+		self.yesButton.configure(bg="pale green")
+		self.yesButton.pack()
+
+		self.noButton = Button(self.passBox, text="No", command=self.passBox.destroy)
+		self.noButton.configure(bg="salmon")
+		self.noButton.pack()
+
+	def passAllSelected(self):
+		for i in range(len(self.testPassList)):
+			self.testPassList[i].set("Pass")
+		self.infoValChangeNonevent()
+		self.passBox.destroy()
 
 ##########################################################################################
 
@@ -787,18 +846,21 @@ class makeGui:
 		self.cardInfo.FirmwareOth = self.firmwareVerOtherEntry.get()
 		self.cardInfo.IglooMinVer = self.iglooMinVerEntry.get()
 		self.cardInfo.IglooMajVer = self.iglooMajVerEntry.get()
+		self.cardInfo.Igloo2_FPGA_Control = self.iglooToggleEntry.get()
 
 		fileString = self.barcodeEntry.get()+"_step2_raw.json"
 
 		with open('/home/django/testing_database/uploader/temp_json/'+fileString,'w') as jsonFile:
 			json.dump(self.cardInfo, jsonFile, default = self.jdefault)
 
-		subprocess.call("/home/django/testing_database/uploader/upload.sh", shell=True)
+		subprocess.call("/home/django/testing_database/uploader/step12.sh", shell=True)
 		print "Secondary step recorded. Thank you!"
 
 ###########################################################################################
 
 	def clearDataBttnPress(self):
+		self.initSubmitBttn.configure(state=NORMAL)
+		
 		# Clear the data in the GUI displays:
 		self.infoCommentVar.set("")
 		self.barcodeEntry.set("")
@@ -808,12 +870,13 @@ class makeGui:
 		self.firmwareVerMinEntry.set("")
 		self.firmwareVerOtherEntry.set("")
 		self.iglooMajVerEntry.set("")
-		self.iglooMinVerEntry.set("")
+		self.iglooMinVerEntry.set("")	
+		self.iglooToggleEntry.set("")
 		self.overwriteVar.set(0)
 
-		# On the gui, change all the tests to "Fail"
+		# On the gui, change all the tests to "N/A"
 		for i in range(len(self.testPassList)):
-			self.testPassList[i].set("Fail")
+			self.testPassList[i].set("N/A")
 
 		# Now, clear the stored, behind-the-scenes entries
 		self.initialTest.User = self.nameChoiceVar.get()
@@ -827,6 +890,7 @@ class makeGui:
 		self.initialTest.DateRun     = str(datetime.now())
 		self.cardInfo.IglooMinVer = self.iglooMinVerEntry.get()
 		self.cardInfo.IglooMajVer = self.iglooMajVerEntry.get()
+		self.cardInfo.Igloo2_FPGA_Control = self.iglooToggleEntry.get()
 		self.initialTest.Overwrite = False
 
 		# Behind the scenes, change all the tests to "Fail"
@@ -877,21 +941,21 @@ class makeGui:
 	def infoValChange(self,event):
 		for i in range(len(self.testPassInfo)):
 			if (self.testPassList[i].get() == "Fail"):
-				self.testPassInfo[i].configure(bg="#ff3333")
+				self.testPassInfo[i].configure(bg="#ff5555")
 			elif (self.testPassList[i].get() == "Pass"):
-				self.testPassInfo[i].configure(bg="green")
+				self.testPassInfo[i].configure(bg="#70ff70")
 			else:
-				self.testPassInfo[i].configure(bg="yellow")
+				self.testPassInfo[i].configure(bg="#CCDDFF")
 
 	# Duplicate of above function, but for non-event cases (IE hitting the "Clear" button)
 	def infoValChangeNonevent(self):
 		for i in range(len(self.testPassInfo)):
                          if (self.testPassList[i].get() == "Fail"):
-                                 self.testPassInfo[i].configure(bg="#ff3333")
+                                 self.testPassInfo[i].configure(bg="#ff5555")
                          elif (self.testPassList[i].get() == "Pass"):
-                                 self.testPassInfo[i].configure(bg="green")
+                                 self.testPassInfo[i].configure(bg="#70ff70")
 			 else:
-				self.testPassInfo[i].configure(bg="yellow")
+				self.testPassInfo[i].configure(bg="#CCDDFF")
 
 #############################################################################
 
@@ -970,6 +1034,110 @@ class makeGui:
 		# Display igloo FW info on gui
 		self.iglooMajVerEntry.set(majorIglooVer)
 		self.iglooMinVerEntry.set(minorIglooVer)
+
+		# Verify that the Igloo can be power toggled
+		self.iglooToggleEntry.set(str(self.checkIglooToggle()))
+
+##############################################################################################
+#	Functions to check igloo toggle
+##############################################################################################
+
+	def checkIglooToggle(self):
+		control_address = 0x22
+		message = self.readBridge(control_address,4)
+		print 'Igloo Control = ', message
+
+		ones_address = 0x02
+		all_ones = '255 255 255 255'
+		i2c_error = '0 0 0 0'
+
+		retval = False
+
+		self.myBus.write(0x00,[0x06])
+		self.myBus.sendBatch()
+
+		register = self.readIgloo(ones_address, 4)
+		if register != all_ones:
+			retval = False
+		print 'Igloo Ones = ', register
+
+		# Turn Igloo Off
+		print 'Igloo Control = ', self.toggleIgloo()
+		register = self.detectIglooError(ones_address, 4)
+		if register != "0":
+			retval = True
+		print 'Igloo Ones = ', register
+
+		# Turn Igloo On
+		print 'Igloo Control = ', self.toggleIgloo()
+		register = self.readIgloo(ones_address, 4)
+		if register != all_ones:
+			retval = False
+		print 'Igloo Ones = ', register
+
+		return retval
+
+        def toggleIgloo(self):
+		iglooControl = 0x22
+		message = self.readBridge(iglooControl,4)
+		value = self.getValue(message)
+		value = value ^ 0x400 # toggle igloo power!
+		messageList = self.getMessageList(value,4)
+		print "\nDEBUG... Message sent to self.writeBridge: ", messageList
+		self.writeBridge(iglooControl,messageList)
+		return self.readBridge(iglooControl,4)
+
+        def writeBridge(self, regAddress,messageList):
+                self.myBus.write(self.address, [regAddress]+messageList)
+                return self.myBus.sendBatch()
+
+	def readBridge(self, regAddress, num_bytes):
+                 self.myBus.write(0x00,[0x06])
+                 self.myBus.sendBatch()
+                 self.myBus.write(self.address,[regAddress])
+                 self.myBus.read(self.address, num_bytes)
+                 message = self.myBus.sendBatch()[-1]
+                 if message[0] != '0':
+                     print 'Bridge i2c error detected'
+                 return self.reverseBytes(message[2:])
+ 
+        def readIgloo(self, regAddress, num_bytes):
+                 self.myBus.write(0x00,[0x06])
+                 self.myBus.write(self.address,[0x11,0x03,0,0,0])
+                 self.myBus.write(0x09,[regAddress])
+                 self.myBus.read(0x09, num_bytes)
+                 message = self.myBus.sendBatch()[-1]
+                 if message[0] != '0':
+                         print 'Igloo i2c error detected in readIgloo'
+                 return self.reverseBytes(message[2:])
+ 
+        def detectIglooError(self, regAddress, num_bytes):
+                 self.myBus.write(0x00,[0x06])
+                 self.myBus.write(self.address,[0x11,0x03,0,0,0])
+                 self.myBus.write(0x09,[regAddress])
+                 self.myBus.read(0x09, num_bytes)
+                 message = self.myBus.sendBatch()[-1]
+                 if message[0] != '0':
+                         print 'Igloo i2c error detected in detectIglooError'
+                 print "Message[0] is: ", message[0]
+                 return message[0]
+
+	def getValue(self, message):
+		hex_message = self.toHex(message)[2:]
+		return int(hex_message,16)
+	
+	def getMessageList(self, value, num_bytes):
+		hex_message = hex(value)[2:]
+		length = len(hex_message)
+		zeros = "".join(list('0' for i in xrange(8-length)))
+		hex_message = zeros + hex_message
+		print 'hex message = ', hex_message
+		mList = list(int(hex_message[a:a+2],16) for a in xrange(0,2*num_bytes,2))
+		mList.reverse()
+		return mList
+
+###########################################################################################
+
 		
 
 root = Tk()

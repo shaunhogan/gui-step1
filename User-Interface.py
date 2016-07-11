@@ -1050,7 +1050,6 @@ class makeGui:
 
 		ones_address = 0x02
 		all_ones = '255 255 255 255'
-		i2c_error = '0 0 0 0'
 
 		retval = False
 

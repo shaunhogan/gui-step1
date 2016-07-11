@@ -28,7 +28,7 @@ class makeGui:
 
 		# Create an instance of cardInformation
 		self.cardInfo = cardInformation()
-		
+
 		# Make an empty list that will eventually contain all of
 		# the active card slots
 		self.outSlotNumbers = []
@@ -42,9 +42,9 @@ class makeGui:
 
     		self.nameChoiceVar         =  StringVar()
     		self.gpioChoiceVar         =  StringVar()
-    		self.infoCommentVar        =  StringVar()	
+    		self.infoCommentVar        =  StringVar()
     		self.barcodeEntry          =  StringVar()
-    		self.uniqueIDEntry         =  StringVar()	
+    		self.uniqueIDEntry         =  StringVar()
 		self.tempEntry             =  StringVar()
     		self.firmwareVerEntry      =  StringVar()
     		self.firmwareVerMinEntry   =  StringVar()
@@ -52,7 +52,7 @@ class makeGui:
 		self.iglooMajVerEntry      =  StringVar()
 		self.iglooMinVerEntry      =  StringVar()
 		self.overwriteVar          =  IntVar()
-	
+
 		# Place an all-encompassing frame in the parent window. All of the following
 		# frames will be placed here (topMost_frame) and not in the parent window.
 		self.topMost_frame = Frame(parent)
@@ -60,20 +60,20 @@ class makeGui:
 
 		#----- constants for controlling layout
 		button_width = 6
-		
+
 		button_padx = "2m"
 		button_pady = "1m"
-		
+
 		frame_padx = "3m"
 		frame_pady = "2m"
 		frame_ipadx = "3m"
 		frame_ipady = "1m"
 		#---------- end layout constants ------
 
-	
+
 		##########################################
 		###                                    ###
-		###	BEGIN MAKING SUB-FRAMES        ### 
+		###	BEGIN MAKING SUB-FRAMES        ###
 		###		                       ###
 		##########################################
 
@@ -132,7 +132,7 @@ class makeGui:
 
 		##########################################
 		###                                    ###
-		###	BEGIN MAKING WIDGETS           ### 
+		###	BEGIN MAKING WIDGETS           ###
 		###		                       ###
 		##########################################
 
@@ -320,7 +320,7 @@ class makeGui:
 			ipadx=frame_ipadx, padx=frame_padx,
 			ipady=frame_ipady, pady=frame_pady,
 			)
-		
+
 		# Make top 2_8 subframe
 		self.experi_subTop2_8_frame = Frame(self.experiment_frame, bg="white")
 		self.experi_subTop2_8_frame.pack(
@@ -369,7 +369,7 @@ class makeGui:
 			pady=button_pady,
 			)
 		self.experi_barcode_lbl.pack(side=LEFT)
-		
+
 		# Make an entry box for the barcode
 		# Make a entrybox for testing comments
 		self.experi_barcode_entry = Entry(
@@ -481,7 +481,7 @@ class makeGui:
 			pady=button_pady,
 			)
 		self.experi_uniqueID_lbl.pack(side=LEFT)
-		
+
 		# Make an entry box for the UniqueID
 		# Make a entrybox for testing comments
 		self.experi_uniqueID_entry = Entry(
@@ -499,7 +499,7 @@ class makeGui:
 			pady=button_pady,
 			)
 		self.experi_temperature_lbl.pack(side=LEFT)
-		
+
 		# Make an entry box for the temperature
 		# Make a entrybox for testing comments
 		self.experi_temperature_entry = Entry(
@@ -517,7 +517,7 @@ class makeGui:
 			pady=button_pady,
 			)
 		self.experi_firmwareVer_lbl.pack(side=LEFT)
-		
+
 		# Make an entry box for the main firmware ver
 		# Make a entrybox for testing comments
 		self.experi_firmwareVer_entry = Entry(
@@ -535,7 +535,7 @@ class makeGui:
 			pady=button_pady,
 			)
 		self.experi_firmwareVerMin_lbl.pack(side=LEFT)
-		
+
 		# Make an entry box for the minor firmware
 		# Make a entrybox for testing comments
 		self.experi_firmwareVerMin_entry = Entry(
@@ -553,7 +553,7 @@ class makeGui:
 			pady=button_pady,
 			)
 		self.experi_firmwareVerOther_lbl.pack(side=LEFT)
-		
+
 		# Make an entry box for the other firmware
 		# Make a entrybox for testing comments
 		self.experi_firmwareVerOther_entry = Entry(
@@ -573,7 +573,7 @@ class makeGui:
 			pady=button_pady,
 			)
 		self.experi_iglooMajVer_lbl.pack(side=LEFT)
-		
+
 		# Make an entry box for the major firmware
 		self.experi_iglooMajVer_entry = Entry(
 			self.experi_subTop2_4_frame,
@@ -591,7 +591,7 @@ class makeGui:
 			pady=button_pady,
 			)
 		self.experi_iglooMinVer_lbl.pack(side=LEFT)
-		
+
 		# Make an entry box for the minor firmware
 		self.experi_iglooMinVer_entry = Entry(
 			self.experi_subTop2_4_5_frame,
@@ -611,7 +611,7 @@ class makeGui:
 		self.experi_uniqueID_give = Button(self.experi_subTop2_5_frame, text ="Upload Unique ID & Firmware Ver.", command=self.infoSubmitButtonPress)
 		self.experi_uniqueID_give.configure(bg="salmon2")
 		self.experi_uniqueID_give.pack(side=TOP)
-		
+
 		# Make a line of hypens
 		self.experi_hyphenLine = Label(self.experi_subTop2_6_frame, text="----------------------------------")
 		self.experi_hyphenLine.configure(bg="white",padx=button_padx,pady=button_pady)
@@ -655,9 +655,9 @@ class makeGui:
 #				      "Res_9","Res_10","Res_11", "Res_12",
 #				      "Res_13", "Res_14", "Res_15", "SuplCur", "Vis", "Program",
 #				      "Res_16"]
-		
+
 		self.testPassInfo = []
-		
+
 		for i in range(0,4):
 			self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
 			self.testPassInfo[i].configure(width=15,bg="#ff3333")
@@ -667,7 +667,7 @@ class makeGui:
 			self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg="white")
 			self.testPassLabel.configure(width=20)
 			self.testPassLabel.pack(side=LEFT)
-		
+
 		for i in range(4,9):
 			self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
 			self.testPassInfo[i].configure(width=11, bg="#ff3333")
@@ -730,13 +730,13 @@ class makeGui:
 		return o.__dict__
 
 ##########################################################################################
-	
+
 	# Dumps the results of the tests & inspections to a json file
 	def initSubmitBttnPress(self):
 		if (self.nameChoiceVar.get() == "Choose Name"):
 			self.throwErrorBox()
 			return None
-	
+
 		self.initialTest.User = self.nameChoiceVar.get()
 		self.initialTest.TestComment = self.infoCommentVar.get()
 		self.initialTest.Barcode     = self.barcodeEntry.get()
@@ -752,14 +752,14 @@ class makeGui:
 				self.initialTest.testResults[self.testLabelList[i]] = False
 			else:
 				self.initialTest.testResults[self.testLabelList[i]] = "na"
-		
-		fileString = self.barcodeEntry.get()+"_step1_raw.json"		
-	
+
+		fileString = self.barcodeEntry.get()+"_step1_raw.json"
+
 		with open('/home/django/testing_database/uploader/temp_json/'+fileString,'w') as jsonFile:
 #		with open(fileString,'w') as jsonFile:     # Uncomment this line for debugging
-			json.dump(self.initialTest, jsonFile, default = self.jdefault)	
+			json.dump(self.initialTest, jsonFile, default = self.jdefault)
 
-		
+
 		subprocess.call("/home/django/testing_database/uploader/upload.sh", shell=True)
 		print "Preliminary step recorded. Thank you!"
 ##########################################################################################
@@ -774,7 +774,7 @@ class makeGui:
 		self.msg.pack()
 
 		self.button = Button(self.top, text="Sorry...", command=self.top.destroy)
-		self.button.pack()	
+		self.button.pack()
 
 ##########################################################################################
 
@@ -838,7 +838,7 @@ class makeGui:
 
 		# Change the buttons back to their red state
 		self.infoValChangeNonevent()
-	
+
 ###########################################################################################
 
 	def reverseBytes(self, message):
@@ -918,11 +918,11 @@ class makeGui:
 		# myBus.write(0x70,[0x03,0x08])
 		self.myBus.read(0x70,1)
 		batch = self.myBus.sendBatch()
-		print 'initial = ', batch
+		print 'initial = '+str(batch)
 
 ##################################################################################
 
-	def getUniqueIDPress(self):		
+	def getUniqueIDPress(self):
 		self.myBus.write(0x74,[0x18])
 		self.myBus.sendBatch()
 
@@ -941,7 +941,7 @@ class makeGui:
 		self.uniqueIDPass = self.uniqueIDEntry.get()
 		self.uniqueIDEntry.set("0x"+self.uniqueIDPass[4:(len(self.uniqueIDPass)-4)])
 
-	        # Getting bridge firmware	
+        # Getting bridge firmware
 		self.myBus.write(0x00,[0x06])
 		self.myBus.write(slot,[0x04])
 		self.myBus.read(slot, 4)
@@ -970,7 +970,9 @@ class makeGui:
 		# Display igloo FW info on gui
 		self.iglooMajVerEntry.set(majorIglooVer)
 		self.iglooMinVerEntry.set(minorIglooVer)
-		
+
+        # Test Igloo Control
+
 
 root = Tk()
 myapp = makeGui(root)

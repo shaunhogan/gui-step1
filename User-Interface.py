@@ -965,7 +965,8 @@ class makeGui:
 			     "J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
 			     "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
 
-		print jSlotDict[self.gpioChoiceVar.get()]
+		gpioVal = jSlotDict[self.gpioChoiceVar.get()]
+		print 'GPIO '+self.gpioChoiceVar.get()+' value = '+str(gpioVal)
 
 		self.myBus.write(0x74,[0x08]) # PCA9538 is bit 3 on ngccm mux
 		# myBus.write(0x70,[0x01,0x00]) # GPIO PwrEn is register 3
@@ -977,12 +978,19 @@ class makeGui:
 		self.myBus.write(0x70,[0x01,0x08])
 
 		#jtag selectors finnagling for slot 26
-		self.myBus.write(0x70,[0x01,jSlotDict[self.gpioChoiceVar.get()]])
+		self.myBus.write(0x70,[0x01,gpioVal)
 
 		# myBus.write(0x70,[0x03,0x08])
 		self.myBus.read(0x70,1)
 		batch = self.myBus.sendBatch()
-		print 'initial = '+str(batch)
+		print 'GPIO Batch = '+str(batch)
+
+		if batch[-1][0] == '1 0': #i2c error
+			print 'GPIO Choice Fail!'
+		elif batch[-1][0] == '0 '+str(gpioVal): #i2c success
+			print 'GPIO Choice Success!'
+		else:
+			print 'GPIO Choice Error... state of confusion!'
 
 ##################################################################################
 
@@ -998,7 +1006,9 @@ class makeGui:
 		self.myBus.write(0x50,[0x00])
 		self.myBus.read(0x50, 8)
 		raw_bus = self.myBus.sendBatch()
-		print raw_bus
+		print 'Raw Unique ID = '+str(raw_bus[-1])
+		if raw_bus[-1][0] != '0':
+			print 'Unique ID i2c Error!'
 		cooked_bus = self.reverseBytes(raw_bus[-1])
 		#cooked_bus = self.serialNum(cooked_bus)
 		self.uniqueIDEntry.set(self.toHex(cooked_bus))
@@ -1014,7 +1024,7 @@ class makeGui:
 		cooked_data = self.reverseBytes(med_rare_data)
 		data_well_done = self.toHex(cooked_data)	# my apologies for the cooking references
 		data_well_done = data_well_done[2:]
-		print data_well_done
+		print 'Bridge FPGA Firmware Version = 0x'+str(data_well_done)
 		self.firmwareVerEntry.set("0x"+data_well_done[0:2])    #these are the worst (best?) variable names ever
 		self.firmwareVerMinEntry.set("0x"+data_well_done[2:4])
 		self.firmwareVerOtherEntry.set("0x"+data_well_done[4:8])
@@ -1034,7 +1044,7 @@ class makeGui:
 		# Display igloo FW info on gui
 		self.iglooMajVerEntry.set(majorIglooVer)
 		self.iglooMinVerEntry.set(minorIglooVer)
-
+		print 'Igloo2 FPGA Firmware Version = 0x'+str(majorIglooVer)+str(minorIglooVer)
 
 		# Verify that the Igloo can be power toggled
 		self.iglooToggleEntry.set(str(self.checkIglooToggle()))
@@ -1044,9 +1054,10 @@ class makeGui:
 ##############################################################################################
 
 	def checkIglooToggle(self):
+		print '\nBegin Toggle Igloo2 Power Test'
 		control_address = 0x22
 		message = self.readBridge(control_address,4)
-		print 'Igloo Control = ', message
+		print 'Igloo Control = '+str(message)
 
 		ones_address = 0x02
 		all_ones = '255 255 255 255'
@@ -1062,19 +1073,25 @@ class makeGui:
 		print 'Igloo Ones = '+str(register)
 
 		# Turn Igloo Off
-		print 'Igloo Control = ', self.toggleIgloo()
+		print 'Igloo Control = '+str(self.toggleIgloo())
 		register = self.detectIglooError(ones_address, 4)
 		if register != "0":
 			retval = True
 		print 'Igloo Ones = '+str(register)
 
 		# Turn Igloo On
-		print 'Igloo Control = ', self.toggleIgloo()
+		print 'Igloo Control = '+str(self.toggleIgloo())
 		register = self.readIgloo(ones_address, 4)
 		if register != all_ones:
 			retval = False
 		print 'Igloo Ones = '+str(register)
 
+		if retval:
+			print 'Toggle Igloo2 Power Success!'
+		else:
+			print 'Toggle Igloo2 Power Fail!'
+			print 'QIE Card Fails Toggle Igloo Power!'
+			print 'Please notify your supervisor (Joe) before continuing!'
 		return retval
 
         def toggleIgloo(self):

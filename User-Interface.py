@@ -966,7 +966,7 @@ class makeGui:
 			     "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
 
 		gpioVal = jSlotDict[self.gpioChoiceVar.get()]
-		print 'GPIO '+self.gpioChoiceVar.get()+' value = '+str(gpioVal)
+		print '\nGPIO '+self.gpioChoiceVar.get()+' value = '+str(gpioVal)
 
 		self.myBus.write(0x74,[0x08]) # PCA9538 is bit 3 on ngccm mux
 		# myBus.write(0x70,[0x01,0x00]) # GPIO PwrEn is register 3
@@ -978,16 +978,16 @@ class makeGui:
 		self.myBus.write(0x70,[0x01,0x08])
 
 		#jtag selectors finnagling for slot 26
-		self.myBus.write(0x70,[0x01,gpioVal)
+		self.myBus.write(0x70,[0x01,gpioVal])
 
 		# myBus.write(0x70,[0x03,0x08])
 		self.myBus.read(0x70,1)
 		batch = self.myBus.sendBatch()
 		print 'GPIO Batch = '+str(batch)
 
-		if batch[-1][0] == '1 0': #i2c error
+		if batch[-1] == '1 0': #i2c error
 			print 'GPIO Choice Fail!'
-		elif batch[-1][0] == '0 '+str(gpioVal): #i2c success
+		elif batch[-1] == '0 '+str(gpioVal): #i2c success
 			print 'GPIO Choice Success!'
 		else:
 			print 'GPIO Choice Error... state of confusion!'
@@ -1006,7 +1006,7 @@ class makeGui:
 		self.myBus.write(0x50,[0x00])
 		self.myBus.read(0x50, 8)
 		raw_bus = self.myBus.sendBatch()
-		print 'Raw Unique ID = '+str(raw_bus[-1])
+		print '\nRaw Unique ID = '+str(raw_bus[-1])
 		if raw_bus[-1][0] != '0':
 			print 'Unique ID i2c Error!'
 		cooked_bus = self.reverseBytes(raw_bus[-1])
@@ -1044,7 +1044,8 @@ class makeGui:
 		# Display igloo FW info on gui
 		self.iglooMajVerEntry.set(majorIglooVer)
 		self.iglooMinVerEntry.set(minorIglooVer)
-		print 'Igloo2 FPGA Firmware Version = 0x'+str(majorIglooVer)+str(minorIglooVer)
+		print 'Igloo2 FPGA Major Firmware Version = '+str(majorIglooVer)
+		print 'Igloo2 FPGA Minor Firmware Version = '+str(minorIglooVer)
 
 		# Verify that the Igloo can be power toggled
 		self.iglooToggleEntry.set(str(self.checkIglooToggle()))
@@ -1090,8 +1091,7 @@ class makeGui:
 			print 'Toggle Igloo2 Power Success!'
 		else:
 			print 'Toggle Igloo2 Power Fail!'
-			print 'QIE Card Fails Toggle Igloo Power!'
-			print 'Please notify your supervisor (Joe) before continuing!'
+			print '\nPlease confirm that the power source is on and the card is in slot J18!'
 		return retval
 
         def toggleIgloo(self):

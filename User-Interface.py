@@ -7,6 +7,7 @@
 #
 # This is a comment to see if I got git to work properly
 # round 2 electric boogaloo
+# what does that mean?
 
 from Tkinter import *
 from datetime import datetime
@@ -43,14 +44,14 @@ class makeGui:
 		# Make a placeholder for the shortened unique ID
 		self.uniqueIDPass = ""
 
-    		self.nameChoiceVar         =  StringVar()
-    		self.gpioChoiceVar         =  StringVar()
-    		self.infoCommentVar        =  StringVar()
-    		self.barcodeEntry          =  StringVar()
-    		self.uniqueIDEntry         =  StringVar()
+		self.nameChoiceVar         =  StringVar()
+		self.gpioChoiceVar         =  StringVar()
+		self.infoCommentVar        =  StringVar()
+		self.barcodeEntry          =  StringVar()
+		self.uniqueIDEntry         =  StringVar()
 		self.tempEntry             =  StringVar()
-    		self.firmwareVerEntry      =  StringVar()
-    		self.firmwareVerMinEntry   =  StringVar()
+    	self.firmwareVerEntry      =  StringVar()
+    	self.firmwareVerMinEntry   =  StringVar()
 		self.firmwareVerOtherEntry =  StringVar()
 		self.iglooToggleEntry      =  StringVar()
 		self.iglooMajVerEntry      =  StringVar()

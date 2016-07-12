@@ -982,7 +982,13 @@ class makeGui:
 		# myBus.write(0x70,[0x03,0x08])
 		self.myBus.read(0x70,1)
 		batch = self.myBus.sendBatch()
-		print 'initial = '+str(batch)
+		if (batch[-1][0] == "1"):
+			print "I2C communication error with GPIO!"
+			self.gpioSelect_bttn.configure(bg="#ff3333")
+		elif (batch[-1][0] == "0"):
+			print "GPIO " + str(jSlotDict[self.gpioChoiceVar.get()]) + " Opened!"
+			self.gpioSelect_bttn.configure(bg="CadetBlue1")
+#		print 'initial = '+str(batch)
 
 ##################################################################################
 

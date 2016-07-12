@@ -985,12 +985,16 @@ class makeGui:
 		batch = self.myBus.sendBatch()
 		print 'GPIO Batch = '+str(batch)
 
-		if batch[-1] == '1 0': #i2c error
-			print 'GPIO Choice Fail!'
-		elif batch[-1] == '0 '+str(gpioVal): #i2c success
-			print 'GPIO Choice Success!'
+		if (batch[-1] == "1 0"):
+			print "I2C communication error with GPIO!"
+			self.gpioSelect_bttn.configure(bg="#ff3333")
+		elif (batch[-1] == "0 "+str(gpioVal)):
+			print "GPIO " + str(jSlotDict[self.gpioChoiceVar.get()]) + " Opened!"
+			self.gpioSelect_bttn.configure(bg="#33ff33")
+
 		else:
 			print 'GPIO Choice Error... state of confusion!'
+		# print 'initial = '+str(batch)
 
 ##################################################################################
 

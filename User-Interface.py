@@ -846,7 +846,7 @@ class makeGui:
 		self.cardInfo.FirmwareOth = self.firmwareVerOtherEntry.get()
 		self.cardInfo.IglooMinVer = self.iglooMinVerEntry.get()
 		self.cardInfo.IglooMajVer = self.iglooMajVerEntry.get()
-		self.cardInfo.Igloo2_FPGA_Control = self.iglooToggleEntry.get()
+		self.cardInfo.Igloo_FPGA_Control = self.iglooToggleEntry.get()
 
 		fileString = self.barcodeEntry.get()+"_step2_raw.json"
 

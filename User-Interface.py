@@ -50,8 +50,8 @@ class makeGui:
 		self.barcodeEntry          =  StringVar()
 		self.uniqueIDEntry         =  StringVar()
 		self.tempEntry             =  StringVar()
-    	self.firmwareVerEntry      =  StringVar()
-    	self.firmwareVerMinEntry   =  StringVar()
+                self.firmwareVerEntry      =  StringVar()
+                self.firmwareVerMinEntry   =  StringVar()
 		self.firmwareVerOtherEntry =  StringVar()
 		self.iglooToggleEntry      =  StringVar()
 		self.iglooMajVerEntry      =  StringVar()
@@ -1115,15 +1115,15 @@ class makeGui:
                 self.myBus.write(self.address, [regAddress]+messageList)
                 return self.myBus.sendBatch()
 
-	def readBridge(self, regAddress, num_bytes):
-                 self.myBus.write(0x00,[0x06])
-                 self.myBus.sendBatch()
-                 self.myBus.write(self.address,[regAddress])
-                 self.myBus.read(self.address, num_bytes)
-                 message = self.myBus.sendBatch()[-1]
-                 if message[0] != '0':
-                     print 'Bridge i2c error detected'
-                 return self.reverseBytes(message[2:])
+        def readBridge(self, regAddress, num_bytes):
+                self.myBus.write(0x00,[0x06])
+                self.myBus.sendBatch()
+                self.myBus.write(self.address,[regAddress])
+                self.myBus.read(self.address, num_bytes)
+                message = self.myBus.sendBatch()[-1]
+                if message[0] != '0':
+                    print 'Bridge i2c error detected'
+                return self.reverseBytes(message[2:])
 
         def readIgloo(self, regAddress, num_bytes):
                  self.myBus.write(0x00,[0x06])

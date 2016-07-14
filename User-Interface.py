@@ -1121,7 +1121,7 @@ class makeGui:
                 self.myBus.write(self.address, [regAddress]+messageList)
                 return self.myBus.sendBatch()
 
-	def readBridge(self, regAddress, num_bytes):
+        def readBridge(self, regAddress, num_bytes):
                  self.myBus.write(0x00,[0x06])
                  self.myBus.sendBatch()
                  self.myBus.write(self.address,[regAddress])

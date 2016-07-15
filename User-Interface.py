@@ -1095,13 +1095,15 @@ class makeGui:
 
 		# Turn Igloo Off
 		# print 'Igloo Control = '+str(self.toggleIgloo())
+		self.toggleIgloo()
 		register = self.detectIglooError(ones_address, 4)
-		if register != "0":
+		if register != '0':
 			retval = True
 		# print 'Igloo Ones = '+str(register)
 
 		# Turn Igloo On
 		# print 'Igloo Control = '+str(self.toggleIgloo())
+		self.toggleIgloo()
 		register = self.readIgloo(ones_address, 4)
 		if register != all_ones:
 			retval = False
@@ -1116,13 +1118,13 @@ class makeGui:
 		return retval
 
         def toggleIgloo(self):
-		iglooControl = 0x22
-		message = self.readBridge(iglooControl,4)
-		value = self.getValue(message)
-		value = value ^ 0x400 # toggle igloo power!
-		messageList = self.getMessageList(value,4)
-		self.writeBridge(iglooControl,messageList)
-		return self.readBridge(iglooControl,4)
+                iglooControl = 0x22
+                message = self.readBridge(iglooControl,4)
+                value = self.getValue(message)
+                value = value ^ 0x400 # toggle igloo power!
+                messageList = self.getMessageList(value,4)
+                self.writeBridge(iglooControl,messageList)
+                return self.readBridge(iglooControl,4)
 
         def writeBridge(self, regAddress,messageList):
                 self.myBus.write(self.address, [regAddress]+messageList)

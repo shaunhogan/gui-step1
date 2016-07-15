@@ -50,8 +50,8 @@ class makeGui:
 		self.barcodeEntry          =  StringVar()
 		self.uniqueIDEntry         =  StringVar()
 		self.tempEntry             =  StringVar()
-                self.firmwareVerEntry      =  StringVar()
-                self.firmwareVerMinEntry   =  StringVar()
+		self.firmwareVerEntry      =  StringVar()
+		self.firmwareVerMinEntry   =  StringVar()
 		self.firmwareVerOtherEntry =  StringVar()
 		self.iglooToggleEntry      =  StringVar()
 		self.iglooMajVerEntry      =  StringVar()
@@ -966,11 +966,16 @@ class makeGui:
 	# Opens the proper GPIO slot. Used for programming cards.
 	def gpioBttnPress(self):
 		jSlotDict = {"J2 and J18" : 0x29, "J3 and J19" : 0x89, "J4 and J20" : 0xA9,
-			     "J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
-			     "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
+			    	"J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
+			    	"J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
+		bridgeDict = {"J18" : 0x19, "J19" : 0x1A, "J20": 0x1B, "J21" : 0x1C,
+					"J23" : 0x19, "J24" : 0x1A, "J25": 0x1B, "J26" : 0x1C,}
 
 		gpioVal = jSlotDict[self.gpioChoiceVar.get()]
+		self.jslot = int(self.gpioChoiceVar.get()[-2:])
+		self.slot = bridgeDict[self.gpioChoiceVar.get()[-3:]]
 		print '\nGPIO '+self.gpioChoiceVar.get()+' value = '+str(gpioVal)
+		print 'Bridge I2C Address = '+str(hex(self.slot))
 
 		self.myBus.write(0x74,[0x08]) # PCA9538 is bit 3 on ngccm mux
 		# myBus.write(0x70,[0x01,0x00]) # GPIO PwrEn is register 3
@@ -1003,14 +1008,21 @@ class makeGui:
 ##################################################################################
 
 	def getUniqueIDPress(self):
-		self.myBus.write(0x74,[0x18])
+		if self.jslot in [18,19,20,21]:
+			self.myBus.write(0x74,[0x18])
+		if self.jslot in [23,24,25,26]:
+			self.myBus.write(0x74,[0x9])
 		self.myBus.sendBatch()
 
-		slot = 0x19
+		# slot = 0x19
+		# Use self.slot, which is defined through gpioChoiceVar
+		print 'JSlot for UniqueID Press = '+str(self.jslot)
+		print 'I2C Address for UniqueID Press = '+str(self.slot)
+
 		# Getting unique ID
 		# 0x05000000ea9c8b7000   <- From main gui
 		self.myBus.write(0x00,[0x06])
-		self.myBus.write(slot,[0x11,0x04,0,0,0])
+		self.myBus.write(self.slot,[0x11,0x04,0,0,0])
 		self.myBus.write(0x50,[0x00])
 		self.myBus.read(0x50, 8)
 		raw_bus = self.myBus.sendBatch()
@@ -1025,8 +1037,8 @@ class makeGui:
 
         # Getting bridge firmware
 		self.myBus.write(0x00,[0x06])
-		self.myBus.write(slot,[0x04])
-		self.myBus.read(slot, 4)
+		self.myBus.write(self.slot,[0x04])
+		self.myBus.read(self.slot, 4)
 		raw_data = self.myBus.sendBatch()[-1]
 		med_rare_data = raw_data[2:]
 		cooked_data = self.reverseBytes(med_rare_data)
@@ -1038,11 +1050,11 @@ class makeGui:
 		self.firmwareVerOtherEntry.set("0x"+data_well_done[4:8])
 
 		# Getting temperature
-		self.tempEntry.set(str(round(temp.readManyTemps(slot, 10, "Temperature", "nohold"),4)))
+		self.tempEntry.set(str(round(temp.readManyTemps(self.slot, 10, "Temperature", "nohold"),4)))
 
 		# Getting IGLOO firmware info
-		majorIglooVer = it.readIgloo(slot, 0x00)
-		minorIglooVer = it.readIgloo(slot, 0x01)
+		majorIglooVer = it.readIgloo(self.slot, 0x00)
+		minorIglooVer = it.readIgloo(self.slot, 0x01)
 		# Parse IGLOO firmware info
 		majorIglooVer = self.toHex(self.reverseBytes(majorIglooVer))
 		minorIglooVer = self.toHex(self.reverseBytes(minorIglooVer))
@@ -1066,7 +1078,7 @@ class makeGui:
 		print '\nBegin Toggle Igloo2 Power Test'
 		control_address = 0x22
 		message = self.readBridge(control_address,4)
-		print 'Igloo Control = '+str(message)
+		# print 'Igloo Control = '+str(message)
 
 		ones_address = 0x02
 		all_ones = '255 255 255 255'
@@ -1079,27 +1091,28 @@ class makeGui:
 		register = self.readIgloo(ones_address, 4)
 		if register != all_ones:
 			retval = False
-		print 'Igloo Ones = '+str(register)
+		# print 'Igloo Ones = '+str(register)
 
 		# Turn Igloo Off
-		print 'Igloo Control = '+str(self.toggleIgloo())
+		# print 'Igloo Control = '+str(self.toggleIgloo())
 		register = self.detectIglooError(ones_address, 4)
 		if register != "0":
 			retval = True
-		print 'Igloo Ones = '+str(register)
+		# print 'Igloo Ones = '+str(register)
 
 		# Turn Igloo On
-		print 'Igloo Control = '+str(self.toggleIgloo())
+		# print 'Igloo Control = '+str(self.toggleIgloo())
 		register = self.readIgloo(ones_address, 4)
 		if register != all_ones:
 			retval = False
-		print 'Igloo Ones = '+str(register)
+		# print 'Igloo Ones = '+str(register)
 
 		if retval:
-			print 'Toggle Igloo2 Power Success!'
+			print 'Toggle Igloo Power Success!'
 		else:
-			print 'Toggle Igloo2 Power Fail!'
-			print '\nPlease confirm that the power source is on and the card is in slot J18!'
+			print 'Toggle Igloo Power Fail!'
+			print '\nPlease confirm that the power source is on.'
+			print 'Please confirm that the card is in the selected slot (J18 or J23).'
 		return retval
 
         def toggleIgloo(self):
@@ -1116,14 +1129,14 @@ class makeGui:
                 return self.myBus.sendBatch()
 
         def readBridge(self, regAddress, num_bytes):
-                self.myBus.write(0x00,[0x06])
-                self.myBus.sendBatch()
-                self.myBus.write(self.address,[regAddress])
-                self.myBus.read(self.address, num_bytes)
-                message = self.myBus.sendBatch()[-1]
-                if message[0] != '0':
-                    print 'Bridge i2c error detected'
-                return self.reverseBytes(message[2:])
+                 self.myBus.write(0x00,[0x06])
+                 self.myBus.sendBatch()
+                 self.myBus.write(self.address,[regAddress])
+                 self.myBus.read(self.address, num_bytes)
+                 message = self.myBus.sendBatch()[-1]
+                 if message[0] != '0':
+                     print 'Bridge i2c error detected'
+                 return self.reverseBytes(message[2:])
 
         def readIgloo(self, regAddress, num_bytes):
                  self.myBus.write(0x00,[0x06])
@@ -1141,8 +1154,8 @@ class makeGui:
                  self.myBus.write(0x09,[regAddress])
                  self.myBus.read(0x09, num_bytes)
                  message = self.myBus.sendBatch()[-1]
-                 if message[0] != '0':
-                         print 'Igloo i2c error detected in detectIglooError'
+                #  if message[0] != '0':
+                #          print 'Igloo i2c error detected in detectIglooError'
                  return message[0]
 
 	def getValue(self, message):

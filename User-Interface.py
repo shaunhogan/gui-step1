@@ -1075,7 +1075,7 @@ class makeGui:
 ##############################################################################################
 
 	def checkIglooToggle(self):
-		print '\nBegin Toggle Igloo2 Power Test'
+		print '\n--- Begin Toggle Igloo2 Power Test'
 		control_address = 0x22
 		message = self.readBridge(control_address,4)
 		# print 'Igloo Control = '+str(message)

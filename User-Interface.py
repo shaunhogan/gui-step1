@@ -1118,48 +1118,48 @@ class makeGui:
             print 'Please confirm that the card is in the selected slot (J18 or J23).'
         return retval
 
-        def toggleIgloo(self):
-                iglooControl = 0x22
-                message = self.readBridge(iglooControl,4)
-                value = self.getValue(message)
-                value = value ^ 0x400 # toggle igloo power!
-                messageList = self.getMessageList(value,4)
-                self.writeBridge(iglooControl,messageList)
-                return self.readBridge(iglooControl,4)
+    def toggleIgloo(self):
+        iglooControl = 0x22
+        message = self.readBridge(iglooControl,4)
+        value = self.getValue(message)
+        value = value ^ 0x400 # toggle igloo power!
+        messageList = self.getMessageList(value,4)
+        self.writeBridge(iglooControl,messageList)
+        return self.readBridge(iglooControl,4)
 
-        def writeBridge(self, regAddress,messageList):
-                self.myBus.write(self.address, [regAddress]+messageList)
-                return self.myBus.sendBatch()
+    def writeBridge(self, regAddress,messageList):
+        self.myBus.write(self.address, [regAddress]+messageList)
+        return self.myBus.sendBatch()
 
-        def readBridge(self, regAddress, num_bytes):
-                 self.myBus.write(0x00,[0x06])
-                 self.myBus.sendBatch()
-                 self.myBus.write(self.address,[regAddress])
-                 self.myBus.read(self.address, num_bytes)
-                 message = self.myBus.sendBatch()[-1]
-                 if message[0] != '0':
-                     print 'Bridge i2c error detected'
-                 return self.reverseBytes(message[2:])
+    def readBridge(self, regAddress, num_bytes):
+        self.myBus.write(0x00,[0x06])
+        self.myBus.sendBatch()
+        self.myBus.write(self.address,[regAddress])
+        self.myBus.read(self.address, num_bytes)
+        message = self.myBus.sendBatch()[-1]
+        if message[0] != '0':
+            print 'Bridge i2c error detected'
+        return self.reverseBytes(message[2:])
 
-        def readIgloo(self, regAddress, num_bytes):
-                 self.myBus.write(0x00,[0x06])
-                 self.myBus.write(self.address,[0x11,0x03,0,0,0])
-                 self.myBus.write(0x09,[regAddress])
-                 self.myBus.read(0x09, num_bytes)
-                 message = self.myBus.sendBatch()[-1]
-                 if message[0] != '0':
-                         print 'Igloo i2c error detected in readIgloo'
-                 return self.reverseBytes(message[2:])
+    def readIgloo(self, regAddress, num_bytes):
+        self.myBus.write(0x00,[0x06])
+        self.myBus.write(self.address,[0x11,0x03,0,0,0])
+        self.myBus.write(0x09,[regAddress])
+        self.myBus.read(0x09, num_bytes)
+        message = self.myBus.sendBatch()[-1]
+        if message[0] != '0':
+            print 'Igloo i2c error detected in readIgloo'
+        return self.reverseBytes(message[2:])
 
-        def detectIglooError(self, regAddress, num_bytes):
-                 self.myBus.write(0x00,[0x06])
-                 self.myBus.write(self.address,[0x11,0x03,0,0,0])
-                 self.myBus.write(0x09,[regAddress])
-                 self.myBus.read(0x09, num_bytes)
-                 message = self.myBus.sendBatch()[-1]
-                #  if message[0] != '0':
-                #          print 'Igloo i2c error detected in detectIglooError'
-                 return message[0]
+    def detectIglooError(self, regAddress, num_bytes):
+        self.myBus.write(0x00,[0x06])
+        self.myBus.write(self.address,[0x11,0x03,0,0,0])
+        self.myBus.write(0x09,[regAddress])
+        self.myBus.read(0x09, num_bytes)
+        message = self.myBus.sendBatch()[-1]
+        #  if message[0] != '0':
+        #          print 'Igloo i2c error detected in detectIglooError'
+        return message[0]
 
     def getValue(self, message):
         hex_message = self.toHex(message)[2:]

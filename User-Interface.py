@@ -995,7 +995,9 @@ class makeGui:
         print '\nGPIO '+self.gpioChoiceVar.get()+' value = '+str(gpioVal)
         print 'Bridge I2C Address = '+str(hex(self.slot))
 
-        self.myBus.write(0x74,[0x08]) # PCA9538 is bit 3 on ngccm mux
+	self.myBus.write(0x72, [0x01])
+        batch = self.myBus.sendBatch()
+        self.myBus.write(0x74, [0x08]) # PCA9538 is bit 3 on ngccm mux
         # myBus.write(0x70,[0x01,0x00]) # GPIO PwrEn is register 3
         #power on and reset
             #register 3 is control reg for i/o modes
@@ -1028,8 +1030,10 @@ class makeGui:
 
     def getUniqueIDPress(self):
         if self.jslot in [18,19,20,21]:
+	    self.myBus.write(0x72, [0x01])
             self.myBus.write(0x74,[0x18])
         if self.jslot in [23,24,25,26]:
+	    self.myBus.write(0x72, [0x01])
             self.myBus.write(0x74,[0x9])
         self.myBus.sendBatch()
 

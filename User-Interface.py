@@ -160,21 +160,21 @@ class makeGui:
         self.info_subTop_frame = Frame(self.info_frame,background="white")
         self.info_subTop_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        ipady=frame_ipady,
-                        padx=frame_padx,
-                        pady=frame_pady
-                        )
+            ipadx=frame_ipadx,
+            ipady=frame_ipady,
+            padx=frame_padx,
+            pady=frame_pady
+            )
 
         # Make a sub-sub-frame within the frame to hold comment box
         self.info_subBot_frame = Frame(self.info_frame,background="white")
         self.info_subBot_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        ipady=frame_ipady,
-                        padx=frame_padx,
-                        pady=frame_pady
-                        )
+            ipadx=frame_ipadx,
+            ipady=frame_ipady,
+            padx=frame_padx,
+            pady=frame_pady
+            )
 
         # Make a label for the name drop-down:
         self.info_nameLabel = Label(self.info_subTop_frame, text="Tester Name: ")
@@ -257,80 +257,80 @@ class makeGui:
         self.experi_subTop2_frame = Frame(self.experiment_frame,background="white")
         self.experi_subTop2_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        ipady=frame_ipady,
-                        padx=frame_padx,
-                        pady=frame_pady
+            ipadx=frame_ipadx,
+            ipady=frame_ipady,
+            padx=frame_padx,
+            pady=frame_pady
             )
 
         # Make top 2_0 subframe
         self.experi_subTop2_0_frame = Frame(self.experiment_frame,background="white")
         self.experi_subTop2_0_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        ipady=frame_ipady,
-                        padx=frame_padx,
-                        pady=frame_pady
+            ipadx=frame_ipadx,
+            ipady=frame_ipady,
+            padx=frame_padx,
+            pady=frame_pady
             )
 
         # Make top 2_1 subframe
         self.experi_subTop2_1_frame = Frame(self.experiment_frame,background="white")
         self.experi_subTop2_1_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        ipady=frame_ipady,
-                        padx=frame_padx,
-                        pady=frame_pady
+            ipadx=frame_ipadx,
+            ipady=frame_ipady,
+            padx=frame_padx,
+            pady=frame_pady
             )
 
         # Make top 2_2 subframe
         self.experi_subTop2_2_frame = Frame(self.experiment_frame,background="white")
         self.experi_subTop2_2_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        ipady=frame_ipady,
-                        padx=frame_padx,
-                        pady=frame_pady
+            ipadx=frame_ipadx,
+            ipady=frame_ipady,
+            padx=frame_padx,
+            pady=frame_pady
             )
 
         # Make top 2_3 subframe
         self.experi_subTop2_3_frame = Frame(self.experiment_frame,background="white")
         self.experi_subTop2_3_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        ipady=frame_ipady,
-                        padx=frame_padx,
-                        pady=frame_pady
+            ipadx=frame_ipadx,
+            ipady=frame_ipady,
+            padx=frame_padx,
+            pady=frame_pady
             )
 
         # Make top 2_4 subframe
         self.experi_subTop2_4_frame = Frame(self.experiment_frame,background="white")
         self.experi_subTop2_4_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        ipady=frame_ipady,
-                        padx=frame_padx,
-                        pady=frame_pady
+            ipadx=frame_ipadx,
+            ipady=frame_ipady,
+            padx=frame_padx,
+            pady=frame_pady
             )
 
-                # Make top 2_2 subframe
-                self.experi_subTop2_2_frame = Frame(self.experiment_frame,background="white")
-                self.experi_subTop2_2_frame.pack(
-                        side=TOP,
-                        ipadx=frame_ipadx,
-                        ipady=frame_ipady,
-                        padx=frame_padx,
-                        pady=frame_pady
-                        )
+        # Make top 2_2 subframe
+        self.experi_subTop2_2_frame = Frame(self.experiment_frame,background="white")
+        self.experi_subTop2_2_frame.pack(
+                side=TOP,
+                ipadx=frame_ipadx,
+                ipady=frame_ipady,
+                padx=frame_padx,
+                pady=frame_pady
+                )
 
         # Make top 2_4_5 subframe
         self.experi_subTop2_4_5_frame = Frame(self.experiment_frame,background="white")
         self.experi_subTop2_4_5_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        ipady=frame_ipady,
-                        padx=frame_padx,
-                        pady=frame_pady
+            ipadx=frame_ipadx,
+            ipady=frame_ipady,
+            padx=frame_padx,
+            pady=frame_pady
             )
 
         # Make top 2_4_6 subframe
@@ -338,9 +338,9 @@ class makeGui:
         self.experi_subTop_2_4_6_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
-                    ipady=frame_ipady,
-                        padx=frame_padx,
-                        pady=frame_pady
+            ipady=frame_ipady,
+            padx=frame_padx,
+            pady=frame_pady
             )
 
 
@@ -348,10 +348,10 @@ class makeGui:
         self.experi_subTop2_5_frame = Frame(self.experiment_frame,background="white")
         self.experi_subTop2_5_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        ipady=frame_ipady,
-                        padx=frame_padx,
-                        pady=frame_pady
+            ipadx=frame_ipadx,
+            ipady=frame_ipady,
+            padx=frame_padx,
+            pady=frame_pady
             )
 
         ###################################
@@ -417,77 +417,76 @@ class makeGui:
         self.experi_subTop3_frame = Frame(self.experi_rightFrame,background="white")
         self.experi_subTop3_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        ipady=frame_ipady,
-                        padx=frame_padx,
+            ipadx=frame_ipadx,
+            ipady=frame_ipady,
+            padx=frame_padx,
             )
 
         # Make top 3 subframe for text
         self.experi_subTop3_fText = Frame(self.experi_rightFrame,background="white")
         self.experi_subTop3_fText.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        ipady=frame_ipady,
-                        padx=frame_padx,
-
+            ipadx=frame_ipadx,
+            ipady=frame_ipady,
+            padx=frame_padx,
             )
 
         # Make top 4 subframe
         self.experi_subTop4_frame = Frame(self.experi_rightFrame,background="white")
         self.experi_subTop4_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        padx=frame_padx,
+            ipadx=frame_ipadx,
+            padx=frame_padx,
             )
 
         # Make top 4 subframe for text
         self.experi_subTop4_fText = Frame(self.experi_rightFrame,background="white")
         self.experi_subTop4_fText.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        padx=frame_padx,
+            ipadx=frame_ipadx,
+            padx=frame_padx,
             )
 
         # Make top 5 subframe
         self.experi_subTop5_frame = Frame(self.experi_rightFrame,background="white")
         self.experi_subTop5_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        padx=frame_padx,
+            ipadx=frame_ipadx,
+            padx=frame_padx,
             )
 
         # Make top 5 subframe for text
         self.experi_subTop5_fText = Frame(self.experi_rightFrame,background="white")
         self.experi_subTop5_fText.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        padx=frame_padx,
+            ipadx=frame_ipadx,
+            padx=frame_padx,
             )
 
         # Make top 6 subframe
         self.experi_subTop6_frame = Frame(self.experi_rightFrame,background="white")
         self.experi_subTop6_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        padx=frame_padx,
+            ipadx=frame_ipadx,
+            padx=frame_padx,
             )
 
         # Make top 6 subframe for text
         self.experi_subTop6_fText = Frame(self.experi_rightFrame,background="white")
         self.experi_subTop6_fText.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
-                        padx=frame_padx,
+            ipadx=frame_ipadx,
+            padx=frame_padx,
             )
 
         # Make top 7 subframe
         self.experi_subTop7_frame = Frame(self.experi_rightFrame,background="white")
         self.experi_subTop7_frame.pack(
             side=TOP,
-                        ipadx=frame_ipadx,
+            ipadx=frame_ipadx,
             ipady=frame_ipady,
             pady=frame_pady,
-                        padx=frame_padx,
+            padx=frame_padx,
             )
 
 
@@ -980,8 +979,15 @@ class makeGui:
         jSlotDict = {"J2 and J18" : 0x29, "J3 and J19" : 0x89, "J4 and J20" : 0xA9,
                     "J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
                     "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
+
         bridgeDict = {"J18" : 0x19, "J19" : 0x1A, "J20": 0x1B, "J21" : 0x1C,
-                    "J23" : 0x19, "J24" : 0x1A, "J25": 0x1B, "J26" : 0x1C,}
+                    "J23" : 0x19, "J24" : 0x1A, "J25": 0x1B, "J26" : 0x1C}
+
+        # Full Backplane Functionality
+        newJSlotDict = {"J2 and J21" : [0x29,0x49], "J3 and J20" : [0x89,0xA9],
+                        "J4 and J19" : [0xA9,0x89], "J5 and J18" : [0x49,0x29],
+                        "J7 and J26" : [0x2A,0x4A], "J8 and J25" : [0x8A,0xAA],
+                        "J9 and J24" : [0xAA,0x8A], "J10 and J23" : [0x4A,0x2A]}
 
         gpioVal = jSlotDict[self.gpioChoiceVar.get()]
         self.jslot = int(self.gpioChoiceVar.get()[-2:])

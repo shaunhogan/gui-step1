@@ -1027,9 +1027,17 @@ class makeGui:
 ##################################################################################
 
     def getUniqueIDPress(self):
-        if self.jslot in [18,19,20,21]:
+        self.myBus.write[0x72,[0x02]]
+        if self.secondSlot in [2,3,4,5]:
+            self.myBus.write(0x74,[0x0A])
+        if self.secondSlot in [7,8,9,10]:
+            self.myBus.write(0x74,[0x28])
+        self.myBus.sendBatch()
+
+        self.myBus.write[0x72,[0x01]]
+        if self.secondSlot in [18,19,20,21]:
             self.myBus.write(0x74,[0x18])
-        if self.jslot in [23,24,25,26]:
+        if self.secondSlot in [23,24,25,26]:
             self.myBus.write(0x74,[0x9])
         self.myBus.sendBatch()
 

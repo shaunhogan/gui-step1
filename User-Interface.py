@@ -33,8 +33,8 @@ class makeGui:
         # Create an instance of cardInformation
         self.cardInfo = cardInformation()
 
-	# Read info from left side?
-	self.readFromList = True
+        # Read info from left side?
+        self.readFromList = True
 
         # Make an empty list that will eventually contain all of
         # the active card slots
@@ -768,7 +768,6 @@ class makeGui:
     # This function is needed to make the json dumps print properly
     def jdefault(self,o):
         return o.__dict__
->>>>>>> 9d470692a04829b7d1436137e49c25e1eae07ff6
 
 ##########################################################################################
 

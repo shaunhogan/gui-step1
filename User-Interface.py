@@ -22,7 +22,7 @@ import subprocess
 class makeGui:
 	def __init__(self, parent):
 		# Create a webBus instance
-		self.myBus = client.webBus("pi7",0)
+		self.myBus = client.webBus("pi4",0)
 
 		# Create a permanent address of QCard
 		self.address = 0x19

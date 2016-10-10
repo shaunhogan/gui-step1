@@ -22,7 +22,7 @@ import subprocess
 class makeGui:
     def __init__(self, parent):
         # Create a webBus instance
-        self.myBus = client.webBus("pi7",0)
+        self.myBus = client.webBus("192.168.1.41",0)
 
         # Create a permanent address of QCard
         self.address = 0x19
@@ -1108,11 +1108,11 @@ class makeGui:
         self.firmwareVerOtherEntry.set("0x"+data_well_done[4:8])
 
         # Getting temperature
-        self.tempEntry.set(str(round(temp.readManyTemps(self.slot, 10, "Temperature", "nohold"),4)))
+        self.tempEntry.set(str(round(temp.readManyTemps(self.myBus, self.slot, 10, "Temperature", "nohold"),4)))
 
         # Getting IGLOO firmware info
-        majorIglooVer = it.readIgloo(self.slot, 0x00)
-        minorIglooVer = it.readIgloo(self.slot, 0x01)
+        majorIglooVer = it.readIgloo(self.myBus, self.slot, 0x00)
+        minorIglooVer = it.readIgloo(self.myBus, self.slot, 0x01)
         # Parse IGLOO firmware info
         majorIglooVer = self.toHex(self.reverseBytes(majorIglooVer))
         minorIglooVer = self.toHex(self.reverseBytes(minorIglooVer))

@@ -974,6 +974,7 @@ class makeGui:
 
     # Opens the proper GPIO slot. Used for programming cards.
     def gpioBttnPress(self):
+        # Previous dict. Defines GPIO values.
         jSlotDict = {"J2 and J18" : 0x29, "J3 and J19" : 0x89, "J4 and J20" : 0xA9,
                     "J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
                     "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
@@ -994,7 +995,7 @@ class makeGui:
         self.jslots = dictStringToInts[self.gpioChoiceVar.get()]
         print '\nGPIO '+self.gpioChoiceVar.get()+' values = '+str(gpioVals)
 
-	for gpioValsIndex in xrange(len(gpioVals)):
+	for gpioValsIndex in xrange(1):
 	    gpioVal = gpioVals[gpioValsIndex]
             #if gpioValsIndex == 0:
                 #self.myBus.write(0x72, [0x02])
@@ -1058,7 +1059,7 @@ class makeGui:
     	        #self.myBus.write(0x72, [0x01])
                 self.myBus.write(0x74,[0x18])
             if self.jslot in [23,24,25,26]:
-         	#self.myBus.write(0x72, [0x01])
+                #self.myBus.write(0x72, [0x01])
                 self.myBus.write(0x74,[0x09])
         else:
             self.jslot = self.jslots[0]

@@ -1,10 +1,13 @@
-# User-Interface.py
+# Simple-Gui.py
 #
-# This is the main Graphical User Interface for communicating
-# with the setup in the lab.
-# Developed with the help of many people
-# For Baylor University, Summer 2016.
-# Use for HE QIE Card programming and testing at Fermilab.
+# This is the Simple Graphical User Interface for communicating with QIE Cards
+# using the ngCCM Emulator. It can be used to open GPIO for programming of 
+# the Igloo FPGA. A computer running Microsemi Flash Pro must be connected
+# to the ngCCM Emulator for Igloo FPGA programming.
+
+# Developed with the help of many people.
+# Originally based on User-Interface.py used at Fermilab.
+# For CERN, Building 904, October 2016.
 
 from Tkinter import *
 from datetime import datetime
@@ -96,24 +99,6 @@ class makeGui:
         ###                                    ###
         ##########################################
 
-        # Make and pack a sub-frame within topMost_frame that will contain
-        # all of the controls for non-hardware related test information
-        # (i.e. name of tester)
-        # This will now only contain read Unique ID buttons.
-        # self.info_frame = Frame(
-        #     self.topMost_frame,
-        #     borderwidth=5, relief=RIDGE,
-        #     height=50,
-        #     background="white",
-        #     )
-        # self.info_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-
         # Make a top half-frame
         self.topHalf_frame = Frame(self.topMost_frame)
         self.topHalf_frame.pack(side=TOP)
@@ -134,22 +119,6 @@ class makeGui:
             pady=frame_pady
             )
 
-        # # Make a label for the entire right frame
-        # self.experi_rightFrame = Frame(
-        #     self.topHalf_frame,
-        #     borderwidth=5, relief=RIDGE,
-        #     height=580, width=300,
-        #     background="black"
-        #     )
-        # self.experi_rightFrame.pack_propagatte=(False)
-        # self.experi_rightFrame.pack(
-        #     side=LEFT,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-
         ##########################################
         ###                                    ###
         ###     BEGIN MAKING WIDGETS           ###
@@ -161,81 +130,12 @@ class makeGui:
         #####    Widgets in info frame   #####
         #####                            #####
         ######################################
-
-        # Removed Testing Information/Parameters Frame
-        # # Make and pack a text label for name selector
-        # self.info_Label = Label(self.info_frame, text="Testing Information/Parameters")
-        # self.info_Label.configure(
-        #     padx=button_padx,
-        #     pady=button_pady,
-        #     background="white"
-        #     )
-        # self.info_Label.pack(side=TOP)
-
-        # # Make a sub-sub-frame within the frame to hold another label and a dropdown box
-        # self.info_subTop_frame = Frame(self.info_frame,background="white")
-        # self.info_subTop_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-
-        # # Make a sub-sub-frame within the frame to hold comment box
-        # self.info_subBot_frame = Frame(self.info_frame,background="white")
-        # self.info_subBot_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-
-        # # Make a label for the name drop-down:
-        # self.info_nameLabel = Label(self.info_subTop_frame, text="Tester Name: ")
-        # self.info_nameLabel.configure(
-        #     padx=button_padx,
-        #     pady=button_pady,
-        #     background="white"
-        #     )
-        # self.info_nameLabel.pack(side=LEFT)
-
-        # # Make and pack a listbox to pick which QIE card to talk to:
-        # self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar,
-        #                   "Shaun Hogan","Caleb Smith","Adryanna Smith","Jordan Potarf",
-        #                   "John Lawrence","Andrew Baas","Mason Dorseth","Josh Hiltbrand")
-        # self.info_nameBox.pack(side=LEFT)
-        # self.nameChoiceVar.set("Choose Name") # initializes the OptionMenu
-
-        # # Make a label for the name drop-down:
-        # self.info_commentLabel = Label(self.info_subBot_frame, text="User Testing Comments: ")
-        # self.info_commentLabel.configure(
-        #     padx=button_padx,
-        #     pady=button_pady,
-        #     background="white"
-        #     )
-        # self.info_commentLabel.pack(side=LEFT)
-
-        # # Make a entrybox for testing comments
-        # self.info_commentBox = Entry(
-        #     self.info_subBot_frame,
-        #     textvariable=self.infoCommentVar
-        #     )
-        # self.info_commentBox.pack(side=LEFT)
-        
         
         ######################################
         #####                            #####
         #####  Experiment Setup Frames   #####
         #####                            #####
         ######################################
-
-        self.testLabelList = ["Res_1","Res_2","Res_3","Res_4",
-                          "Res_5","Res_6","Res_7","Res_8",
-                      "Res_9","Res_10","Res_11", "Res_12",
-                      "Res_13", "Res_14", "Res_15", "SuplCur", "Vis", "Program",
-                      "Res_16"]
 
         # Make a label for the entire left frame
         self.experi_subFrame_lbl = Label(self.experiment_frame,text="QIE Card Setup & Parameters")
@@ -367,151 +267,11 @@ class makeGui:
             )
 
 
-        # Make top 2_5 subframe
-        self.experi_subTop2_5_frame = Frame(self.experiment_frame,background="white")
-        self.experi_subTop2_5_frame.pack(
-            side=TOP,
-            ipadx=frame_ipadx,
-            ipady=frame_ipady,
-            padx=frame_padx,
-            pady=frame_pady
-            )
-
         ###################################
         ###                             ###
         ###   Subframes on right side   ###
         ###                             ###
         ###################################
-
-        # # Make a buffer frame
-        # self.experi_subTopBuffer_frame = Frame(self.experi_rightFrame,bg="white")
-        # self.experi_subTopBuffer_frame.pack(
-        #     side=TOP,
-        #     ipady=frame_ipady,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-
-        # # Make an "inspections and tests" label
-        # self.experi_inspections_label = Label(self.experi_subTopBuffer_frame,
-        #                 text="Inspections and Tests")
-        # self.experi_inspections_label.configure(bg="white")
-        # self.experi_inspections_label.pack()
-
-        # # Make a subframe for the barcode box
-        # self.experi_barcode_frame = Frame(self.experi_rightFrame, bg="white")
-        # self.experi_barcode_frame.pack(
-        #     side=TOP,
-        #     ipady=frame_ipady,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-
-        # # Make a label for the Barcode entry
-        # self.experi_barcode_lbl = Label(self.experi_barcode_frame, text="Barcode: ")
-        # self.experi_barcode_lbl.configure(
-        #     background="white",
-        #     padx=button_padx,
-        #     pady=button_pady,
-        #     )
-        # self.experi_barcode_lbl.pack(side=LEFT)
-
-        # # Make an entry box for the barcode
-        # # Make a entrybox for testing comments
-        # self.experi_barcode_entry = Entry(
-        #     self.experi_barcode_frame,
-        #     textvariable=self.barcodeEntry
-        #     )
-        # self.experi_barcode_entry.pack(side=RIGHT)
-
-        # # Make another buffer frame
-        # self.experi_subTopBuffer2_frame = Frame(self.experi_rightFrame,bg="white")
-        # self.experi_subTopBuffer2_frame.pack(
-        #     side=TOP,
-        #     ipady=frame_ipady,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-
-        # # Make top 3 subframe
-        # self.experi_subTop3_frame = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop3_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 3 subframe for text
-        # self.experi_subTop3_fText = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop3_fText.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 4 subframe
-        # self.experi_subTop4_frame = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop4_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 4 subframe for text
-        # self.experi_subTop4_fText = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop4_fText.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 5 subframe
-        # self.experi_subTop5_frame = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop5_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 5 subframe for text
-        # self.experi_subTop5_fText = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop5_fText.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 6 subframe
-        # self.experi_subTop6_frame = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop6_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 6 subframe for text
-        # self.experi_subTop6_fText = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop6_fText.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 7 subframe
-        # self.experi_subTop7_frame = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop7_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     pady=frame_pady,
-        #     padx=frame_padx,
-        #     )
-
 
         # Create variables for each manual check (16 placeholders for now)
         self.testPassList = [StringVar() for i in range(0,19)]
@@ -661,11 +421,6 @@ class makeGui:
             )
         self.iglooToggle_entry.pack(side=RIGHT)
 
-        # # Make a button to submit the unique ID & firmware
-        # self.experi_uniqueID_give = Button(self.experi_subTop2_5_frame, text ="Upload Unique ID & Firmware Ver.", command=self.infoSubmitButtonPress)
-        # self.experi_uniqueID_give.configure(bg="salmon2")
-        # self.experi_uniqueID_give.pack(side=TOP)
-
         # Make a line of hypens
         self.experi_hyphenLine = Label(self.experi_subTop2_6_frame, text="----------------------------------")
         self.experi_hyphenLine.configure(bg="white",padx=button_padx,pady=button_pady)
@@ -698,95 +453,6 @@ class makeGui:
         self.experi_uniqueID_right_get = Button(self.experi_subTop2_10_frame, text ="Get Unique ID & Firmware Ver. from Right", command=self.getUniqueIDPress_right)
         self.experi_uniqueID_right_get.configure(bg="lemon chiffon")
         self.experi_uniqueID_right_get.pack(side=TOP)
-
-        ################################
-        ###                          ###
-        ###     Visual Tests         ###
-        ###                          ###
-        ################################
-
-        # self.testDescDict = {"Res_1" : "Bkpln to GND", "Res_2" : "1.2V to GND", "Res_3" : "1.5V to GND",
-        #              "Res_4" : "2.5V to GND", "Res_5" : "3.3V to GND", "Res_6" : "5.0V to GND",
-        #              "Res_7" : "1.2V to 1.5V", "Res_8" : "1.2V to 2.5V", "Res_9" : "1.2V to 3.3V",
-        #              "Res_10" : "1.2V to 5.0V", "Res_11" : "1.5V to 2.5V", "Res_12" : "1.5V to 5.0V",
-        #              "Res_13" : "2.5V to 3.3V", "Res_14" : "2.5V to 5.0V", "Res_15" : "3.3V to 5.0V",
-        #              "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK", "Res_16" : "1.5V to 3.3V"}
-
-#       # self.testPassList = [StringVar() for i in range(0,19)]
-
-#       # self.testLabelList = ["Res_1","Res_2","Res_3","Res_4",
-#       #                   "Res_5","Res_6","Res_7","Res_8",
-#       #               "Res_9","Res_10","Res_11", "Res_12",
-#       #               "Res_13", "Res_14", "Res_15", "SuplCur", "Vis", "Program",
-#       #               "Res_16"]
-
-        # self.testPassInfo = []
-
-        # for i in range(0,4):
-        #     self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-        #     self.testPassInfo[i].configure(width=15,bg="#CCDDFF")
-        #     self.testPassList[i].set("N/A")
-        #     self.testPassInfo[i].pack(side=LEFT)
-
-        #     self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg="white")
-        #     self.testPassLabel.configure(width=20)
-        #     self.testPassLabel.pack(side=LEFT)
-
-        # for i in range(4,9):
-        #     self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-        #     self.testPassInfo[i].configure(width=11, bg="#CCDDFF")
-        #     self.testPassList[i].set("N/A")
-        #     self.testPassInfo[i].pack(side=LEFT)
-
-        #     self.testPassLabel=Label(self.experi_subTop4_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
-        #     self.testPassLabel.configure(width=15)
-        #     self.testPassLabel.pack(side=LEFT)
-
-        # for i in range(9,14):
-        #     self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-        #     self.testPassInfo[i].configure(width=11,bg="#CCDDFF")
-        #     self.testPassList[i].set("N/A")
-        #     self.testPassInfo[i].pack(side=LEFT)
-
-        #     self.testPassLabel=Label(self.experi_subTop5_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
-        #     self.testPassLabel.configure(width=15)
-        #     self.testPassLabel.pack(side=LEFT)
-
-        # for i in range(14,19):
-        #     self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-        #     self.testPassInfo[i].configure(width=11,bg="#CCDDFF")
-        #     self.testPassList[i].set("N/A")
-        #     self.testPassInfo[i].pack(side=LEFT)
-
-        #     self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
-        #     self.testPassLabel.configure(width=15)
-        #     self.testPassLabel.pack(side=LEFT)
-
-        # # Make a checkbox to overwrite/not overwrite pre-existing data
-        # self.overwriteBox = Checkbutton(self.experi_subTop7_frame, text="Overwrite existing QIE Card data (if applicable)?", variable=self.overwriteVar)
-        # self.overwriteBox.configure(bg="lemon chiffon")
-        # self.overwriteBox.pack(side=TOP,
-        #                padx = button_padx,
-        #                pady = button_pady,
-        #                ipady = button_pady*2,
-        #                ipadx = button_padx*2)
-
-        # # Make a button to submit tests and information
-        # self.passAllTestsBttn = Button(self.experi_subTop7_frame, text="Pass All Tests", command=self.throwPassAllBox)
-        # self.passAllTestsBttn.configure(bg="#FFE699", width=40)
-        # self.passAllTestsBttn.pack(side=TOP)
-
-        # # Make a button to submit tests and information
-        # self.initSubmitBttn = Button(self.experi_subTop7_frame, text="Submit Inspections & Tests", command=self.initSubmitBttnPress)
-        # self.initSubmitBttn.configure(bg="#FFCC66", width=40)
-        # self.initSubmitBttn.pack(side=TOP)
-
-        # # Make a button to clear all results
-        # self.clearDataBttn = Button(self.experi_subTop7_frame, text="Clear Inspections, Tests, & Info", command=self.clearDataBttnPress)
-        # self.clearDataBttn.configure(bg="orange", width=40)
-        # self.clearDataBttn.pack(side=TOP)
-
-
 
     #################################
     ###                           ###
@@ -1026,11 +692,6 @@ class makeGui:
                         "J7 and J26" : [0x2A,0x4A], "J8 and J25" : [0x8A,0xAA],
                         "J9 and J24" : [0xAA,0x8A], "J10 and J23" : [0x4A,0x2A]}
 
-        #dictStringToInts = {"J2 and J21" : [2, 21], "J3 and J20" : [3, 20],
-        #                "J4 and J19" : [4, 19], "J5 and J18" : [5, 18],
-        #                "J7 and J26" : [7, 26], "J8 and J25" : [8, 25],
-        #                "J9 and J24" : [9, 24], "J10 and J23" : [10, 23]}
-        # 2 3 4 5 ; 7 8 9 10 ; 18 19 20 21 ; 23 24 25 26
         dictStringToInts = {"J2 and J18" : [2, 18], "J3 and J19" : [3, 19],
                             "J4 and J20" : [4, 20], "J5 and J21" : [5, 21],
                             "J7 and J23" : [7, 23], "J8 and J24" : [8, 24],

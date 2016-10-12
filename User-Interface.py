@@ -4,10 +4,7 @@
 # with the setup in the lab.
 # Developed with the help of many people
 # For Baylor University, Summer 2016.
-#
-# This is a comment to see if I got git to work properly
-# round 2 electric boogaloo
-# what does that mean?
+# Use for HE QIE Card programming and testing at Fermilab.
 
 from Tkinter import *
 from datetime import datetime
@@ -21,8 +18,11 @@ import subprocess
 
 class makeGui:
     def __init__(self, parent):
+        # The Raspberry Pi IP address
+        self.pi = "192.168.1.41"
+
         # Create a webBus instance
-        self.myBus = client.webBus("192.168.1.41",0)
+        self.myBus = client.webBus(self.pi,0)
 
         # Create a permanent address of QCard
         self.address = 0x19
@@ -88,6 +88,7 @@ class makeGui:
         # Make and pack a sub-frame within topMost_frame that will contain
         # all of the controls for non-hardware related test information
         # (i.e. name of tester)
+        # This will now only contain read Unique ID buttons.
         self.info_frame = Frame(
             self.topMost_frame,
             borderwidth=5, relief=RIDGE,
@@ -150,67 +151,79 @@ class makeGui:
         #####                            #####
         ######################################
 
-        # Make and pack a text label for name selector
-        self.info_Label = Label(self.info_frame, text="Testing Information/Parameters")
-        self.info_Label.configure(
-            padx=button_padx,
-            pady=button_pady,
-            background="white"
-            )
-        self.info_Label.pack(side=TOP)
+        # Removed Testing Information/Parameters Frame
+        # # Make and pack a text label for name selector
+        # self.info_Label = Label(self.info_frame, text="Testing Information/Parameters")
+        # self.info_Label.configure(
+        #     padx=button_padx,
+        #     pady=button_pady,
+        #     background="white"
+        #     )
+        # self.info_Label.pack(side=TOP)
 
-        # Make a sub-sub-frame within the frame to hold another label and a dropdown box
-        self.info_subTop_frame = Frame(self.info_frame,background="white")
-        self.info_subTop_frame.pack(
-            side=TOP,
-            ipadx=frame_ipadx,
-            ipady=frame_ipady,
-            padx=frame_padx,
-            pady=frame_pady
-            )
+        # # Make a sub-sub-frame within the frame to hold another label and a dropdown box
+        # self.info_subTop_frame = Frame(self.info_frame,background="white")
+        # self.info_subTop_frame.pack(
+        #     side=TOP,
+        #     ipadx=frame_ipadx,
+        #     ipady=frame_ipady,
+        #     padx=frame_padx,
+        #     pady=frame_pady
+        #     )
 
-        # Make a sub-sub-frame within the frame to hold comment box
-        self.info_subBot_frame = Frame(self.info_frame,background="white")
-        self.info_subBot_frame.pack(
-            side=TOP,
-            ipadx=frame_ipadx,
-            ipady=frame_ipady,
-            padx=frame_padx,
-            pady=frame_pady
-            )
+        # # Make a sub-sub-frame within the frame to hold comment box
+        # self.info_subBot_frame = Frame(self.info_frame,background="white")
+        # self.info_subBot_frame.pack(
+        #     side=TOP,
+        #     ipadx=frame_ipadx,
+        #     ipady=frame_ipady,
+        #     padx=frame_padx,
+        #     pady=frame_pady
+        #     )
 
-        # Make a label for the name drop-down:
-        self.info_nameLabel = Label(self.info_subTop_frame, text="Tester Name: ")
-        self.info_nameLabel.configure(
-            padx=button_padx,
-            pady=button_pady,
-            background="white"
-            )
-        self.info_nameLabel.pack(side=LEFT)
+        # # Make a label for the name drop-down:
+        # self.info_nameLabel = Label(self.info_subTop_frame, text="Tester Name: ")
+        # self.info_nameLabel.configure(
+        #     padx=button_padx,
+        #     pady=button_pady,
+        #     background="white"
+        #     )
+        # self.info_nameLabel.pack(side=LEFT)
 
-        # Make and pack a listbox to pick which QIE card to talk to:
-        self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar,
-                          "Shaun Hogan","Caleb Smith","Adryanna Smith","Jordan Potarf",
-                          "John Lawrence","Andrew Baas","Mason Dorseth","Josh Hiltbrand")
-        self.info_nameBox.pack(side=LEFT)
-        self.nameChoiceVar.set("Choose Name") # initializes the OptionMenu
+        # # Make and pack a listbox to pick which QIE card to talk to:
+        # self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar,
+        #                   "Shaun Hogan","Caleb Smith","Adryanna Smith","Jordan Potarf",
+        #                   "John Lawrence","Andrew Baas","Mason Dorseth","Josh Hiltbrand")
+        # self.info_nameBox.pack(side=LEFT)
+        # self.nameChoiceVar.set("Choose Name") # initializes the OptionMenu
 
-        # Make a label for the name drop-down:
-        self.info_commentLabel = Label(self.info_subBot_frame, text="User Testing Comments: ")
-        self.info_commentLabel.configure(
-            padx=button_padx,
-            pady=button_pady,
-            background="white"
-            )
-        self.info_commentLabel.pack(side=LEFT)
+        # # Make a label for the name drop-down:
+        # self.info_commentLabel = Label(self.info_subBot_frame, text="User Testing Comments: ")
+        # self.info_commentLabel.configure(
+        #     padx=button_padx,
+        #     pady=button_pady,
+        #     background="white"
+        #     )
+        # self.info_commentLabel.pack(side=LEFT)
 
-        # Make a entrybox for testing comments
-        self.info_commentBox = Entry(
-            self.info_subBot_frame,
-            textvariable=self.infoCommentVar
-            )
-        self.info_commentBox.pack(side=LEFT)
+        # # Make a entrybox for testing comments
+        # self.info_commentBox = Entry(
+        #     self.info_subBot_frame,
+        #     textvariable=self.infoCommentVar
+        #     )
+        # self.info_commentBox.pack(side=LEFT)
 
+        # Make a button to read the unique ID & firmware LEFT SIDE
+        self.experi_uniqueID_left_get = Button(self.info_frame, text ="Get Unique ID & Firmware Ver. from Left", command=self.getUniqueIDPress_left)
+        self.experi_uniqueID_left_get.configure(bg="CadetBlue1")
+        self.experi_uniqueID_left_get.pack(side=TOP)
+
+        # Make a button to read the unique ID & firmware RIGHT SIDE
+        self.experi_uniqueID_right_get = Button(self.info_frame, text ="Get Unique ID & Firmware Ver. from Right", command=self.getUniqueIDPress_right)
+        self.experi_uniqueID_right_get.configure(bg="lemon chiffon")
+        self.experi_uniqueID_right_get.pack(side=TOP)
+        
+        
         ######################################
         #####                            #####
         #####  Experiment Setup Frames   #####
@@ -488,9 +501,9 @@ class makeGui:
         self.testPassState = ("Pass","Fail")
 
         #################################
-        ###               ###
+        ###                           ###
         ###       Info for Card       ###
-        ###               ###
+        ###                           ###
         #################################
 
         # Make a label for the uniqueID entry
@@ -996,7 +1009,7 @@ class makeGui:
         print '\nGPIO '+self.gpioChoiceVar.get()+' values = '+str(gpioVals)
 
         for gpioValsIndex in xrange(1):
-	        gpioVal = gpioVals[gpioValsIndex]
+            gpioVal = gpioVals[gpioValsIndex]
             #if gpioValsIndex == 0:
                 #self.myBus.write(0x72, [0x02])
             #else:

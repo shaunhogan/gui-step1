@@ -1,4 +1,12 @@
-# Simple Scripts to select and read from slots.
+# SimpleScripts to select GPIO and read from slots.
+
+# CERN, Building 904
+# October 2016
+
+# Usage Notes:
+# Please use your Raspberry Pi ip address (example 192.168.1.41)
+# Configure your ethernet network manually 
+# For example, ip address = 192.168.1.44, subnet mask = 255.255.255.0 
 
 from datetime import datetime
 import json
@@ -7,24 +15,46 @@ import temp
 import os
 import sys
 
+# Teststand class pings Raspberry Pi
 class Teststand:
-    def __init__(self, pi="192.168.1.41"):
+    def __init__(self, windows=True, pi="192.168.1.41"):
+        
+        # Initialize Values
+        self.gpioSelected = False       # Has GPIO been selected?
+        self.piStatus     = False       # Can we ping the RaPi?
+        self.busStatus    = False       # Can we connect a client websocket?
+
+        # MyPi (ip address)
         self.pi = pi
-        # Ping Pi
-        status = False
-        status = self.pingPi()
+
+        # Use different count options to ping only 1 time.
+        if windows:
+            # Windows uses -n for ping count option. 
+            self.ping = "ping -n 1 {0}".format(self.pi)
+        else:
+            # Linux and OSX use -c for ping count option. 
+            self.ping = "ping -c 1 {0}".format(self.pi)
+
+        # Ping Raspberry Pi
+        self.pingPi()
 
         # Create a webBus instance
-        if status:
-            self.myBus = client.webBus(self.pi,0)
+        if self.piStatus:
+            try:
+                self.myBus = client.websocket(self.pi,0)
+            except:
+                self.busStatus = False
+                print 'Client Websocket Connection Error: No bus for you... sadness, it\'s true!'
+                return
 
-        # Has GPIO been selected?
-        self.gpioSelected = False
+            # Client websocket connected sucessfully.
+            self.busStatus = True
 
-        # Find active slots.
-        self.slot_list = [2,3,4,5,7,8,9,10,18,19,20,21,23,24,25,26]
-        self.active_slots = self.findActiveSlots()
-        print "Active J-Slots: {0}".format(self.active_slots)
+            # Find active slots only if client websocket is connected.
+            print "Finding active slots..."
+            self.slot_list = [2,3,4,5,7,8,9,10,18,19,20,21,23,24,25,26]
+            self.active_slots = self.findActiveSlots()
+            print "Active J-Slots: {0}".format(self.active_slots)
 
     #################################
     ###                           ###
@@ -38,14 +68,14 @@ class Teststand:
 
     # Test Raspberry Pi Connection
     def pingPi(self):
-        print "Pinging Raspberry Pi. Hold please!"
-        status = os.system("ping -n 1 {0}".format(self.pi))
-        if status == 0:
+        print "Pinging Raspberry Pi: {0}".format(self.ping)
+        pingStatus = os.system(self.ping)
+        if pingStatus == 0:
             print "Raspberry Pi Connected: {0}".format(self.pi)
-            return True
+            self.piStatus = True
         else:
             print "Raspberry Pi Connection Error: {0}".format(self.pi)
-            return False
+            self.piStatus = False
 
     def reverseBytes(self, message):
         message_list = message.split()
@@ -206,6 +236,9 @@ class Teststand:
         print 'Igloo2 FPGA Major Firmware Version: {0}'.format(self.igloo_fw_maj)
         print 'Igloo2 FPGA Minor Firmware Version: {0}'.format(self.igloo_fw_min)
 
+        # Return Dictionary
+        return self.getInfo()
+
 
 ##################################################################################
 
@@ -219,6 +252,7 @@ class Teststand:
         cardInfo["bridge_fw_oth"]  = self.bridge_fw_oth
         cardInfo["igloo_fw_maj"]   = self.igloo_fw_maj
         cardInfo["igloo_fw_min"]   = self.igloo_fw_min
+        cardInfo["temperature"]    = self.temp
         cardInfo["date_time"]      = str(datetime.now())
 
         print "Card info recorded. Merci beaucoup!"
@@ -260,15 +294,20 @@ class Teststand:
     def readActiveSlots(self):
         info = []
         for slot in self.active_slots:
-            self.readInfo(slot)
-            info.append(self.getInfo())
+            info.append(self.readInfo())
         return info
 
 ##################################################################################
 
 slot_list = [2,3,4,5,7,8,9,10,18,19,20,21,23,24,25,26]
 
-def runSlot():
+# Get information for specific slot.
+# Enter J Slot as python argument.
+# For example, for J2 (slot 2) run
+# python scripts.py 2
+# Windows True for Windows OS, False for Linux and OSX
+# Pi Ip Address: default is 192.168.1.41
+def runSlot(windows=True, pi="192.168.1.41"):
     if len(sys.argv) != 2:
         print "Enter J-Slot to select and read"
     else:
@@ -276,19 +315,32 @@ def runSlot():
         if slot not in slot_list:
             print "Please select J-Slot from {0}".format(slot_list)
         else:
-            ts = Teststand()
-            hiB = ts.hiDerBridge(2)
-            hiI = ts.hiDerIgloo(2)
-            print "Hi Der Bridge: {0}".format(hiB)
-            print "Hi Der Igloo: {0}".format(hiI)
-            if hiB and hiI:
-                ts.selectGpio(slot)
-                ts.readInfo(slot)
-                cardInfo = ts.getInfo()
-                print cardInfo
+            ts = Teststand(windows,pi)
+            if ts.piStatus and ts.busStatus:
+                hiB = ts.hiDerBridge(slot)
+                hiI = ts.hiDerIgloo(slot)
+                print "Hi Der Bridge: {0}".format(hiB)
+                print "Hi Der Igloo: {0}".format(hiI)
+                if hiB and hiI:
+                    ts.selectGpio(slot)
+                    cardInfo = ts.readInfo(slot)
+                    print cardInfo
 
-#runSlot()
-t = Teststand()
-info = t.readActiveSlots()
-print info
+# Get information for all active slots.
+# Windows True for Windows OS, False for Linux and OSX
+# Pi Ip Address: default is 192.168.1.41
+def runStand(windows=True, pi="192.168.1.41"):
+    ts = Teststand(windows, pi)
+    if ts.piStatus and ts.busStatus:
+        info = ts.readActiveSlots()
+        print info
+
+# Only run if scripts.py is main... otherwise don't run (if imported as library).
+if __name__ == '__main__':
+    windows = False
+    pi = "127.0.0.1"
+    runSlot(windows,pi)
+    runStand(windows,pi)
+
+
 

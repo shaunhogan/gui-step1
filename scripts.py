@@ -10,7 +10,6 @@ import sys
 class Teststand:
     def __init__(self, pi="192.168.1.41"):
         self.pi = pi
-
         # Ping Pi
         status = False
         status = self.pingPi()
@@ -22,11 +21,20 @@ class Teststand:
         # Has GPIO been selected?
         self.gpioSelected = False
 
+        # Find active slots.
+        self.slot_list = [2,3,4,5,7,8,9,10,18,19,20,21,23,24,25,26]
+        self.active_slots = self.findActiveSlots()
+        print "Active J-Slots: {0}".format(self.active_slots)
+
     #################################
     ###                           ###
     ###  BEGIN MEMBER FUNCTIONS   ###
     ###                           ###
     #################################
+
+
+##################################################################################
+
 
     # Test Raspberry Pi Connection
     def pingPi(self):
@@ -71,29 +79,53 @@ class Teststand:
         return s.join(message_list)
     
     def readBridge(self, regAddress, num_bytes):
+        self.selectSlot(self.jslot)
         self.myBus.write(0x00,[0x06])
         self.myBus.sendBatch()
         self.myBus.write(self.slot,[regAddress])
         self.myBus.read(self.slot, num_bytes)
         message = self.myBus.sendBatch()[-1]
-        if message[0] != '0':
-            print 'Bridge I2C Error'
+        #if message[0] != '0':
+        #    print 'Bridge I2C Error'
         return self.toHex(self.reverseBytes(message[2:]))
 
     def readIgloo(self, regAddress, num_bytes):
+        self.selectSlot(self.jslot)
         self.myBus.write(0x00,[0x06])
         self.myBus.write(self.slot,[0x11,0x03,0,0,0])
         self.myBus.write(0x09,[regAddress])
         self.myBus.read(0x09, num_bytes)
         message = self.myBus.sendBatch()[-1]
-        if message[0] != '0':
-            print 'Igloo I2C Error'
+        #if message[0] != '0':
+        #    print 'Igloo I2C Error'
         return self.toHex(self.reverseBytes(message[2:]))
+
 
 ##################################################################################
 
-    # Opens the proper GPIO slot. Used for programming cards.
-    def select(self, jslot):
+    # Select jslot, open channel on ngCCM Emulator.
+    def selectSlot(self, jslot):
+        self.jslot = jslot
+
+        bridgeDict = {  2 : 0x19, 3 : 0x1A, 4 : 0x1B, 5 : 0x1C,
+                        7 : 0x19, 8 : 0x1A, 9: 0x1B, 10: 0x1C,
+                       18 : 0x19, 19 : 0x1A, 20: 0x1B, 21 : 0x1C,
+                       23 : 0x19, 24 : 0x1A, 25: 0x1B, 26 : 0x1C}
+
+        self.slot = bridgeDict[self.jslot]
+        if self.jslot in [18,19,20,21]:
+            self.myBus.write(0x74,[0x10^0x8])
+        if self.jslot in [23,24,25,26]:
+            self.myBus.write(0x74,[0x01^0x8])
+        if self.jslot in [2,3,4,5]:
+           self.myBus.write(0x74, [0x02^0x8])
+        if self.jslot in [7,8,9,10]:
+           self.myBus.write(0x74, [0x20^0x8])
+
+        self.myBus.sendBatch()
+
+    # Writes proper GPIO to ngCCM Emulator for given jslot.  Used for programming cards.
+    def selectGpio(self, jslot):
         self.jslot = jslot
         # Defines GPIO values. Only used for reference.
         jSlotDict = {"J2 and J18" : 0x29, "J3 and J19" : 0x89, "J4 and J20" : 0xA9,
@@ -132,26 +164,9 @@ class Teststand:
 
 ##################################################################################
         
-    def read(self, jslot):
-        self.jslot = jslot
-
-        bridgeDict = {  2 : 0x19, 3 : 0x1A, 4 : 0x1B, 5 : 0x1C,
-                        7 : 0x19, 8 : 0x1A, 9: 0x1B, 10: 0x1C,
-                       18 : 0x19, 19 : 0x1A, 20: 0x1B, 21 : 0x1C,
-                       23 : 0x19, 24 : 0x1A, 25: 0x1B, 26 : 0x1C}
-
-        self.slot = bridgeDict[self.jslot]
-        if self.jslot in [18,19,20,21]:
-            self.myBus.write(0x74,[0x10^0x8])
-        if self.jslot in [23,24,25,26]:
-            self.myBus.write(0x74,[0x01^0x8])
-        if self.jslot in [2,3,4,5]:
-           self.myBus.write(0x74, [0x02^0x8])
-        if self.jslot in [7,8,9,10]:
-           self.myBus.write(0x74, [0x20^0x8])
-
-        self.myBus.sendBatch()
-
+    # Read Unique ID and Firmware Versions from given jslot
+    def readInfo(self, jslot):
+        self.selectSlot(jslot)
         print 'Read Slot: J'+str(self.jslot)
 
         # Getting unique ID
@@ -195,7 +210,7 @@ class Teststand:
 ##################################################################################
 
 
-    # Dumps the card UID and firmware version to a json file
+    # Returns dictionary with unique id and firmware versions
     def getInfo(self):
         cardInfo = {}
         cardInfo["unique_id"]      = self.unique_id
@@ -210,42 +225,70 @@ class Teststand:
         return cardInfo
 
     # Tests for communication with Bridge.
-    def hiDerBridge(self):
+    def hiDerBridge(self, jslot):
+        self.jslot = jslot
         onesZeros = self.readBridge(0x0A, 4)
         value = '0xaaaaaaaa'
-        print "Bridge OnesZeros: {0}".format(onesZeros)
+        #print "Bridge OnesZeros: {0}".format(onesZeros)
         if onesZeros == value:
             return True
         else:
             return False
 
-    def hiDerIgloo(self):
+    # Tests for communication with Igloo. 
+    def hiDerIgloo(self, jslot):
+        self.jslot = jslot
         ones = self.readIgloo(0x02, 4)
         value = '0xffffffff'
-        print "Igloo Ones: {0}".format(ones)
+        #print "Igloo Ones: {0}".format(ones)
         if ones == value:
             return True
         else:
             return False
 
+    # Determine active jslots.
+    def findActiveSlots(self):
+        slots = []
+        for slot in self.slot_list:
+            hiB = self.hiDerBridge(slot)
+            hiI = self.hiDerIgloo(slot)
+            if hiB and hiI:
+                print "Active J-Slot: {0}".format(slot)
+                slots.append(slot)
+        return slots
+            
+    def readActiveSlots(self):
+        info = []
+        for slot in self.active_slots:
+            self.readInfo(slot)
+            info.append(self.getInfo())
+        return info
+
 ##################################################################################
 
 slot_list = [2,3,4,5,7,8,9,10,18,19,20,21,23,24,25,26]
 
-if len(sys.argv) != 2:
-    print "Enter J-Slot to select and read"
-else:
-    slot = int(sys.argv[1])
-    if slot not in slot_list:
-        print "Please select J-Slot from {0}".format(slot_list)
+def runSlot():
+    if len(sys.argv) != 2:
+        print "Enter J-Slot to select and read"
     else:
-        ts = Teststand()
-        ts.select(slot)
-        ts.read(slot)
-        cardInfo = ts.getInfo()
-        print cardInfo
-        print "Hi Der Bridge: {0}".format(ts.hiDerBridge())
-        print "Hi Der Igloo: {0}".format(ts.hiDerIgloo())
+        slot = int(sys.argv[1])
+        if slot not in slot_list:
+            print "Please select J-Slot from {0}".format(slot_list)
+        else:
+            ts = Teststand()
+            hiB = ts.hiDerBridge(2)
+            hiI = ts.hiDerIgloo(2)
+            print "Hi Der Bridge: {0}".format(hiB)
+            print "Hi Der Igloo: {0}".format(hiI)
+            if hiB and hiI:
+                ts.selectGpio(slot)
+                ts.readInfo(slot)
+                cardInfo = ts.getInfo()
+                print cardInfo
 
-
+#runSlot()
+t = Teststand()
+info = t.readActiveSlots()
+print info
 

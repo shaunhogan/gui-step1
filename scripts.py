@@ -213,7 +213,7 @@ class Teststand:
     def hiDerBridge(self):
         onesZeros = self.readBridge(0x0A, 4)
         value = '0xaaaaaaaa'
-        print onesZeros
+        print "Bridge OnesZeros: {0}".format(onesZeros)
         if onesZeros == value:
             return True
         else:
@@ -222,7 +222,7 @@ class Teststand:
     def hiDerIgloo(self):
         ones = self.readIgloo(0x02, 4)
         value = '0xffffffff'
-        print ones
+        print "Igloo Ones: {0}".format(ones)
         if ones == value:
             return True
         else:
@@ -244,8 +244,8 @@ else:
         ts.read(slot)
         cardInfo = ts.getInfo()
         print cardInfo
-        print ts.hiDerBridge()
-        print ts.hiDerIgloo()
+        print "Hi Der Bridge: {0}".format(ts.hiDerBridge())
+        print "Hi Der Igloo: {0}".format(ts.hiDerIgloo())
 
 
 

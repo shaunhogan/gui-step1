@@ -463,7 +463,7 @@ class makeGui:
     # Test Raspberry Pi Connection
     def pingPi(self):
         print "Pinging Raspberry Pi. Hold please!"
-        status = os.system("ping -c 1 {0}".format(self.pi))
+        status = os.system("ping {0}".format(self.pi))
         if status == 0:
             print "Raspberry Pi Connected: {0}".format(self.pi)
             return True

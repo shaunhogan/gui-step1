@@ -1,4 +1,5 @@
 # Checksum Class
+# Verifies Checksum (CRC) for reading Unique ID, temperature, and humidity.
 
 crctab = [
           0, 94, 188, 226, 97, 63, 221, 131, 194, 156, 126, 32, 163, 253, 31, 65,

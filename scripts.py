@@ -200,16 +200,13 @@ class Teststand:
         print 'Read Slot: J'+str(self.jslot)
 
         # Getting unique ID
-        # 0x05000000ea9c8b7000   <- From main gui
+        # 0x000000ea9c8b
         self.myBus.write(0x00,[0x06])
         self.myBus.write(self.slot,[0x11,0x04,0,0,0])
         self.myBus.write(0x50,[0x00])
         self.myBus.read(0x50, 8)
         raw_bus = self.myBus.sendBatch()
         raw_bus = raw_bus[-1]
-        # Here is a test case.
-        #raw_bus = '0 112 123 123 123 0 0 0 55'
-        #print 'Raw Unique ID: '+str(raw_bus)
         if raw_bus[0] != '0':
             print 'Read Unique ID I2C Error!'
             return False

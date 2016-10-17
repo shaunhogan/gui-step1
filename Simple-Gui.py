@@ -25,6 +25,14 @@ class makeGui:
         # The Raspberry Pi IP address
         self.pi = "192.168.1.41"
 
+        # Windows Computer?
+        windows = False
+
+        if windows:
+            self.ping = "ping -n 1 {0}".format(self.pi)
+        else:
+            self.ping = "ping -c 1 {0}".format(self.pi)
+
         # Ping Pi
         status = self.pingPi()
 
@@ -463,7 +471,7 @@ class makeGui:
     # Test Raspberry Pi Connection
     def pingPi(self):
         print "Pinging Raspberry Pi. Hold please!"
-        status = os.system("ping -n 1 {0}".format(self.pi))
+        status = os.system(self.ping)
         if status == 0:
             print "Raspberry Pi Connected: {0}".format(self.pi)
             return True

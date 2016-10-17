@@ -41,7 +41,7 @@ class Teststand:
         # Create a webBus instance
         if self.piStatus:
             try:
-                self.myBus = client.websocket(self.pi,0)
+                self.myBus = client.webBus(self.pi,0)
             except:
                 self.busStatus = False
                 print 'Client Websocket Connection Error: No bus for you... sadness, it\'s true!'
@@ -338,9 +338,9 @@ def runStand(windows=True, pi="192.168.1.41"):
 # Only run if scripts.py is main... otherwise don't run (if imported as library).
 if __name__ == '__main__':
     windows = False
-    pi = "127.0.0.1"
-    runSlot(windows,pi)
-    runStand(windows,pi)
+    #pi = "127.0.0.1"
+    runSlot(windows)
+    #runStand(windows)
 
 
 

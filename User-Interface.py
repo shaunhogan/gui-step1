@@ -689,13 +689,13 @@ class makeGui:
         self.gpioSelect_bttn.configure(bg="CadetBlue1")
         self.gpioSelect_bttn.pack()
 
-        # Make a button to read the unique ID & firmware LEFT SIDE
-        self.experi_uniqueID_left_get = Button(self.experi_subTop2_9_frame, text ="Get Unique ID & Firmware Ver. from Left", command=self.getUniqueIDPress_left)
+        # Make a button to read the unique ID & firmware LEFT SIDE :: Now RIGHT SIDE (backwards backplane)
+        self.experi_uniqueID_left_get = Button(self.experi_subTop2_9_frame, text ="Get Unique ID & Firmware Ver. from Right", command=self.getUniqueIDPress_left)
         self.experi_uniqueID_left_get.configure(bg="CadetBlue1")
         self.experi_uniqueID_left_get.pack(side=TOP)
 
-        # Make a button to read the unique ID & firmware RIGHT SIDE
-        self.experi_uniqueID_right_get = Button(self.experi_subTop2_10_frame, text ="Get Unique ID & Firmware Ver. from Right", command=self.getUniqueIDPress_right)
+        # Make a button to read the unique ID & firmware RIGHT SIDE :: Now LEFT SIDE (backwards backplane)
+        self.experi_uniqueID_right_get = Button(self.experi_subTop2_10_frame, text ="Get Unique ID & Firmware Ver. from Left", command=self.getUniqueIDPress_right)
         self.experi_uniqueID_right_get.configure(bg="lemon chiffon")
         self.experi_uniqueID_right_get.pack(side=TOP)
 
@@ -1026,11 +1026,6 @@ class makeGui:
                         "J7 and J26" : [0x2A,0x4A], "J8 and J25" : [0x8A,0xAA],
                         "J9 and J24" : [0xAA,0x8A], "J10 and J23" : [0x4A,0x2A]}
 
-        #dictStringToInts = {"J2 and J21" : [2, 21], "J3 and J20" : [3, 20],
-        #                "J4 and J19" : [4, 19], "J5 and J18" : [5, 18],
-        #                "J7 and J26" : [7, 26], "J8 and J25" : [8, 25],
-        #                "J9 and J24" : [9, 24], "J10 and J23" : [10, 23]}
-        # 2 3 4 5 ; 7 8 9 10 ; 18 19 20 21 ; 23 24 25 26
         dictStringToInts = {"J2 and J18" : [2, 18], "J3 and J19" : [3, 19],
                             "J4 and J20" : [4, 20], "J5 and J21" : [5, 21],
                             "J7 and J23" : [7, 23], "J8 and J24" : [8, 24],
@@ -1097,7 +1092,7 @@ class makeGui:
 ##################################################################################
 
     def getUniqueIDPress(self):
-
+        # The keys (self.jslot) retun i2c addresses (self.slot)
         bridgeDict = {  2 : 0x19, 3 : 0x1A, 4 : 0x1B, 5 : 0x1C,
                         7 : 0x19, 8 : 0x1A, 9: 0x1B, 10: 0x1C,
                        18 : 0x19, 19 : 0x1A, 20: 0x1B, 21 : 0x1C,
@@ -1119,7 +1114,6 @@ class makeGui:
                self.myBus.write(0x74, [0x02^0x8])
             if self.jslot in [7,8,9,10]:
                self.myBus.write(0x74, [0x20^0x8])
-
         self.myBus.sendBatch()
 
         # slot = 0x19

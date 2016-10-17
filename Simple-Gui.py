@@ -452,13 +452,13 @@ class makeGui:
         self.gpioSelect_bttn.configure(bg="CadetBlue1")
         self.gpioSelect_bttn.pack()
 
-        # Make a button to read the unique ID & firmware LEFT SIDE
-        self.experi_uniqueID_left_get = Button(self.experi_subTop2_9_frame, text ="Get Unique ID & Firmware Ver. from Left", command=self.getUniqueIDPress_left)
+        # Make a button to read the unique ID & firmware LEFT SIDE :: Now RIGHT SIDE (backwards backplane)
+        self.experi_uniqueID_left_get = Button(self.experi_subTop2_9_frame, text ="Get Unique ID & Firmware Ver. from Right", command=self.getUniqueIDPress_left)
         self.experi_uniqueID_left_get.configure(bg="CadetBlue1")
         self.experi_uniqueID_left_get.pack(side=TOP)
 
-        # Make a button to read the unique ID & firmware RIGHT SIDE
-        self.experi_uniqueID_right_get = Button(self.experi_subTop2_10_frame, text ="Get Unique ID & Firmware Ver. from Right", command=self.getUniqueIDPress_right)
+        # Make a button to read the unique ID & firmware RIGHT SIDE :: Now LEFT SIDE (backwards backplane)
+        self.experi_uniqueID_right_get = Button(self.experi_subTop2_10_frame, text ="Get Unique ID & Firmware Ver. from Left", command=self.getUniqueIDPress_right)
         self.experi_uniqueID_right_get.configure(bg="lemon chiffon")
         self.experi_uniqueID_right_get.pack(side=TOP)
 

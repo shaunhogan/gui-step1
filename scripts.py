@@ -294,7 +294,7 @@ class Teststand:
     def readActiveSlots(self):
         info = []
         for slot in self.active_slots:
-            info.append(self.readInfo())
+            info.append(self.readInfo(slot))
         return info
 
 ##################################################################################
@@ -339,8 +339,8 @@ def runStand(windows=True, pi="192.168.1.41"):
 if __name__ == '__main__':
     windows = False
     #pi = "127.0.0.1"
-    runSlot(windows)
-    #runStand(windows)
+    #runSlot(windows)
+    runStand(windows)
 
 
 

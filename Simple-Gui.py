@@ -452,15 +452,16 @@ class makeGui:
         self.gpioSelect_bttn.configure(bg="CadetBlue1")
         self.gpioSelect_bttn.pack()
 
-        # Make a button to read the unique ID & firmware LEFT SIDE :: Now RIGHT SIDE (backwards backplane)
-        self.experi_uniqueID_left_get = Button(self.experi_subTop2_9_frame, text ="Get Unique ID & Firmware Ver. from Right", command=self.getUniqueIDPress_left)
-        self.experi_uniqueID_left_get.configure(bg="CadetBlue1")
+        # Make a button to read the unique ID & firmware from LEFT SIDE (RM 4 and 3)
+        self.experi_uniqueID_left_get = Button(self.experi_subTop2_9_frame, text ="Read from Left (J2-J5 and J7-J10: RM 4 and 3)", command=self.getUniqueIDPress_left)
+        self.experi_uniqueID_left_get.configure(bg="lemon chiffon")
         self.experi_uniqueID_left_get.pack(side=TOP)
 
-        # Make a button to read the unique ID & firmware RIGHT SIDE :: Now LEFT SIDE (backwards backplane)
-        self.experi_uniqueID_right_get = Button(self.experi_subTop2_10_frame, text ="Get Unique ID & Firmware Ver. from Left", command=self.getUniqueIDPress_right)
-        self.experi_uniqueID_right_get.configure(bg="lemon chiffon")
+        # Make a button to read the unique ID & firmware from RIGHT SIDE (RM 2 and 1)
+        self.experi_uniqueID_right_get = Button(self.experi_subTop2_10_frame, text ="Read from Right (J18-J21 and J23-J26: RM 2 and 1)", command=self.getUniqueIDPress_right)
+        self.experi_uniqueID_right_get.configure(bg="CadetBlue1")
         self.experi_uniqueID_right_get.pack(side=TOP)
+
 
     #################################
     ###                           ###
@@ -773,14 +774,6 @@ class makeGui:
                        23 : 0x19, 24 : 0x1A, 25: 0x1B, 26 : 0x1C}
 
         if self.readFromLeft:
-            self.jslot = self.jslots[1]
-            self.slot = bridgeDict[self.jslot]
-            #self.myBus.write(self.fanout, [0x01])
-            if self.jslot in [18,19,20,21]:
-                self.myBus.write(0x74,[0x10^0x8])
-            if self.jslot in [23,24,25,26]:
-                self.myBus.write(0x74,[0x01^0x8])
-        else:
             self.jslot = self.jslots[0]
             self.slot = bridgeDict[self.jslot]
             #self.myBus.write(self.fanout, [0x02])
@@ -788,6 +781,14 @@ class makeGui:
                self.myBus.write(0x74, [0x02^0x8])
             if self.jslot in [7,8,9,10]:
                self.myBus.write(0x74, [0x20^0x8])
+        else:
+            self.jslot = self.jslots[1]
+            self.slot = bridgeDict[self.jslot]
+            #self.myBus.write(self.fanout, [0x01])
+            if self.jslot in [18,19,20,21]:
+                self.myBus.write(0x74,[0x10^0x8])
+            if self.jslot in [23,24,25,26]:
+                self.myBus.write(0x74,[0x01^0x8])
 
         self.myBus.sendBatch()
 

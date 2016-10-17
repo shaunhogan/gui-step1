@@ -52,7 +52,7 @@ class Teststand:
 
             # Find active slots only if client websocket is connected.
             print "Finding active slots..."
-            self.slot_list = [2,3,4,5,7,8,9,10,18,19,20,21,23,24,25,26]
+            self.slot_list = [2,3,4,5,7,8,9,10]#,18,19,20,21,23,24,25,26]
             self.active_slots = self.findActiveSlots()
             print "Active J-Slots: {0}".format(self.active_slots)
 

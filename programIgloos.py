@@ -40,6 +40,7 @@ if __name__ ==  "__main__":
     else:
         slots = ts.active_slots
     
+    iglooData = []
     if ts.piStatus and ts.busStatus:
         for slot in slots:
             print ""
@@ -58,6 +59,9 @@ if __name__ ==  "__main__":
             data = ts.readInfo(slot)
             print "time: ", data["date_time"]
             print "temp: ", data["temperature"]
+            iglooData.append(data["igloo_fw_maj"])
+        for fw in iglooData:
+            print "Igloo FW Major: {0}".format(fw)
     else:
         print "Failed Raspberry Pi and/or Websocket status."
         print "    1. Did you plug in the ethernet cable?"

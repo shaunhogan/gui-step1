@@ -716,10 +716,9 @@ class makeGui:
         self.myBus.write(0x70,[0x01,gpioVal])
         self.myBus.read(0x70,0x01)
     
-        # myBus.write(0x70,[0x03,0x08])
         batch = self.myBus.sendBatch()
 
-        print batch
+        print "GPIO Batch: {0}".format(batch)
         
         if (batch[-1] == "1 0"):
             print "GPIO I2C Error: {0}".format(self.gpioChoiceVar.get())
@@ -727,7 +726,6 @@ class makeGui:
         elif (batch[-1] == "0 "+str(gpioVal)):
             print 'GPIO selected: {0}'.format(self.gpioChoiceVar.get())
             self.gpioSelect_bttn.configure(bg="#33ff33")
-    
         else:
             print 'GPIO Choice Error... unexpected communication error!'
 

@@ -14,10 +14,11 @@ import client
 import temp
 import os
 import sys
+import platform
 
 # Teststand class pings Raspberry Pi
 class Teststand:
-    def __init__(self, windows=True, pi="192.168.1.41"):
+    def __init__(self):
         
         # Initialize Values
         self.gpioSelected = False       # Has GPIO been selected?
@@ -25,7 +26,11 @@ class Teststand:
         self.busStatus    = False       # Can we connect a client websocket?
 
         # MyPi (ip address)
-        self.pi = pi
+        self.pi = "192.168.1.41"
+        #self.pi = "127.0.0.1"
+
+        # Is the OS Windows?
+        windows = platform.system() == "Windows"
 
         # Use different count options to ping only 1 time.
         if windows:
@@ -271,7 +276,7 @@ class Teststand:
         self.jslot = jslot
         igloo_fw_maj = self.readIgloo(0x00, 1)
         igloo_fw_min = self.readIgloo(0x01, 1)
-        print "Igloo fw: {0} {1}".format(igloo_fw_maj, igloo_fw_min)
+        print "Igloo FW: {0} {1}".format(igloo_fw_maj, igloo_fw_min)
         return True
 
     # Determine active jslots.
@@ -301,7 +306,7 @@ slot_list = [2,3,4,5,7,8,9,10,18,19,20,21,23,24,25,26]
 # python scripts.py 2
 # Windows True for Windows OS, False for Linux and OSX
 # Pi Ip Address: default is 192.168.1.41
-def runSlot(windows=True, pi="192.168.1.41"):
+def runSlot():
     if len(sys.argv) != 2:
         print "Enter J-Slot to select and read"
     else:
@@ -309,7 +314,7 @@ def runSlot(windows=True, pi="192.168.1.41"):
         if slot not in slot_list:
             print "Please select J-Slot from {0}".format(slot_list)
         else:
-            ts = Teststand(windows,pi)
+            ts = Teststand()
             if ts.piStatus and ts.busStatus:
                 hiB = ts.hiDerBridge(slot)
                 print "Hi Der Bridge: {0}".format(hiB)
@@ -323,18 +328,16 @@ def runSlot(windows=True, pi="192.168.1.41"):
 # Get information for all active slots.
 # Windows True for Windows OS, False for Linux and OSX
 # Pi Ip Address: default is 192.168.1.41
-def runStand(windows=True, pi="192.168.1.41"):
-    ts = Teststand(windows, pi)
+def runStand():
+    ts = Teststand()
     if ts.piStatus and ts.busStatus:
         info = ts.readActiveSlots()
         print info
 
 # Only run if scripts.py is main... otherwise don't run (if imported as library).
 if __name__ == '__main__':
-    windows = False
-    #pi = "127.0.0.1"
-    #runSlot(windows)
-    runStand(windows)
+    #runSlot()
+    runStand()
 
 
 

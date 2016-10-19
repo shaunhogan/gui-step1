@@ -48,7 +48,7 @@ if __name__ ==  "__main__":
     if ts.piStatus and ts.busStatus:
         for slot in slots:
             print ""
-            print "Beginning progtamming slot: ", slot
+            print "Initiated ProTaming of SpecifiedSlot: ", slot
             print ""
 
             ts.selectGpio(slot)
@@ -68,8 +68,8 @@ if __name__ ==  "__main__":
             print "Igloo FW: {0} {1}".format(datum["igloo_fw_maj"], datum["igloo_fw_min"])
     else:
         print "Failed Raspberry Pi and/or Websocket status."
-        print "    1. Did you plug in the ethernet cable?"
-        print "    2. Did you turn on the Raspberry Pi?"
-        print "    3. Did you start the server?"
+        print "    1. Did you turn on the Raspberry Pi?"
+        print "    2. Did you start the server?"
+        print "    3. Did you plug in the ethernet cable?"
         print "    4. Did you have coffee today?"
 

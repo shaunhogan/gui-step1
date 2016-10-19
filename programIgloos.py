@@ -40,20 +40,32 @@ if __name__ ==  "__main__":
     else:
         slots = ts.active_slots
     
-    for slot in slots:
-        print ""
-        print "Beginning progtamming slot: ", slot
-        print ""
+    iglooData = []
+    if ts.piStatus and ts.busStatus:
+        for slot in slots:
+            print ""
+            print "Beginning progtamming slot: ", slot
+            print ""
 
-        ts.selectGpio(slot)
-        data = ts.readInfo(slot)
-        print "time: ", data["date_time"]
-        print "temp: ", data["temperature"]
+            ts.selectGpio(slot)
+            data = ts.readInfo(slot)
+            print "time: ", data["date_time"]
+            print "temp: ", data["temperature"]
 
-        print "Starting Flashpro batch programming mode"
-        #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:C:\\Users\\pastika\\Desktop\\program_igloo.tcl console_mode:brief", shell=True)
-        sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
-        
-        data = ts.readInfo(slot)
-        print "time: ", data["date_time"]
-        print "temp: ", data["temperature"]
+            print "Starting Flashpro batch programming mode"
+            #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:C:\\Users\\pastika\\Desktop\\program_igloo.tcl console_mode:brief", shell=True)
+            sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
+            
+            data = ts.readInfo(slot)
+            print "time: ", data["date_time"]
+            print "temp: ", data["temperature"]
+            iglooData.append(data["igloo_fw_maj"])
+        for fw in iglooData:
+            print "Igloo FW Major: {0}".format(fw)
+    else:
+        print "Failed Raspberry Pi and/or Websocket status."
+        print "    1. Did you plug in the ethernet cable?"
+        print "    2. Did you turn on the Raspberry Pi?"
+        print "    3. Did you start the server?"
+        print "    4. Did you have coffee today?"
+

@@ -689,17 +689,10 @@ class makeGui:
 
     # Opens the proper GPIO slot. Used for programming cards.
     def gpioBttnPress(self):
-        # Previous dict. Defines GPIO values.
+        # Defines GPIO values for Full Backplane.
         jSlotDict = {"J2 and J18" : 0x29, "J3 and J19" : 0x89, "J4 and J20" : 0xA9,
                     "J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
                     "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
-
-
-        # Old Full Backplane Functionality
-        oldJSlotDict = {"J2 and J21" : [0x29,0x49], "J3 and J20" : [0x89,0xA9],
-                        "J4 and J19" : [0xA9,0x89], "J5 and J18" : [0x49,0x29],
-                        "J7 and J26" : [0x2A,0x4A], "J8 and J25" : [0x8A,0xAA],
-                        "J9 and J24" : [0xAA,0x8A], "J10 and J23" : [0x4A,0x2A]}
 
         dictStringToInts = {"J2 and J18" : [2, 18], "J3 and J19" : [3, 19],
                             "J4 and J20" : [4, 20], "J5 and J21" : [5, 21],
@@ -709,16 +702,8 @@ class makeGui:
         gpioVal = jSlotDict[self.gpioChoiceVar.get()]
         self.jslots = dictStringToInts[self.gpioChoiceVar.get()]
         self.gpioSelected = True
-        # print 'GPIO selected: {0}'.format(self.gpioChoiceVar.get())
 
-        # Fanout Commands
-        #if gpioValsIndex == 0:
-            #self.myBus.write(self.fanout, [0x02])
-        #else:
-            #self.myBus.write(self.fanout, [0x01])
-        #batch = self.myBus.sendBatch()
         self.myBus.write(0x74, [0x08]) # PCA9538 is bit 3 on ngccm mux
-        # myBus.write(0x70,[0x01,0x00]) # GPIO PwrEn is register 3
         #power on and reset
             #register 3 is control reg for i/o modes
         self.myBus.write(0x70,[0x03,0x00]) # sets all GPIO pins to 'output' mode
@@ -730,7 +715,6 @@ class makeGui:
         self.myBus.write(0x70,[0x01,gpioVal])
     
         # myBus.write(0x70,[0x03,0x08])
-        self.myBus.read(0x70,1)
         batch = self.myBus.sendBatch()
     
         if (batch[-1] == "1 0"):
@@ -741,10 +725,7 @@ class makeGui:
             self.gpioSelect_bttn.configure(bg="#33ff33")
     
         else:
-            print 'GPIO Choice Error... state of confusion!'
-            # print 'initial = '+str(batch)
-        
-        #print 'GPIO batch: {0}'.format(batch)
+            print 'GPIO Choice Error... unexpected communication error!'
 
 ##################################################################################
 
@@ -853,10 +834,8 @@ class makeGui:
 ##############################################################################################
 
     def checkIglooToggle(self):
-        #print '\n--- Begin Toggle Igloo2 Power Test'
         control_address = 0x22
         message = self.readBridge(control_address,4)
-        # print 'Igloo Control = '+str(message)
 
         ones_address = 0x02
         all_ones = '255 255 255 255'
@@ -869,23 +848,18 @@ class makeGui:
         register = self.readIgloo(ones_address, 4)
         if register != all_ones:
             retval = False
-        # print 'Igloo Ones = '+str(register)
 
         # Turn Igloo Off
-        # print 'Igloo Control = '+str(self.toggleIgloo())
         self.toggleIgloo()
         register = self.detectIglooError(ones_address, 4)
         if register != '0':
             retval = True
-        # print 'Igloo Ones = '+str(register)
 
         # Turn Igloo On
-        # print 'Igloo Control = '+str(self.toggleIgloo())
         self.toggleIgloo()
         register = self.readIgloo(ones_address, 4)
         if register != all_ones:
             retval = False
-        # print 'Igloo Ones = '+str(register)
 
         if retval:
             print 'Toggle Igloo Power Success!'
@@ -935,8 +909,6 @@ class makeGui:
         self.myBus.write(0x09,[regAddress])
         self.myBus.read(0x09, num_bytes)
         message = self.myBus.sendBatch()[-1]
-        #  if message[0] != '0':
-        #          print 'Igloo i2c error detected in detectIglooError'
         return message[0]
 
     def getValue(self, message):
@@ -948,7 +920,6 @@ class makeGui:
         length = len(hex_message)
         zeros = "".join(list('0' for i in xrange(8-length)))
         hex_message = zeros + hex_message
-        # print 'hex message = '+str(hex_message)
         mList = list(int(hex_message[a:a+2],16) for a in xrange(0,2*num_bytes,2))
         mList.reverse()
         return mList

@@ -52,7 +52,7 @@ class Teststand:
 
             # Find active slots only if client websocket is connected.
             print "Finding active slots..."
-            self.slot_list = [2,3,4,5,7,8,9,10]#,18,19,20,21,23,24,25,26]
+            self.slot_list = [2,3,4,5,7,8,9,10,18,19,20,21,23,24,25,26]
             self.active_slots = self.findActiveSlots()
             print "Active J-Slots: {0}".format(self.active_slots)
 
@@ -158,9 +158,9 @@ class Teststand:
     def selectGpio(self, jslot):
         self.jslot = jslot
         # Defines GPIO values. Only used for reference.
-        jSlotDict = {"J2 and J18" : 0x29, "J3 and J19" : 0x89, "J4 and J20" : 0xA9,
-                    "J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
-                    "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
+        #jSlotDict = {"J2 and J18" : 0x29, "J3 and J19" : 0x89, "J4 and J20" : 0xA9,
+        #            "J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
+        #            "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
 
         # Used to set GPIO for single slot.
         jSlotDict = {  2  : 0x29, 3  : 0x89, 4  : 0xA9, 5  : 0x49,
@@ -263,7 +263,7 @@ class Teststand:
         self.jslot = jslot
         onesZeros = self.readBridge(0x0A, 4)
         value = '0xaaaaaaaa'
-        #print "Bridge OnesZeros: {0}".format(onesZeros)
+        print "Bridge OnesZeros: {0}".format(onesZeros)
         if onesZeros == value:
             return True
         else:
@@ -274,7 +274,7 @@ class Teststand:
         self.jslot = jslot
         ones = self.readIgloo(0x02, 4)
         value = '0xffffffff'
-        #print "Igloo Ones: {0}".format(ones)
+        print "Igloo Ones: {0}".format(ones)
         if ones == value:
             return True
         else:
@@ -321,7 +321,7 @@ def runSlot(windows=True, pi="192.168.1.41"):
                 hiI = ts.hiDerIgloo(slot)
                 print "Hi Der Bridge: {0}".format(hiB)
                 print "Hi Der Igloo: {0}".format(hiI)
-                if hiB and hiI:
+                if hiB:
                     ts.selectGpio(slot)
                     cardInfo = ts.readInfo(slot)
                     print cardInfo

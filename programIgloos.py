@@ -22,12 +22,16 @@ if __name__ ==  "__main__":
     parser = OptionParser()
     parser.add_option("-f", "--file", dest="filename", help="Grab programming file")
     parser.add_option("-s", "--slot", dest="slot",     help="Specify a single slot", default = -2)
+    parser.add_option("-t", "--stop", dest="stop",     action="store_true",  help="Stop after checking active slots")
 
     (options, args) = parser.parse_args()
 
     writeTCLFile(options.filename)
     
     ts = Teststand()
+
+    if options.stop:
+        exit()
     
     slots = []
     if options.slot >0:
@@ -59,9 +63,9 @@ if __name__ ==  "__main__":
             data = ts.readInfo(slot)
             print "time: ", data["date_time"]
             print "temp: ", data["temperature"]
-            iglooData.append(data["igloo_fw_maj"])
-        for fw in iglooData:
-            print "Igloo FW Major: {0}".format(fw)
+            iglooData.append(data)
+        for datum in iglooData:
+            print "Igloo FW: {0} {1}".format(datum["igloo_fw_maj"], datum["igloo_fw_min"])
     else:
         print "Failed Raspberry Pi and/or Websocket status."
         print "    1. Did you plug in the ethernet cable?"

@@ -269,21 +269,18 @@ class Teststand:
     # Tests for communication with Igloo. 
     def hiDerIgloo(self, jslot):
         self.jslot = jslot
-        ones = self.readIgloo(0x02, 4)
-        value = '0xffffffff'
-        print "Igloo Ones: {0}".format(ones)
-        if ones == value:
-            return True
-        else:
-            return False
+        igloo_fw_maj = self.readIgloo(0x00, 1)
+        igloo_fw_min = self.readIgloo(0x01, 1)
+        print "Igloo fw: {0} {1}".format(igloo_fw_maj, igloo_fw_min)
+        return True
 
     # Determine active jslots.
     def findActiveSlots(self):
         slots = []
         for slot in self.slot_list:
             hiB = self.hiDerBridge(slot)
-            hiI = self.hiDerIgloo(slot)
-            if hiB and hiI:
+            if hiB:
+                hiI = self.hiDerIgloo(slot)
                 print "Active J-Slot: {0}".format(slot)
                 slots.append(slot)
         return slots
@@ -315,10 +312,10 @@ def runSlot(windows=True, pi="192.168.1.41"):
             ts = Teststand(windows,pi)
             if ts.piStatus and ts.busStatus:
                 hiB = ts.hiDerBridge(slot)
-                hiI = ts.hiDerIgloo(slot)
                 print "Hi Der Bridge: {0}".format(hiB)
-                print "Hi Der Igloo: {0}".format(hiI)
                 if hiB:
+                    hiI = ts.hiDerIgloo(slot)
+                    print "Hi Der Igloo: {0}".format(hiI)
                     ts.selectGpio(slot)
                     cardInfo = ts.readInfo(slot)
                     print cardInfo

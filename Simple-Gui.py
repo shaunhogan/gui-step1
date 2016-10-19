@@ -19,6 +19,7 @@ import json
 import client
 import subprocess
 import os
+import platform
 
 class makeGui:
     def __init__(self, parent):
@@ -26,7 +27,7 @@ class makeGui:
         self.pi = "192.168.1.41"
 
         # Windows Computer?
-        windows = False
+        windows = (platform.system() == 'Windows')
 
         if windows:
             self.ping = "ping -n 1 {0}".format(self.pi)
@@ -713,10 +714,13 @@ class makeGui:
     
         #jtag selectors finnagling for slot 26
         self.myBus.write(0x70,[0x01,gpioVal])
+        self.myBus.read(0x70,0x01)
     
         # myBus.write(0x70,[0x03,0x08])
         batch = self.myBus.sendBatch()
-    
+
+        print batch
+        
         if (batch[-1] == "1 0"):
             print "GPIO I2C Error: {0}".format(self.gpioChoiceVar.get())
             self.gpioSelect_bttn.configure(bg="#ff3333")

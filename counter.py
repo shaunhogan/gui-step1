@@ -199,7 +199,8 @@ def count(rm_list, register_list, wait, iterations=1):
         # Reset High and Low
         reset(0x10, True)
         reset(0x10, False)
-
+        print "Reset Counters"
+        print register_list
         # Read counters 
         readCounters(rm_list, register_list)
 
@@ -212,7 +213,6 @@ def count(rm_list, register_list, wait, iterations=1):
             # Read counters 
             readCounters(rm_list, register_list)
 
-        reset(0x08, False)
     else:
         print "Check power / connections."
 
@@ -221,6 +221,8 @@ def count(rm_list, register_list, wait, iterations=1):
 if __name__ == "__main__":
     rm_list = [2]
     reg_list = ["b_reset", "i_reset", "b_wte", "i_wte"]
-    count(rm_list, reg_list, 0.1, 10)
+    wait = 0.5
+    iterations = 55
+    count(rm_list, reg_list, wait, iterations)
 
 

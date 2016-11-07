@@ -101,7 +101,7 @@ def gpioReset():
     bus.write(gpio,[0x01,0x18]) # GPIO reset is 10
     bus.write(gpio,[0x01,0x08])
     batch = bus.sendBatch()
-    print 'gpio reset: {0}'.format(batch)
+    print 'GPIO Reset: {0}'.format(batch)
 
 # Set gpio to output mode
 def gpioOutputMode():
@@ -200,7 +200,6 @@ def count(rm_list, register_list, wait, iterations=1):
         reset(0x10, True)
         reset(0x10, False)
         print "Reset Counters"
-        print register_list
         # Read counters 
         readCounters(rm_list, register_list)
 
@@ -218,11 +217,19 @@ def count(rm_list, register_list, wait, iterations=1):
 
 #########################################################
 
-if __name__ == "__main__":
-    rm_list = [2]
-    reg_list = ["b_reset", "i_reset", "b_wte", "i_wte"]
-    wait = 0.5
-    iterations = 55
+def main():
+    rm_list = [3,4]
+    #reg_list = ["b_reset", "i_reset", "b_wte", "i_wte"]
+    reg_list = ["b_clock", "i_clock"]
+    wait = 1
+    iterations = 100
+    print "RM list: {0}".format(rm_list)
+    print "Register list: {0}".format(reg_list)
+    print "Wait time: {0}".format(wait)
+    print "Number iterations: {0}".format(iterations)
     count(rm_list, reg_list, wait, iterations)
+
+if __name__ == "__main__":
+    main()
 
 

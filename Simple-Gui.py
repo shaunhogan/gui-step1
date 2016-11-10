@@ -20,11 +20,12 @@ import client
 import subprocess
 import os
 import platform
+import mypi
 
 class makeGui:
     def __init__(self, parent):
         # The Raspberry Pi IP address
-        self.pi = "192.168.1.41"
+        self.pi = mypi.ip_address
 
         # Windows Computer?
         windows = (platform.system() == 'Windows')

@@ -16,11 +16,12 @@ import json
 import client
 import subprocess
 import os
+import mypi
 
 class makeGui:
     def __init__(self, parent):
         # The Raspberry Pi IP address
-        self.pi = "192.168.1.41"
+        self.pi = mypi.ip_address
 
         # Ping Pi
         status = self.pingPi()

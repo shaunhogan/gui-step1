@@ -5,7 +5,10 @@
 # open channel with gui currently... read from J18
 
 import client
-pi = "192.168.1.41"
+import mypi
+
+# Raspberry Pi IP address
+pi = mypi.ip_address
 bus = client.webBus(pi, 0)
 
 def pulse(cmd):

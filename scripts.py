@@ -15,6 +15,7 @@ import temp
 import os
 import sys
 import platform
+import mypi
 
 # Teststand class pings Raspberry Pi
 class Teststand:
@@ -26,7 +27,7 @@ class Teststand:
         self.busStatus    = False       # Can we connect a client websocket?
 
         # MyPi (ip address)
-        self.pi = "192.168.1.41"
+        self.pi = mypi.ip_address
         #self.pi = "127.0.0.1"
 
         # Is the OS Windows?

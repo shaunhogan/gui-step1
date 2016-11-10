@@ -2,9 +2,10 @@
 
 import client
 import time
+import mypi
 
 # Setup web bus and i2c addresses.
-pi = "192.168.1.41"
+pi = mypi.ip_address
 bus = client.webBus(pi, 0)
 ccm = 0x74
 gpio = 0x70
@@ -169,16 +170,23 @@ def readCounter(rm, slot, counter):
     m = bus.sendBatch()
     return m
 
-def readCounters(rm_list, register_list):
+def readCounters(rm_list, register_list, calibration=False):
     outputs = []
-    for c in register_list:
+    for r in register_list:
         for rm in rm_list:
             for slot in [1,2,3,4]:
                 # Read and print counter 
-                m = readCounter(rm, slot, c)
+                m = readCounter(rm, slot, r)
                 v = getValue(m[-1])
                 outputs.append("{0}".format(v))
                 #print "{0} : {1}".format(c,v)
+        if calibration:
+            # Read and print counter: calibration is "RM 2 Slot 1" address
+            m = readCounter(2, 1, r)
+            v = getValue(m[-1])
+            outputs.append("{0}".format(v))
+            #print "{0} : {1}".format(c,v)
+
     print "\t".join(outputs)
         
 # bit = 0x10 is reset counter
@@ -190,7 +198,7 @@ def readCounters(rm_list, register_list):
 # wait a second         wait for t = 1 seconds
 # counter enable low    turn bit = 0x08 off
 # read counters         counts = 11000 after 1 second (11 kHz)
-def count(rm_list, register_list, wait, iterations=1):
+def count(rm_list, register_list, wait, iterations=1, calibration=False):
     # Set gpio output mode
     status = gpioOutputMode()
 
@@ -201,7 +209,7 @@ def count(rm_list, register_list, wait, iterations=1):
         reset(0x10, False)
         print "Reset Counters"
         # Read counters 
-        readCounters(rm_list, register_list)
+        readCounters(rm_list, register_list, calibration)
 
         for i in xrange(iterations):
             # Counter enable high, wait, counter enable low
@@ -210,7 +218,7 @@ def count(rm_list, register_list, wait, iterations=1):
             reset(0x08, False)
 
             # Read counters 
-            readCounters(rm_list, register_list)
+            readCounters(rm_list, register_list, calibration)
 
     else:
         print "Check power / connections."
@@ -218,16 +226,18 @@ def count(rm_list, register_list, wait, iterations=1):
 #########################################################
 
 def main():
-    rm_list = [3,4]
-    #reg_list = ["b_reset", "i_reset", "b_wte", "i_wte"]
-    reg_list = ["b_clock", "i_clock"]
+    calibration = False
+    rm_list = [3, 4]
+    reg_list = ["b_reset", "i_reset", "b_wte", "i_wte"]
+    #reg_list = ["b_clock", "i_clock"]
     wait = 1
-    iterations = 100
+    iterations = 20
     print "RM list: {0}".format(rm_list)
     print "Register list: {0}".format(reg_list)
+    print "Calibration: {0}".format(calibration)
     print "Wait time: {0}".format(wait)
     print "Number iterations: {0}".format(iterations)
-    count(rm_list, reg_list, wait, iterations)
+    count(rm_list, reg_list, wait, iterations, calibration)
 
 if __name__ == "__main__":
     main()

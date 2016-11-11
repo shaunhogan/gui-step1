@@ -15,7 +15,7 @@ import temp
 import os
 import sys
 import platform
-import mypi
+import config
 
 # Teststand class pings Raspberry Pi
 class Teststand:
@@ -27,8 +27,14 @@ class Teststand:
         self.busStatus    = False       # Can we connect a client websocket?
 
         # MyPi (ip address)
-        self.pi = mypi.ip_address
+        self.pi = config.ip_address
         #self.pi = "127.0.0.1"
+        
+        # ngCCM i2c address
+        self.ccm = config.ccm
+
+        # ngCCM i2c address
+        self.gpio = config.gpio
 
         # Is the OS Windows?
         windows = platform.system() == "Windows"
@@ -139,6 +145,33 @@ class Teststand:
 
 ##################################################################################
 
+    # Reset gpio 
+    def gpioReset(self):
+        # gpio reset
+        #register 3 is control reg for i/o modes
+        self.myBus.write(self.ccm,[0x08])
+        self.myBus.write(self.gpio,[0x03,0x00]) # sets all GPIO pins to 'output' mode
+        self.myBus.write(self.gpio,[0x01,0x00])
+        self.myBus.write(self.gpio,[0x01,0x08])
+        self.myBus.write(self.gpio,[0x01,0x18]) # GPIO reset is 10
+        self.myBus.write(self.gpio,[0x01,0x08])
+        batch = self.myBuself.s.sendBatch()
+        print 'GPIO Reset: {0}'.format(batch)
+    
+    # Set gpio to output mode
+    def gpioOutputMode(self):
+        #register 3 is control reg for i/o modes
+        self.myBus.write(self.ccm,[0x08])
+        self.myBus.write(self.gpio,[0x03,0x00]) # sets all GPIO pins to 'output' mode
+        batch = self.myBus.sendBatch()
+        error_code = batch[-1][0]
+        if error_code == '1':
+            print "Set GPIO output mode fail"
+            return False
+        else:
+            print "Set GPIO output mode successful"
+            return True
+
     # Select jslot, open channel on ngCCM Emulator.
     def selectSlot(self, jslot):
         self.jslot = jslot
@@ -150,13 +183,13 @@ class Teststand:
 
         self.slot = bridgeDict[self.jslot]
         if self.jslot in [18,19,20,21]:
-            self.myBus.write(0x74,[0x10^0x8])
+            self.myBus.write(self.ccm,[0x10^0x8])
         if self.jslot in [23,24,25,26]:
-            self.myBus.write(0x74,[0x01^0x8])
+            self.myBus.write(self.ccm,[0x01^0x8])
         if self.jslot in [2,3,4,5]:
-           self.myBus.write(0x74, [0x02^0x8])
+           self.myBus.write(self.ccm, [0x02^0x8])
         if self.jslot in [7,8,9,10]:
-           self.myBus.write(0x74, [0x20^0x8])
+           self.myBus.write(self.ccm, [0x20^0x8])
 
         self.myBus.sendBatch()
 
@@ -177,17 +210,17 @@ class Teststand:
         gpioVal = jSlotDict[self.jslot]
         self.gpioSelected = True
 
-        self.myBus.write(0x74, [0x08]) # PCA9538 is bit 3 on ngccm mux
-        self.myBus.write(0x70,[0x03,0x00]) # sets all GPIO pins to 'output' mode
-        self.myBus.write(0x70,[0x01,0x08])
-        self.myBus.write(0x70,[0x01,0x18]) # GPIO reset is 10
-        self.myBus.write(0x70,[0x01,0x08])
+        self.myBus.write(self.ccm, [0x08]) # PCA9538 is bit 3 on ngccm mux
+        self.myBus.write(self.gpio,[0x03,0x00]) # sets all GPIO pins to 'output' mode
+        self.myBus.write(self.gpio,[0x01,0x08])
+        self.myBus.write(self.gpio,[0x01,0x18]) # GPIO reset is 10
+        self.myBus.write(self.gpio,[0x01,0x08])
     
         #jtag selectors finnagling for slot 26
-        self.myBus.write(0x70,[0x01,gpioVal])
+        self.myBus.write(self.gpio,[0x01,gpioVal])
     
-        # myBus.write(0x70,[0x03,0x08])
-        self.myBus.read(0x70,1)
+        # myBus.write(self.gpio,[0x03,0x08])
+        self.myBus.read(self.gpio,1)
         batch = self.myBus.sendBatch()
     
         if (batch[-1] == "1 0"):

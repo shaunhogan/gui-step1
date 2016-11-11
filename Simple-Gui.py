@@ -20,12 +20,12 @@ import client
 import subprocess
 import os
 import platform
-import mypi
+import config
 
 class makeGui:
     def __init__(self, parent):
         # The Raspberry Pi IP address
-        self.pi = mypi.ip_address
+        self.pi = config.ip_address
 
         # Windows Computer?
         windows = (platform.system() == 'Windows')
@@ -42,11 +42,11 @@ class makeGui:
         if status:
             self.myBus = client.webBus(self.pi,0)
 
-        # Create a permanent i2c address of QCard in slot 1 (used for Igloo Toggle)
-        self.address = 0x19
-
-        # Fanout i2c address 
-        self.fanout = 0x72
+        # Define i2c addresses
+        self.gpio = config.gpio         # gpio i2c address
+        self.fanout = config.fanout     # fanout i2c address
+        self.ccm = config.ccm           # ngccm emulator i2c address
+        self.address = 0x19             # Qie Card in slot 1 i2c address (use for Toggle Igloo Power)
 
         # Create an instance of initialTests
         self.initialTest = initialTests()
@@ -705,17 +705,17 @@ class makeGui:
         self.jslots = dictStringToInts[self.gpioChoiceVar.get()]
         self.gpioSelected = True
 
-        self.myBus.write(0x74, [0x08]) # PCA9538 is bit 3 on ngccm mux
+        self.myBus.write(self.ccm, [0x08]) # PCA9538 is bit 3 on ngccm mux
         #power on and reset
             #register 3 is control reg for i/o modes
-        self.myBus.write(0x70,[0x03,0x00]) # sets all GPIO pins to 'output' mode
-        self.myBus.write(0x70,[0x01,0x08])
-        self.myBus.write(0x70,[0x01,0x18]) # GPIO reset is 10
-        self.myBus.write(0x70,[0x01,0x08])
+        self.myBus.write(self.gpio,[0x03,0x00]) # sets all GPIO pins to 'output' mode
+        self.myBus.write(self.gpio,[0x01,0x08])
+        self.myBus.write(self.gpio,[0x01,0x18]) # GPIO reset is 10
+        self.myBus.write(self.gpio,[0x01,0x08])
     
         #jtag selectors finnagling for slot 26
-        self.myBus.write(0x70,[0x01,gpioVal])
-        self.myBus.read(0x70,0x01)
+        self.myBus.write(self.gpio,[0x01,gpioVal])
+        self.myBus.read(self.gpio,0x01)
     
         batch = self.myBus.sendBatch()
 
@@ -762,17 +762,17 @@ class makeGui:
             self.slot = bridgeDict[self.jslot]
             #self.myBus.write(self.fanout, [0x02])
             if self.jslot in [2,3,4,5]:
-               self.myBus.write(0x74, [0x02^0x8])
+               self.myBus.write(self.ccm, [0x02^0x8])
             if self.jslot in [7,8,9,10]:
-               self.myBus.write(0x74, [0x20^0x8])
+               self.myBus.write(self.ccm, [0x20^0x8])
         else:
             self.jslot = self.jslots[1]
             self.slot = bridgeDict[self.jslot]
             #self.myBus.write(self.fanout, [0x01])
             if self.jslot in [18,19,20,21]:
-                self.myBus.write(0x74,[0x10^0x8])
+                self.myBus.write(self.ccm,[0x10^0x8])
             if self.jslot in [23,24,25,26]:
-                self.myBus.write(0x74,[0x01^0x8])
+                self.myBus.write(self.ccm,[0x01^0x8])
 
         self.myBus.sendBatch()
 

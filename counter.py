@@ -2,13 +2,13 @@
 
 import client
 import time
-import mypi
+import config
 
 # Setup web bus and i2c addresses.
-pi = mypi.ip_address
 bus = client.webBus(pi, 0)
-ccm = 0x74
-gpio = 0x70
+pi = config.ip_address
+ccm = config.ccm
+gpio = config.gpio
 igloo = 0x09
 
 # Bridge and Igloo Counters

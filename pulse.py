@@ -5,15 +5,15 @@
 # open channel with gui currently... read from J18
 
 import client
-import mypi
+import config
 
 # Raspberry Pi IP address
-pi = mypi.ip_address
+pi = config.ip_address
 bus = client.webBus(pi, 0)
 
 def pulse(cmd):
     cmd = cmd2list(cmd)
-    bus.write(0x74,[0x10])
+    bus.write(config.ccm,[0x10])
     bus.read(0x30,11)
     #bus.write(0x30,[03,00,03,00,03,00,00,00,0xff,00,0xff])
     bus.write(0x30,cmd)

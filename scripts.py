@@ -30,11 +30,11 @@ class Teststand:
         self.pi = config.ip_address
         #self.pi = "127.0.0.1"
         
-        # ngCCM i2c address
-        self.ccm = config.ccm
-
-        # ngCCM i2c address
-        self.gpio = config.gpio
+        # Define i2c addresses
+        self.gpio = config.gpio         # gpio i2c address
+        self.fanout = config.fanout     # fanout i2c address
+        self.ccm = config.ccm           # ngccm emulator i2c address
+        self.address = 0x19             # Qie Card in slot 1 i2c address (use for Toggle Igloo Power)
 
         # Is the OS Windows?
         windows = platform.system() == "Windows"
@@ -47,7 +47,7 @@ class Teststand:
             # Linux and OSX use -c for ping count option. 
             self.ping = "ping -c 1 {0}".format(self.pi)
 
-        # Ping Raspberry Pi
+        # Ping Raspberry Pi and store result in self.piStatus
         self.pingPi()
 
         # Create a webBus instance
@@ -61,6 +61,10 @@ class Teststand:
 
             # Client websocket connected sucessfully.
             self.busStatus = True
+
+            # Set GPIO to output mode and reset GPIO
+            self.gpioOutputMode()
+            self.gpioReset()
 
             # Find active slots only if client websocket is connected.
             print "Finding active slots..."
@@ -155,7 +159,7 @@ class Teststand:
         self.myBus.write(self.gpio,[0x01,0x08])
         self.myBus.write(self.gpio,[0x01,0x18]) # GPIO reset is 10
         self.myBus.write(self.gpio,[0x01,0x08])
-        batch = self.myBuself.s.sendBatch()
+        batch = self.myBus.sendBatch()
         print 'GPIO Reset: {0}'.format(batch)
     
     # Set gpio to output mode

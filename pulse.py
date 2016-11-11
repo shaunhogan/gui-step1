@@ -6,12 +6,14 @@
 
 import client
 import config
+import counter
 
 # Raspberry Pi IP address
 pi = config.ip_address
 bus = client.webBus(pi, 0)
 
 def pulse(cmd):
+    counter.gpioReset()
     cmd = cmd2list(cmd)
     bus.write(config.ccm,[0x10])
     bus.read(0x30,11)
@@ -26,8 +28,8 @@ def cmd2list(cmd):
     cmd_list = cmd.split(" ")
     return list(int(c, 16) for c in cmd_list)
 
-
-# Send this command
-cmd = "03 00 03 00 03 00 00 00 ff 00 ff"
-pulse(cmd)
+if __name__ == "__main__":
+    # Send this command
+    cmd = "03 00 03 00 03 00 00 00 ff 00 ff"
+    pulse(cmd)
 

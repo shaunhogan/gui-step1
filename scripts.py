@@ -63,7 +63,7 @@ class Teststand:
             self.busStatus = True
 
             # Set GPIO to output mode and reset GPIO
-            #self.gpioOutputMode()
+            self.gpioOutputMode()
             self.gpioReset()
 
             # Find active slots only if client websocket is connected.
@@ -121,6 +121,17 @@ class Teststand:
         message_list = message.split()
         # Remove error code, family name, checksum
         message_list = message_list[2:-1]
+        s = " "
+        return s.join(message_list)
+
+    # Checks and removes error code.
+    def errorCode(self, message):
+        message_list = message.split()
+        # Remove error code, family name, checksum
+        error = message_list[0]
+        if error == '1':
+            print "I2C Error"
+        message_list = message_list[1:]
         s = " "
         return s.join(message_list)
     
@@ -251,7 +262,7 @@ class Teststand:
             print 'Read Unique ID I2C Error!'
             return False
         # Remove error code [0], family code [1] and checksum [-1]
-        salted_bus = self.serialNum(raw_bus)
+        salted_bus = self.errorCode(raw_bus)
         cooked_bus = self.reverseBytes(salted_bus)
         self.unique_id = self.toHex(cooked_bus)
         print 'Unique ID: {0}'.format(self.unique_id)

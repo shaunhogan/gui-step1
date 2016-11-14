@@ -226,7 +226,13 @@ class Teststand:
         self.gpioSelected = True
 
         # Reset GPIO and set GPIO output mode
-        self.gpioReset()
+        #self.gpioReset()
+        self.myBus.write(self.ccm,[0x08])
+        self.myBus.write(self.gpio,[0x03,0x00]) # sets all GPIO pins to 'output' mode
+        self.myBus.write(self.gpio,[0x01,0x00])
+        self.myBus.write(self.gpio,[0x01,0x08])
+        self.myBus.write(self.gpio,[0x01,0x18]) # GPIO reset is 10
+        self.myBus.write(self.gpio,[0x01,0x08])
     
         #jtag selectors finnagling for slot 26
         self.myBus.write(self.gpio,[0x01,gpioVal])

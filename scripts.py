@@ -63,7 +63,7 @@ class Teststand:
             self.busStatus = True
 
             # Set GPIO to output mode and reset GPIO
-            self.gpioOutputMode()
+            #self.gpioOutputMode()
             self.gpioReset()
 
             # Find active slots only if client websocket is connected.
@@ -149,7 +149,7 @@ class Teststand:
 
 ##################################################################################
 
-    # Reset gpio 
+    # Reset gpio and set to output mode 
     def gpioReset(self):
         # gpio reset
         #register 3 is control reg for i/o modes
@@ -214,11 +214,8 @@ class Teststand:
         gpioVal = jSlotDict[self.jslot]
         self.gpioSelected = True
 
-        self.myBus.write(self.ccm, [0x08]) # PCA9538 is bit 3 on ngccm mux
-        self.myBus.write(self.gpio,[0x03,0x00]) # sets all GPIO pins to 'output' mode
-        self.myBus.write(self.gpio,[0x01,0x08])
-        self.myBus.write(self.gpio,[0x01,0x18]) # GPIO reset is 10
-        self.myBus.write(self.gpio,[0x01,0x08])
+        # Reset GPIO and set GPIO output mode
+        self.gpioReset()
     
         #jtag selectors finnagling for slot 26
         self.myBus.write(self.gpio,[0x01,gpioVal])

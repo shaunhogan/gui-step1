@@ -63,7 +63,7 @@ class Teststand:
             self.busStatus = True
 
             # Set GPIO to output mode and reset GPIO
-            self.gpioOutputMode()
+            #self.gpioOutputMode()
             self.gpioReset()
 
             # Find active slots only if client websocket is connected.
@@ -171,7 +171,14 @@ class Teststand:
         self.myBus.write(self.gpio,[0x01,0x18]) # GPIO reset is 10
         self.myBus.write(self.gpio,[0x01,0x08])
         batch = self.myBus.sendBatch()
-        print 'GPIO Reset: {0}'.format(batch)
+        error_code = batch[-1][0]
+        if error_code == '1':
+            print "GPIO reset fail"
+            return False
+        else:
+            print "GPIO reset successful"
+            return True
+
     
     # Set gpio to output mode
     def gpioOutputMode(self):

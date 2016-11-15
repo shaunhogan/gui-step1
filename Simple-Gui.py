@@ -719,7 +719,7 @@ class makeGui:
     
         batch = self.myBus.sendBatch()
 
-        print "GPIO Batch: {0}".format(batch)
+        #print "GPIO Batch: {0}".format(batch)
         
         if (batch[-1] == "1 0"):
             print "GPIO I2C Error: {0}".format(self.gpioChoiceVar.get())
@@ -787,7 +787,6 @@ class makeGui:
         self.myBus.write(0x50,[0x00])
         self.myBus.read(0x50, 8)
         raw_bus = self.myBus.sendBatch()
-        print 'Raw Unique ID: '+str(raw_bus[-1])
         if raw_bus[-1][0] != '0':
             print 'Read Unique ID I2C Error!'
             return False
@@ -796,6 +795,7 @@ class makeGui:
         self.uniqueIDEntry.set(self.toHex(cooked_bus))
         self.uniqueIDPass = self.uniqueIDEntry.get()
         self.uniqueIDEntry.set("0x"+self.uniqueIDPass[4:(len(self.uniqueIDPass)-4)])
+        print 'Full Unique ID: '+str(self.uniqueIDPass[:-2])
 
         # Getting bridge firmware
         self.myBus.write(0x00,[0x06])

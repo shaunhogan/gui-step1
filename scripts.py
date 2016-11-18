@@ -16,6 +16,7 @@ import os
 import sys
 import platform
 import config
+import time
 
 # Teststand class pings Raspberry Pi
 class Teststand:
@@ -169,6 +170,9 @@ class Teststand:
         self.myBus.write(self.gpio,[0x01,0x00])
         self.myBus.write(self.gpio,[0x01,0x08])
         self.myBus.write(self.gpio,[0x01,0x18]) # GPIO reset is 10
+        batch = self.myBus.sendBatch()
+        time.sleep(2)
+        self.myBus.write(self.ccm,[0x08])
         self.myBus.write(self.gpio,[0x01,0x08])
         batch = self.myBus.sendBatch()
         error_code = batch[-1][0]

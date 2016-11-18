@@ -64,7 +64,8 @@ class Teststand:
             self.busStatus = True
 
             # Set GPIO to output mode and reset GPIO
-            #self.gpioOutputMode()
+            self.gpioOutputMode()
+            time.sleep(2)
             self.gpioReset()
 
             # Find active slots only if client websocket is connected.
@@ -167,13 +168,13 @@ class Teststand:
         #register 3 is control reg for i/o modes
         self.myBus.write(self.ccm,[0x08])
         self.myBus.write(self.gpio,[0x03,0x00]) # sets all GPIO pins to 'output' mode
-        self.myBus.write(self.gpio,[0x01,0x00])
-        self.myBus.write(self.gpio,[0x01,0x08])
-        self.myBus.write(self.gpio,[0x01,0x18]) # GPIO reset is 10
+        self.myBus.write(self.gpio,[0x01,0x00]) # turn off reset
+        self.myBus.write(self.gpio,[0x01,0x08]) # reset low
+        self.myBus.write(self.gpio,[0x01,0x18]) # reset high: GPIO reset is 10
         batch = self.myBus.sendBatch()
         time.sleep(2)
         self.myBus.write(self.ccm,[0x08])
-        self.myBus.write(self.gpio,[0x01,0x08])
+        self.myBus.write(self.gpio,[0x01,0x08]) # reset low (turn off reset)
         batch = self.myBus.sendBatch()
         error_code = batch[-1][0]
         if error_code == '1':
@@ -189,6 +190,7 @@ class Teststand:
         #register 3 is control reg for i/o modes
         self.myBus.write(self.ccm,[0x08])
         self.myBus.write(self.gpio,[0x03,0x00]) # sets all GPIO pins to 'output' mode
+        self.myBus.write(self.gpio,[0x01,0x00]) # turn off reset
         batch = self.myBus.sendBatch()
         error_code = batch[-1][0]
         if error_code == '1':

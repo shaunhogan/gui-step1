@@ -11,8 +11,6 @@ Programming repository: https://github.com/BaylorCMS/gui-step1/tree/hackFor904
 
 Branch: hackFor904
 
-Test: Can I push from Windows https?
-
 ###Using Windows Powershell
 
 Print unique ids and current firmware versions

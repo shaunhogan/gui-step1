@@ -20,15 +20,21 @@ def writeTCLFile(programFile):
 if __name__ ==  "__main__":
 
     parser = OptionParser()
-    parser.add_option("-f", "--file", dest="filename", help="Grab programming file")
-    parser.add_option("-s", "--slot", dest="slot",     help="Specify a single slot", default = -2)
-    parser.add_option("-t", "--stop", dest="stop",     action="store_true",  help="Stop after checking active slots")
+    parser.add_option("-f", "--file",        dest="filename",    help="Grab programming file")
+    parser.add_option("-i", "--ip",          dest="ip",          help="Grab programming file")
+    parser.add_option("-s", "--slot",        dest="slot",        help="Specify a single slot", default = -2)
+    parser.add_option("-t", "--stop",        dest="stop",        action="store_true",  help="Stop after checking active slots")
+    parser.add_option("-b", "--board",       dest="board",       action="store_true",  help="Use fanout board")
+    parser.add_option("-c", "--calibration", dest="calibration", action="store_true",  help="Include calibration unit")
 
     (options, args) = parser.parse_args()
 
-    writeTCLFile(options.filename)
-    
-    ts = Teststand()
+    #writeTCLFile(options.filename)
+
+    if options.ip:
+        ts = Teststand(board=options.board, calibration=options.calibration, ip=options.ip)
+    else:
+        ts = Teststand(board=options.board, calibration=options.calibration)
 
     if options.stop:
         exit()
@@ -72,5 +78,6 @@ if __name__ ==  "__main__":
         print "    1. Did you turn on the Raspberry Pi?"
         print "    2. Did you start the server?"
         print "    3. Did you plug in the ethernet cable?"
-        print "    4. Did you have coffee today?"
+        print "    4. Did you use the correct ip address?"
+        print "    5. Did you have coffee today?"
 

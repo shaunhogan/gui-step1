@@ -20,22 +20,26 @@ import time
 
 # Teststand class pings Raspberry Pi
 class Teststand:
-    def __init__(self):
+    def __init__(self, board=False, calibration=False, ip=config.ip_address):
+        # Include calibraiton unit.
+        self.calibrate = calibration
+        # Use fanout board with channels.
+        self.board = board
+        self.channels = config.channels
+        # MyPi (ip address)
+        self.pi = ip
         
         # Initialize Values
         self.gpioSelected = False       # Has GPIO been selected?
         self.piStatus     = False       # Can we ping the RaPi?
         self.busStatus    = False       # Can we connect a client websocket?
 
-        # MyPi (ip address)
-        self.pi = config.ip_address
-        #self.pi = "127.0.0.1"
-        
         # Define i2c addresses
         self.gpio = config.gpio         # gpio i2c address
         self.fanout = config.fanout     # fanout i2c address
         self.ccm = config.ccm           # ngccm emulator i2c address
         self.address = 0x19             # Qie Card in slot 1 i2c address (use for Toggle Igloo Power)
+        self.active_slots = []          # Initialize with no active slots.
 
         # Is the OS Windows?
         windows = platform.system() == "Windows"
@@ -65,14 +69,19 @@ class Teststand:
 
             # Set GPIO to output mode and reset GPIO
             self.gpioOutputMode()
-            time.sleep(2)
+            time.sleep(1)
             self.gpioReset()
 
             # Find active slots only if client websocket is connected.
             print "Finding active slots..."
-            self.slot_list = [2,3,4,5,7,8,9,10,18,19,20,21,23,24,25,26]
+            if self.calibrate:
+                self.slot_list = [2,3,4,5,7,8,9,10,12]
+            else:
+                self.slot_list = [2,3,4,5,7,8,9,10,18,19,20,21,23,24,25,26]
             self.active_slots = self.findActiveSlots()
             print "Active J-Slots: {0}".format(self.active_slots)
+        else:
+            print "Raspberry Pi disconnected."
 
     #################################
     ###                           ###
@@ -162,8 +171,16 @@ class Teststand:
 
 ##################################################################################
 
-    # Reset gpio and set to output mode 
     def gpioReset(self):
+        if self.board:          # Use fanout board
+            for ch in self.channels:
+                self.myBus.write(self.fanout, [ch])
+                self.magicReset()
+        else:                   # Without fanout board
+            self.magicReset()
+
+    # Reset gpio and set to output mode 
+    def magicReset(self):
         # gpio reset
         #register 3 is control reg for i/o modes
         self.myBus.write(self.ccm,[0x08])
@@ -172,7 +189,7 @@ class Teststand:
         self.myBus.write(self.gpio,[0x01,0x08]) # reset low
         self.myBus.write(self.gpio,[0x01,0x18]) # reset high: GPIO reset is 10
         batch = self.myBus.sendBatch()
-        time.sleep(2)
+        time.sleep(1)
         self.myBus.write(self.ccm,[0x08])
         self.myBus.write(self.gpio,[0x01,0x08]) # reset low (turn off reset)
         batch = self.myBus.sendBatch()
@@ -185,8 +202,16 @@ class Teststand:
             return True
 
     
-    # Set gpio to output mode
     def gpioOutputMode(self):
+        if self.board:              # Use fanout board
+            for ch in self.channels:
+                self.myBus.write(self.fanout, [ch])
+                self.outputMode()
+        else:                       # Without fanout board
+            self.outputMode()
+
+    # Set gpio to output mode
+    def outputMode(self):
         #register 3 is control reg for i/o modes
         self.myBus.write(self.ccm,[0x08])
         self.myBus.write(self.gpio,[0x03,0x00]) # sets all GPIO pins to 'output' mode
@@ -194,10 +219,10 @@ class Teststand:
         batch = self.myBus.sendBatch()
         error_code = batch[-1][0]
         if error_code == '1':
-            print "Set GPIO output mode fail"
+            print "Set GPIO output mode fail for channel {0}".format(ch)
             return False
         else:
-            print "Set GPIO output mode successful"
+            print "Set GPIO output mode successful for channel {0}".format(ch)
             return True
 
     # Select jslot, open channel on ngCCM Emulator.
@@ -207,19 +232,28 @@ class Teststand:
         bridgeDict = {  2 : 0x19, 3 : 0x1A, 4 : 0x1B, 5 : 0x1C,
                         7 : 0x19, 8 : 0x1A, 9: 0x1B, 10: 0x1C,
                        18 : 0x19, 19 : 0x1A, 20: 0x1B, 21 : 0x1C,
-                       23 : 0x19, 24 : 0x1A, 25: 0x1B, 26 : 0x1C}
+                       23 : 0x19, 24 : 0x1A, 25: 0x1B, 26 : 0x1C,
+                       12 : 0x19}
+
+        # Fanout Board
+        if self.board:
+            if self.jslot in [18,19,20,21,23,24,25,26]:
+                self.myBus.write(self.fanout, [self.channels[0]])   # RM 1 and 2
+            if self.jslot in [2,3,4,5,7,8,9,10,12]:
+                self.myBus.write(self.fanout, [self.channels[1]])   # RM 3 and 4 and CU
 
         self.slot = bridgeDict[self.jslot]
-        if self.jslot in [18,19,20,21]:
-            self.myBus.write(self.ccm,[0x10^0x8])
-        if self.jslot in [23,24,25,26]:
-            self.myBus.write(self.ccm,[0x01^0x8])
-        if self.jslot in [2,3,4,5]:
-           self.myBus.write(self.ccm, [0x02^0x8])
-        if self.jslot in [7,8,9,10]:
-           self.myBus.write(self.ccm, [0x20^0x8])
+        if self.jslot in [23,24,25,26]:             # RM 1
+            self.myBus.write(self.ccm, [0x01|0x8])
+        if self.jslot in [12,18,19,20,21]:          # RM 2 and CU (12)
+            self.myBus.write(self.ccm, [0x10|0x8])
+        if self.jslot in [7,8,9,10]:                # RM 3
+            self.myBus.write(self.ccm, [0x20|0x8])
+        if self.jslot in [2,3,4,5]:                 # RM 4
+            self.myBus.write(self.ccm, [0x02|0x8])
 
-        self.myBus.sendBatch()
+        # Don't send batch yet... wait until full command is assembled.
+        #self.myBus.sendBatch()
 
     # Writes proper GPIO to ngCCM Emulator for given jslot.  Used for programming cards.
     def selectGpio(self, jslot):
@@ -233,19 +267,22 @@ class Teststand:
         jSlotDict = {  2  : 0x29, 3  : 0x89, 4  : 0xA9, 5  : 0x49,
                        7  : 0x2A, 8  : 0x8A, 9  : 0xAA, 10 : 0x4A,
                        18 : 0x29, 19 : 0x89, 20 : 0xA9, 21 : 0x49,
-                       23 : 0x2A, 24 : 0x8A, 25 : 0xAA, 26 : 0x4A }
+                       23 : 0x2A, 24 : 0x8A, 25 : 0xAA, 26 : 0x4A,
+                       12 : 0x2C}
 
         gpioVal = jSlotDict[self.jslot]
         self.gpioSelected = True
 
         # Reset GPIO and set GPIO output mode
-        #self.gpioReset()
-        self.myBus.write(self.ccm,[0x08])
-        self.myBus.write(self.gpio,[0x03,0x00]) # sets all GPIO pins to 'output' mode
-        self.myBus.write(self.gpio,[0x01,0x00])
-        self.myBus.write(self.gpio,[0x01,0x08])
-        self.myBus.write(self.gpio,[0x01,0x18]) # GPIO reset is 10
-        self.myBus.write(self.gpio,[0x01,0x08])
+        self.gpioReset()
+
+        # Old magic reset commands
+        #self.myBus.write(self.ccm,[0x08])
+        #self.myBus.write(self.gpio,[0x03,0x00]) # sets all GPIO pins to 'output' mode
+        #self.myBus.write(self.gpio,[0x01,0x00])
+        #self.myBus.write(self.gpio,[0x01,0x08])
+        #self.myBus.write(self.gpio,[0x01,0x18]) # GPIO reset is 10
+        #self.myBus.write(self.gpio,[0x01,0x08])
     
         #jtag selectors finnagling for slot 26
         self.myBus.write(self.gpio,[0x01,gpioVal])
@@ -290,7 +327,7 @@ class Teststand:
         # Getting bridge firmware
         raw_data = self.readBridge(0x04, 4)
         data_well_done = raw_data[2:]
-        print 'Bridge FPGA Firmware Version: 0x'+str(data_well_done)
+        print 'Bridge FW: 0x'+str(data_well_done)
         self.bridge_fw_maj = "0x"+data_well_done[0:2]    #these are the worst (best?) variable names ever
         self.bridge_fw_min = "0x"+data_well_done[2:4]
         self.bridge_fw_oth = "0x"+data_well_done[4:8]
@@ -301,8 +338,7 @@ class Teststand:
         # Getting IGLOO firmware info
         self.igloo_fw_maj = self.readIgloo(0x00, 1)
         self.igloo_fw_min = self.readIgloo(0x01, 1)
-        print 'Igloo2 FPGA Major Firmware Version: {0}'.format(self.igloo_fw_maj)
-        print 'Igloo2 FPGA Minor Firmware Version: {0}'.format(self.igloo_fw_min)
+        print 'Igloo FW: {0} {1}'.format(self.igloo_fw_maj, self.igloo_fw_min)
 
         # Return Dictionary
         return self.getInfo()
@@ -331,7 +367,7 @@ class Teststand:
         self.jslot = jslot
         onesZeros = self.readBridge(0x0A, 4)
         value = '0xaaaaaaaa'
-        print "Bridge OnesZeros: {0}".format(onesZeros)
+        #print "Bridge OnesZeros: {0}".format(onesZeros)
         if onesZeros == value:
             return True
         else:
@@ -342,8 +378,8 @@ class Teststand:
         self.jslot = jslot
         igloo_fw_maj = self.readIgloo(0x00, 1)
         igloo_fw_min = self.readIgloo(0x01, 1)
-        print "Igloo FW: {0} {1}".format(igloo_fw_maj, igloo_fw_min)
-        return True
+        #print "Igloo FW: {0} {1}".format(igloo_fw_maj, igloo_fw_min)
+        return "{0} {1}".format(igloo_fw_maj, igloo_fw_min)
 
     # Determine active jslots.
     def findActiveSlots(self):
@@ -352,7 +388,7 @@ class Teststand:
             hiB = self.hiDerBridge(slot)
             if hiB:
                 hiI = self.hiDerIgloo(slot)
-                print "Active J-Slot: {0}".format(slot)
+                print "J{0} : Igloo FW {1}".format(slot, hiI)
                 slots.append(slot)
         return slots
             
@@ -364,7 +400,7 @@ class Teststand:
 
 ##################################################################################
 
-slot_list = [2,3,4,5,7,8,9,10,18,19,20,21,23,24,25,26]
+slot_list = [2,3,4,5,7,8,9,10,12,18,19,20,21,23,24,25,26]
 
 # Get information for specific slot.
 # Enter J Slot as python argument.
@@ -389,7 +425,7 @@ def runSlot():
                     print "Hi Der Igloo: {0}".format(hiI)
                     ts.selectGpio(slot)
                     cardInfo = ts.readInfo(slot)
-                    print cardInfo
+                    #print cardInfo
 
 # Get information for all active slots.
 # Windows True for Windows OS, False for Linux and OSX
@@ -398,12 +434,12 @@ def runStand():
     ts = Teststand()
     if ts.piStatus and ts.busStatus:
         info = ts.readActiveSlots()
-        print info
+        #print info
 
 # Only run if scripts.py is main... otherwise don't run (if imported as library).
 if __name__ == '__main__':
-    #runSlot()
-    runStand()
+    runSlot()
+    #runStand()
 
 
 

@@ -36,7 +36,8 @@ class makeGui:
             self.ping = "ping -c 1 {0}".format(self.pi)
 
         # Ping Pi
-        status = self.pingPi()
+        #status = self.pingPi()
+        status = False
 
         # Create a webBus instance
         if status:
@@ -47,6 +48,7 @@ class makeGui:
         self.fanout = config.fanout     # fanout i2c address
         self.ccm = config.ccm           # ngccm emulator i2c address
         self.address = 0x19             # Qie Card in slot 1 i2c address (use for Toggle Igloo Power)
+        self.fanoutStatus = 0           # 0 means don't use fanout board, 1 means use fanout board
 
         # Create an instance of initialTests
         self.initialTest = initialTests()
@@ -156,6 +158,14 @@ class makeGui:
             )
         self.experi_subFrame_lbl.pack(side=TOP)
 
+        # Make top 2_11 subframe
+        self.experi_subTop2_11_frame = Frame(self.experiment_frame, bg="white")
+        self.experi_subTop2_11_frame.pack(
+            side=TOP,
+            ipadx=frame_ipadx, padx=frame_padx,
+            ipady=frame_ipady, pady=frame_pady,
+            )
+
         # Make top 2_7 subframe
         self.experi_subTop2_7_frame = Frame(self.experiment_frame, bg="white")
         self.experi_subTop2_7_frame.pack(
@@ -172,7 +182,7 @@ class makeGui:
             ipady=frame_ipady, pady=frame_pady,
             )
 
-        # Make top 2_8 subframe
+        # Make top 2_9 subframe
         self.experi_subTop2_9_frame = Frame(self.experiment_frame, bg="white")
         self.experi_subTop2_9_frame.pack(
             side=TOP,
@@ -180,7 +190,7 @@ class makeGui:
             ipady=frame_ipady, pady=frame_pady,
             )
 
-        # Make top 2_8 subframe
+        # Make top 2_10 subframe
         self.experi_subTop2_10_frame = Frame(self.experiment_frame, bg="white")
         self.experi_subTop2_10_frame.pack(
             side=TOP,
@@ -436,6 +446,12 @@ class makeGui:
         self.experi_hyphenLine.configure(bg="white",padx=button_padx,pady=button_pady)
         self.experi_hyphenLine.pack()
 
+        # Make a button to use Fanout Board
+        self.gpioSelect_bttn = Button(self.experi_subTop2_11_frame, command=self.useFanout,
+                          text="Use Fanout Board")
+        self.gpioSelect_bttn.configure(bg="CadetBlue1")
+        self.gpioSelect_bttn.pack()
+
         # Make a label for the GPIO selection
         self.gpioSelect_label = Label(self.experi_subTop2_7_frame, text="Select GPIO Option: ")
         self.gpioSelect_label.configure(bg="white",padx=button_padx,pady=button_pady)
@@ -688,6 +704,13 @@ class makeGui:
                                  self.testPassInfo[i].configure(bg="#CCDDFF")
 
 #############################################################################
+
+    def useFanout(self):
+        self.fanoutStatus = (self.fanoutStatus + 1) % 2
+        if self.fanoutStatus == 0:
+            print "Fanout baord option disabled."
+        if self.fanoutStatus == 1:
+            print "Fanout board option enabled."
 
     # Opens the proper GPIO slot. Used for programming cards.
     def gpioBttnPress(self):

@@ -1112,7 +1112,7 @@ class makeGui:
         self.tempEntry.set(str(round(temp.readManyTemps(self.myBus, self.slot, 10, "Temperature", "nohold"),4)))
 
         # Getting IGLOO firmware info
-        igloo = "top"
+        igloo = "bottom"
         majorIglooVer = it.readIgloo(self.myBus, self.slot, igloo, 0x00)
         minorIglooVer = it.readIgloo(self.myBus, self.slot, igloo, 0x01)
         # Parse IGLOO firmware info

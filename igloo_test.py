@@ -7,7 +7,7 @@ import sys
 def readIgloo(b, slot, igloo, address, num_bytes=1):
     iglooAddress = 0x09
     i2cSelectValue = -1
-    iglooSelectDictionary = {"top":0x03, "bottom":0x07}
+    iglooSelectDictionary = {"top":0x03, "bottom":0x06}
     try:
         i2cSelectValue = iglooSelectDictionary[igloo]
     except KeyError:

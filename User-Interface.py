@@ -4,31 +4,30 @@
 # with the setup in the lab.
 # Developed with the help of many people
 # For Baylor University, Summer 2016.
-#
-# This is a comment to see if I got git to work properly
-# round 2 electric boogaloo
-# what does that mean?
 
 from Tkinter import *
 from datetime import datetime
 from initialClass import initialTests
 from cardInfoClass import cardInformation
-from tools import readIgloo, reverseBytes
+from Tools import Tools
 import temp
 import json
 import client
 import subprocess
 
-class makeGui:
+class makeGui(Tools):
     def __init__(self, parent):
         # Create a webBus instance
         #self.myBus = client.webBus("192.168.1.41",0)
         self.myBus = client.webBus("pi7",0)
 
-        # Create a permanent address of QCard
+        # Create a permanent I2C address of QCard (slot 1)
         self.address = 0x19
         
-        # test HB igloo
+        # Permanent I2C address of Igloo FPGA
+        self.iglooAddress = 0x09
+        
+        # Specify "top" or "bottom" Igloo FPGA
         self.igloo = "top"
 
         # Create an instance of initialTests
@@ -1091,11 +1090,14 @@ class makeGui:
         print '\nRaw Unique ID = '+str(raw_bus[-1])
         if raw_bus[-1][0] != '0':
             print 'Unique ID i2c Error!'
-        cooked_bus = reverseBytes(raw_bus[-1])
+        cooked_bus = self.reverseBytes(raw_bus[-1])
         #cooked_bus = self.serialNum(cooked_bus)
         self.uniqueIDEntry.set(self.toHex(cooked_bus))
         self.uniqueIDPass = self.uniqueIDEntry.get()
         self.uniqueIDEntry.set("0x"+self.uniqueIDPass[4:(len(self.uniqueIDPass)-4)])
+
+
+######### Add UniqueID Checksum to verify correct unique id is read
 
         # Getting bridge firmware
         self.myBus.write(0x00,[0x06])
@@ -1103,7 +1105,7 @@ class makeGui:
         self.myBus.read(self.slot, 4)
         raw_data = self.myBus.sendBatch()[-1]
         med_rare_data = raw_data[2:]
-        cooked_data = reverseBytes(med_rare_data)
+        cooked_data = self.reverseBytes(med_rare_data)
         data_well_done = self.toHex(cooked_data)    # my apologies for the cooking references
         data_well_done = data_well_done[2:]
         print 'Bridge FPGA Firmware Version = 0x'+str(data_well_done)
@@ -1115,8 +1117,8 @@ class makeGui:
         self.tempEntry.set(str(round(temp.readManyTemps(self.myBus, self.slot, 10, "Temperature", "nohold"),4)))
 
         # Getting IGLOO firmware info
-        majorIglooVer = readIgloo(self.myBus, self.slot, self.igloo, 0x00)
-        minorIglooVer = readIgloo(self.myBus, self.slot, self.igloo, 0x01)
+        majorIglooVer = self.readIgloo(0x00)
+        minorIglooVer = self.readIgloo(0x01)
         # Write IGLOO firmware in hex
         majorIglooVer = self.toHex(majorIglooVer)
         minorIglooVer = self.toHex(minorIglooVer)
@@ -1150,7 +1152,7 @@ class makeGui:
         self.myBus.write(0x00,[0x06])
         self.myBus.sendBatch()
 
-        register = readIgloo(self.myBus, self.slot, self.igloo, ones_address, 4)
+        register = self.readIgloo(ones_address, 4)
         if register != all_ones:
             retval = False
         # print 'Igloo Ones = '+str(register)
@@ -1166,7 +1168,7 @@ class makeGui:
         # Turn Igloo On
         # print 'Igloo Control = '+str(self.toggleIgloo())
         self.toggleIgloo()
-        register = readIgloo(self.myBus, self.slot, self.igloo, ones_address, 4)
+        register = self.readIgloo(ones_address, 4)
         if register != all_ones:
             retval = False
         # print 'Igloo Ones = '+str(register)
@@ -1200,7 +1202,7 @@ class makeGui:
         message = self.myBus.sendBatch()[-1]
         if message[0] != '0':
             print 'Bridge i2c error detected'
-        return reverseBytes(message[2:])
+        return self.reverseBytes(message[2:])
 
     # old read igloo function
     #def readIgloo(self, regAddress, num_bytes):
@@ -1210,8 +1212,8 @@ class makeGui:
     #    self.myBus.read(0x09, num_bytes)
     #    message = self.myBus.sendBatch()[-1]
     #    if message[0] != '0':
-    #        print 'Igloo i2c error detected in readIgloo'
-    #    return reverseBytes(message[2:])
+    #        print 'Igloo i2c error detected in self.readIgloo'
+    #    return self.reverseBytes(message[2:])
 
     def detectIglooError(self, regAddress, num_bytes):
         self.myBus.write(0x00,[0x06])

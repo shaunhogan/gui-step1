@@ -1075,10 +1075,8 @@ class makeGui(Tools):
 
         self.myBus.sendBatch()
 
-        # slot = 0x19
-        # Use self.slot, which is defined through gpioChoiceVar
-        print 'JSlot for UniqueID Press = '+str(self.jslot)
-        print 'I2C Address for UniqueID Press = '+str(self.slot)
+        print "Reading Unique ID and Firmware versions."
+        print "JSlot = {0} ; I2C_Address = 0x{1:02x}".format(self.jslot, self.slot)
 
         # Getting unique ID
         # 0x05000000ea9c8b7000   <- From main gui
@@ -1087,7 +1085,7 @@ class makeGui(Tools):
         self.myBus.write(0x50,[0x00])
         self.myBus.read(0x50, 8)
         raw_bus = self.myBus.sendBatch()
-        print '\nRaw Unique ID = '+str(raw_bus[-1])
+        #print '\nRaw Unique ID = '+str(raw_bus[-1])
         if raw_bus[-1][0] != '0':
             print 'Unique ID i2c Error!'
         cooked_bus = self.reverseBytes(raw_bus[-1])
@@ -1095,6 +1093,8 @@ class makeGui(Tools):
         self.uniqueIDEntry.set(self.toHex(cooked_bus))
         self.uniqueIDPass = self.uniqueIDEntry.get()
         self.uniqueIDEntry.set("0x"+self.uniqueIDPass[4:(len(self.uniqueIDPass)-4)])
+
+        print "UniqueID: {0}".format(self.uniqueIDEntry.get())
 
 
 ######### Add UniqueID Checksum to verify correct unique id is read
@@ -1128,8 +1128,8 @@ class makeGui(Tools):
         # Display igloo FW info on gui
         self.iglooMajVerEntry.set(majorIglooVer)
         self.iglooMinVerEntry.set(minorIglooVer)
-        print 'Igloo2 FPGA Major Firmware Version = '+str(majorIglooVer)
-        print 'Igloo2 FPGA Minor Firmware Version = '+str(minorIglooVer)
+        print "{0} Igloo2 FPGA Major Firmware Version = {1}".format(self.igloo, majorIglooVer)
+        print "{0} Igloo2 FPGA Minor Firmware Version = {1}".format(self.igloo, minorIglooVer)
 
         # Verify that the Igloo can be power toggled
         self.iglooToggleEntry.set(str(self.checkIglooToggle()))
@@ -1193,27 +1193,6 @@ class makeGui(Tools):
     def writeBridge(self, regAddress,messageList):
         self.myBus.write(self.address, [regAddress]+messageList)
         return self.myBus.sendBatch()
-
-    def readBridge(self, regAddress, num_bytes):
-        self.myBus.write(0x00,[0x06])
-        self.myBus.sendBatch()
-        self.myBus.write(self.address,[regAddress])
-        self.myBus.read(self.address, num_bytes)
-        message = self.myBus.sendBatch()[-1]
-        if message[0] != '0':
-            print 'Bridge i2c error detected'
-        return self.reverseBytes(message[2:])
-
-    # old read igloo function
-    #def readIgloo(self, regAddress, num_bytes):
-    #    self.myBus.write(0x00,[0x06])
-    #    self.myBus.write(self.address,[0x11,0x03,0,0,0])
-    #    self.myBus.write(0x09,[regAddress])
-    #    self.myBus.read(0x09, num_bytes)
-    #    message = self.myBus.sendBatch()[-1]
-    #    if message[0] != '0':
-    #        print 'Igloo i2c error detected in self.readIgloo'
-    #    return self.reverseBytes(message[2:])
 
     def detectIglooError(self, regAddress, num_bytes):
         self.myBus.write(0x00,[0x06])

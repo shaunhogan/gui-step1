@@ -22,6 +22,17 @@ class Tools:
         s = " "
         return s.join(message_list)
     
+    # Function to read from Bridge FPGA
+    def readBridge(self, regAddress, num_bytes):
+        self.myBus.write(0x00,[0x06])
+        self.myBus.sendBatch()
+        self.myBus.write(self.address,[regAddress])
+        self.myBus.read(self.address, num_bytes)
+        message = self.myBus.sendBatch()[-1]
+        if message[0] != '0':
+            print "In readBridge(): Bridge I2C_ERROR"
+        return self.reverseBytes(message[2:])
+
     # Function to read from Igloo FPGA (top or bottom)
     def readIgloo(self, registerAddress, num_bytes=1):
         i2cSelectValue = -1

@@ -933,23 +933,6 @@ class makeGui(Tools):
         s = " "
         return s.join(message_list)
 
-    # Converts decimal messages to Hex messages. Mostly used for UID
-    def toHex(self, message, colon=0):
-        message_list = message.split()
-        for byte in xrange(len(message_list)):
-            message_list[byte] = hex(int(message_list[byte]))
-            message_list[byte] = message_list[byte][2:]
-            if len(message_list[byte]) == 1:
-                message_list[byte] = '0' + message_list[byte]
-        if colon == 2:
-            s = ":"
-            return s.join(message_list)
-        if colon == 1:
-            s = " "
-            return s.join(message_list)
-        s = ""
-        return '0x' + s.join(message_list)
-
 ##############################################################################
 
     # A function that changes the menu colors depending on if a test passes
@@ -1203,10 +1186,6 @@ class makeGui(Tools):
         #  if message[0] != '0':
         #          print 'Igloo i2c error detected in detectIglooError'
         return message[0]
-
-    def getValue(self, message):
-        hex_message = self.toHex(message)[2:]
-        return int(hex_message,16)
 
     def getMessageList(self, value, num_bytes):
         hex_message = hex(value)[2:]

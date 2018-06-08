@@ -15,13 +15,35 @@ import sys
 
 class Tools:
 
-    # reverse bytes function: input message and output message with bytes reversed
+    # reverseBytes(): input message and output message with bytes reversed
     def reverseBytes(self, message):
         message_list = message.split()
         message_list.reverse()
         s = " "
         return s.join(message_list)
     
+    # toHex(): input message and output corresponding hex string with formatting
+    def toHex(self, message, colon=0):
+        message_list = message.split()
+        for byte in xrange(len(message_list)):
+            message_list[byte] = hex(int(message_list[byte]))
+            message_list[byte] = message_list[byte][2:]
+            if len(message_list[byte]) == 1:
+                message_list[byte] = '0' + message_list[byte]
+        if colon == 2:
+            s = ":"
+            return s.join(message_list)
+        if colon == 1:
+            s = " "
+            return s.join(message_list)
+        s = ""
+        return '0x' + s.join(message_list)
+
+    # getValue(): input message in decimal and output corresponding integer value in decimal
+    def getValue(self, message):
+        hex_message = self.toHex(message)[2:]
+        return int(hex_message,16)
+
     # Function to read from Bridge FPGA
     def readBridge(self, regAddress, num_bytes):
         self.myBus.write(0x00,[0x06])

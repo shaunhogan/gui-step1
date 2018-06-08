@@ -921,20 +921,6 @@ class makeGui(Tools):
 
 ###########################################################################################
 
-    #def reverseBytes(self, message):
-    #    message_list = message.split()
-    #    message_list.reverse()
-    #    s = " "
-    #    return s.join(message_list)
-
-    def serialNum(self, message):
-        message_list = message.split()
-        message_list = message_list[1:-1]
-        s = " "
-        return s.join(message_list)
-
-##############################################################################
-
     # A function that changes the menu colors depending on if a test passes
     # or fails. This function is for event cases (IE, changing a single menu value)
     def infoValChange(self,event):
@@ -1028,6 +1014,7 @@ class makeGui(Tools):
 
 ##################################################################################
 
+    # Read UniqueID, Bridge and Igloo Firmware Versions
     def getUniqueIDPress(self):
 
         bridgeDict = { 18 : 0x19, 19 : 0x1A, 20: 0x1B, 21 : 0x1C,
@@ -1078,7 +1065,7 @@ class makeGui(Tools):
         print "UniqueID: {0}".format(self.uniqueIDEntry.get())
 
 
-######### Add UniqueID Checksum to verify correct unique id is read
+######### TODO: Add UniqueID Checksum to verify correct unique id is read
 
         # Getting bridge firmware
         self.myBus.write(0x00,[0x06])
@@ -1103,9 +1090,6 @@ class makeGui(Tools):
         # Write IGLOO firmware in hex
         majorIglooVer = self.toHex(majorIglooVer)
         minorIglooVer = self.toHex(minorIglooVer)
-        # Trim the entries of their error codes
-        #majorIglooVer = majorIglooVer[0:-2]
-        #minorIglooVer = minorIglooVer[0:-2]
         # Display igloo FW info on gui
         self.iglooMajVerEntry.set(majorIglooVer)
         self.iglooMinVerEntry.set(minorIglooVer)
@@ -1115,9 +1099,9 @@ class makeGui(Tools):
         # Verify that the Igloo can be power toggled
         self.iglooToggleEntry.set(str(self.checkIglooToggle()))
 
-##############################################################################################
-#   Functions to check igloo toggle
-##############################################################################################
+#########################################
+#   Functions to check igloo toggle     #
+#########################################
 
     def checkIglooToggle(self):
         print '\n--- Begin Toggle Igloo2 Power Test'
@@ -1166,34 +1150,20 @@ class makeGui(Tools):
         iglooControl = 0x22
         message = self.readBridge(iglooControl,4)
         value = self.getValue(message)
-        value = value ^ 0x400 # toggle igloo power!
+        value = value ^ 0x400 # toggle igloo power: Igloo2 VDD Enable
         messageList = self.getMessageList(value,4)
         self.writeBridge(iglooControl,messageList)
         return self.readBridge(iglooControl,4)
 
-    def writeBridge(self, regAddress,messageList):
-        self.myBus.write(self.address, [regAddress]+messageList)
-        return self.myBus.sendBatch()
-
-    def detectIglooError(self, regAddress, num_bytes):
+    def detectIglooError(self, registerAddress, num_bytes):
         self.myBus.write(0x00,[0x06])
         self.myBus.write(self.address,[0x11,0x03,0,0,0])
-        self.myBus.write(0x09,[regAddress])
+        self.myBus.write(0x09,[registerAddress])
         self.myBus.read(0x09, num_bytes)
         message = self.myBus.sendBatch()[-1]
         #  if message[0] != '0':
         #          print 'Igloo i2c error detected in detectIglooError'
         return message[0]
-
-    def getMessageList(self, value, num_bytes):
-        hex_message = hex(value)[2:]
-        length = len(hex_message)
-        zeros = "".join(list('0' for i in xrange(8-length)))
-        hex_message = zeros + hex_message
-        # print 'hex message = '+str(hex_message)
-        mList = list(int(hex_message[a:a+2],16) for a in xrange(0,2*num_bytes,2))
-        mList.reverse()
-        return mList
 
 ###########################################################################################
 

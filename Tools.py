@@ -15,6 +15,10 @@ import sys
 
 class Tools:
 
+#########################################################
+#   Methods (formatting, etc) used by makeGui class     #
+#########################################################
+
     # reverseBytes(): input message and output message with bytes reversed
     def reverseBytes(self, message):
         message_list = message.split()
@@ -44,16 +48,47 @@ class Tools:
         hex_message = self.toHex(message)[2:]
         return int(hex_message,16)
 
+    # serialNum(): get 6 unique bytes from UniqueID
+    def serialNum(self, message):
+        message_list = message.split()
+        message_list = message_list[1:-1]
+        s = " "
+        return s.join(message_list)
+
+    # getMessageList(): input value and number of bytes; output message as list
+    def getMessageList(self, value, num_bytes):
+        total_length = 2 * num_bytes
+        hex_message = hex(value)[2:]
+        hex_message = hex_message.zfill(total_length)
+        #message_length = len(hex_message)
+        #zeros = "".join(list('0' for i in xrange(total_length - message_length)))
+        #zeros = (total_length - message_length) * "0"
+        #hex_message = zeros + hex_message
+        print "In getMessageList(): hex value = 0x{0:x}".format(value)
+        print "In getMessageList(): hex message = {0}".format(hex_message)
+        mList = list(int(hex_message[a:a+2],16) for a in xrange(0,total_length,2))
+        mList.reverse()
+        return mList
+
+#########################################################################
+#   Methods for communication (read,write) with FPGAs (Bridge, Igloo)   #
+#########################################################################
+
     # Function to read from Bridge FPGA
-    def readBridge(self, regAddress, num_bytes):
+    def readBridge(self, registerAddress, num_bytes):
         self.myBus.write(0x00,[0x06])
         self.myBus.sendBatch()
-        self.myBus.write(self.address,[regAddress])
+        self.myBus.write(self.address,[registerAddress])
         self.myBus.read(self.address, num_bytes)
         message = self.myBus.sendBatch()[-1]
         if message[0] != '0':
             print "In readBridge(): Bridge I2C_ERROR"
         return self.reverseBytes(message[2:])
+
+    # Function to write to Bridge FPGA
+    def writeBridge(self, registerAddress,messageList):
+        self.myBus.write(self.address, [registerAddress]+messageList)
+        return self.myBus.sendBatch()
 
     # Function to read from Igloo FPGA (top or bottom)
     def readIgloo(self, registerAddress, num_bytes=1):

@@ -8,6 +8,7 @@
 # This is a comment to see if I got git to work properly
 # round 2 electric boogaloo
 # what does that mean?
+# it's a reference to nonsensical titling and naming schemes that often accompany movie sequels
 
 from Tkinter import *
 from datetime import datetime
@@ -18,6 +19,25 @@ import temp
 import json
 import client
 import subprocess
+
+if (0):
+    fontc="black"
+    topc="white"
+    rightc="white"
+    midc="white"
+    backc="#DDDDDD"
+    rightc="white"
+    yesnoc=["pale green","salmon"]
+    buttonsc=["CadetBlue1","lemon chiffon","salmon2","#CCDDFF","#FFE699","#FFCC66","orange","#ffbbbb"]
+else:
+    fontc='#DDDDDD'
+    topc='#333333'
+    rightc='#333333'
+    midc='#333333'
+    backc='#222222'
+    buttonsc=["#000066","#115511","#551111","#445588","#AA9122","#AA0011","#666611","#880000"]
+    yesnoc=["#118811","#881111"]
+
 
 class makeGui:
     def __init__(self, parent):
@@ -66,7 +86,7 @@ class makeGui:
         # frames will be placed here (topMost_frame) and not in the parent window.
         self.topMost_frame = Frame(parent)
         self.topMost_frame.pack()
-
+        self.topMost_frame.configure(bg=backc)
         #----- constants for controlling layout
         button_width = 6
 
@@ -93,7 +113,7 @@ class makeGui:
             self.topMost_frame,
             borderwidth=5, relief=RIDGE,
             height=50,
-            background="white",
+            background=topc,
             )
         self.info_frame.pack(
             side=TOP,
@@ -105,6 +125,7 @@ class makeGui:
 
         # Make a top half-frame
         self.topHalf_frame = Frame(self.topMost_frame)
+        self.topHalf_frame.configure(bg=backc)
         self.topHalf_frame.pack(side=TOP)
 
         # Make a frame for containing an experiment diagram
@@ -112,7 +133,7 @@ class makeGui:
             self.topHalf_frame,
             borderwidth=5, relief=RIDGE,
             height=580, width=300,
-            background="white"
+            background=rightc
             )
         self.experiment_frame.pack_propagate=(False)
         self.experiment_frame.pack(
@@ -128,7 +149,7 @@ class makeGui:
             self.topHalf_frame,
             borderwidth=5, relief=RIDGE,
             height=580, width=300,
-            background="white"
+            background=midc
             )
         self.experi_rightFrame.pack_propagatte=(False)
         self.experi_rightFrame.pack(
@@ -156,12 +177,13 @@ class makeGui:
         self.info_Label.configure(
             padx=button_padx,
             pady=button_pady,
-            background="white"
+            background=topc,
+            foreground=fontc
             )
         self.info_Label.pack(side=TOP)
 
         # Make a sub-sub-frame within the frame to hold another label and a dropdown box
-        self.info_subTop_frame = Frame(self.info_frame,background="white")
+        self.info_subTop_frame = Frame(self.info_frame,background=topc)
         self.info_subTop_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -171,7 +193,7 @@ class makeGui:
             )
 
         # Make a sub-sub-frame within the frame to hold comment box
-        self.info_subBot_frame = Frame(self.info_frame,background="white")
+        self.info_subBot_frame = Frame(self.info_frame,background=topc)
         self.info_subBot_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -185,7 +207,8 @@ class makeGui:
         self.info_nameLabel.configure(
             padx=button_padx,
             pady=button_pady,
-            background="white"
+            background=topc,
+            foreground=fontc
             )
         self.info_nameLabel.pack(side=LEFT)
 
@@ -195,13 +218,14 @@ class makeGui:
                           "John Lawrence","Andrew Baas","Mason Dorseth","Josh Hiltbrand")
         self.info_nameBox.pack(side=LEFT)
         self.nameChoiceVar.set("Choose Name") # initializes the OptionMenu
-
+        self.info_nameBox.configure(bg=topc,fg=fontc)
         # Make a label for the name drop-down:
         self.info_commentLabel = Label(self.info_subBot_frame, text="User Testing Comments: ")
         self.info_commentLabel.configure(
             padx=button_padx,
             pady=button_pady,
-            background="white"
+            background=topc,
+            foreground=fontc
             )
         self.info_commentLabel.pack(side=LEFT)
 
@@ -211,6 +235,7 @@ class makeGui:
             textvariable=self.infoCommentVar
             )
         self.info_commentBox.pack(side=LEFT)
+        self.info_commentBox.configure(bg=topc,fg=fontc)
 
         ######################################
         #####                            #####
@@ -229,12 +254,13 @@ class makeGui:
         self.experi_subFrame_lbl.configure(
             padx=button_padx,
             pady=button_pady,
-            background="white"
+            background=rightc,
+            foreground=fontc
             )
         self.experi_subFrame_lbl.pack(side=TOP)
 
         # Make top 2_7 subframe
-        self.experi_subTop2_7_frame = Frame(self.experiment_frame, bg="white")
+        self.experi_subTop2_7_frame = Frame(self.experiment_frame, bg=rightc)
         self.experi_subTop2_7_frame.pack(
             side=TOP,
             ipadx=frame_ipadx, padx=frame_padx,
@@ -242,7 +268,7 @@ class makeGui:
             )
 
         # Make top 2_8 subframe
-        self.experi_subTop2_8_frame = Frame(self.experiment_frame, bg="white")
+        self.experi_subTop2_8_frame = Frame(self.experiment_frame, bg=rightc)
         self.experi_subTop2_8_frame.pack(
             side=TOP,
             ipadx=frame_ipadx, padx=frame_padx,
@@ -250,7 +276,7 @@ class makeGui:
             )
 
         # Make top 2_6 subframe
-        self.experi_subTop2_6_frame = Frame(self.experiment_frame, bg="white")
+        self.experi_subTop2_6_frame = Frame(self.experiment_frame, bg=rightc)
         self.experi_subTop2_6_frame.pack(
             side=TOP,
             ipadx=frame_ipadx, padx=frame_padx,
@@ -258,7 +284,7 @@ class makeGui:
             )
 
         # Make top 2 subframe
-        self.experi_subTop2_frame = Frame(self.experiment_frame,background="white")
+        self.experi_subTop2_frame = Frame(self.experiment_frame,background=rightc)
         self.experi_subTop2_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -268,7 +294,7 @@ class makeGui:
             )
 
         # Make top 2_0 subframe
-        self.experi_subTop2_0_frame = Frame(self.experiment_frame,background="white")
+        self.experi_subTop2_0_frame = Frame(self.experiment_frame,background=rightc)
         self.experi_subTop2_0_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -278,7 +304,7 @@ class makeGui:
             )
 
         # Make top 2_1 subframe
-        self.experi_subTop2_1_frame = Frame(self.experiment_frame,background="white")
+        self.experi_subTop2_1_frame = Frame(self.experiment_frame,background=rightc)
         self.experi_subTop2_1_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -288,7 +314,7 @@ class makeGui:
             )
 
         # Make top 2_2 subframe
-        self.experi_subTop2_2_frame = Frame(self.experiment_frame,background="white")
+        self.experi_subTop2_2_frame = Frame(self.experiment_frame,background=rightc)
         self.experi_subTop2_2_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -298,7 +324,7 @@ class makeGui:
             )
 
         # Make top 2_3 subframe
-        self.experi_subTop2_3_frame = Frame(self.experiment_frame,background="white")
+        self.experi_subTop2_3_frame = Frame(self.experiment_frame,background=rightc)
         self.experi_subTop2_3_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -308,7 +334,7 @@ class makeGui:
             )
 
         # Make top 2_4 subframe
-        self.experi_subTop2_4_frame = Frame(self.experiment_frame,background="white")
+        self.experi_subTop2_4_frame = Frame(self.experiment_frame,background=rightc)
         self.experi_subTop2_4_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -318,7 +344,7 @@ class makeGui:
             )
 
         # Make top 2_4_5 subframe
-        self.experi_subTop2_4_5_frame = Frame(self.experiment_frame,background="white")
+        self.experi_subTop2_4_5_frame = Frame(self.experiment_frame,background=rightc)
         self.experi_subTop2_4_5_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -328,7 +354,7 @@ class makeGui:
             )
 
         # Make top 2_4_6 subframe
-        self.experi_subTop_2_4_6_frame = Frame(self.experiment_frame, background="white")
+        self.experi_subTop_2_4_6_frame = Frame(self.experiment_frame, background=rightc)
         self.experi_subTop_2_4_6_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -339,7 +365,7 @@ class makeGui:
 
 
         # Make top 2_5 subframe
-        self.experi_subTop2_5_frame = Frame(self.experiment_frame,background="white")
+        self.experi_subTop2_5_frame = Frame(self.experiment_frame,background=rightc)
         self.experi_subTop2_5_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -355,7 +381,7 @@ class makeGui:
         ###################################
 
         # Make a buffer frame
-        self.experi_subTopBuffer_frame = Frame(self.experi_rightFrame,bg="white")
+        self.experi_subTopBuffer_frame = Frame(self.experi_rightFrame,bg=midc)
         self.experi_subTopBuffer_frame.pack(
             side=TOP,
             ipady=frame_ipady,
@@ -366,12 +392,12 @@ class makeGui:
 
         # Make an "inspections and tests" label
         self.experi_inspections_label = Label(self.experi_subTopBuffer_frame,
-                        text="Inspections and Tests")
-        self.experi_inspections_label.configure(bg="white")
+                        text="Inspections and Tests",fg=fontc)
+        self.experi_inspections_label.configure(bg=midc)
         self.experi_inspections_label.pack()
 
         # Make a subframe for the barcode box
-        self.experi_barcode_frame = Frame(self.experi_rightFrame, bg="white")
+        self.experi_barcode_frame = Frame(self.experi_rightFrame, bg=midc)
         self.experi_barcode_frame.pack(
             side=TOP,
             ipady=frame_ipady,
@@ -383,9 +409,10 @@ class makeGui:
         # Make a label for the Barcode entry
         self.experi_barcode_lbl = Label(self.experi_barcode_frame, text="Barcode: ")
         self.experi_barcode_lbl.configure(
-            background="white",
+            background=midc,
             padx=button_padx,
             pady=button_pady,
+            foreground=fontc
             )
         self.experi_barcode_lbl.pack(side=LEFT)
 
@@ -396,9 +423,10 @@ class makeGui:
             textvariable=self.barcodeEntry
             )
         self.experi_barcode_entry.pack(side=RIGHT)
+        self.experi_barcode_entry.configure(bg=midc,fg=fontc)
 
         # Make another buffer frame
-        self.experi_subTopBuffer2_frame = Frame(self.experi_rightFrame,bg="white")
+        self.experi_subTopBuffer2_frame = Frame(self.experi_rightFrame,bg=midc)
         self.experi_subTopBuffer2_frame.pack(
             side=TOP,
             ipady=frame_ipady,
@@ -408,7 +436,7 @@ class makeGui:
             )
 
         # Make top 3 subframe
-        self.experi_subTop3_frame = Frame(self.experi_rightFrame,background="white")
+        self.experi_subTop3_frame = Frame(self.experi_rightFrame,background=midc)
         self.experi_subTop3_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -417,7 +445,7 @@ class makeGui:
             )
 
         # Make top 3 subframe for text
-        self.experi_subTop3_fText = Frame(self.experi_rightFrame,background="white")
+        self.experi_subTop3_fText = Frame(self.experi_rightFrame,background=midc)
         self.experi_subTop3_fText.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -426,7 +454,7 @@ class makeGui:
             )
 
         # Make top 4 subframe
-        self.experi_subTop4_frame = Frame(self.experi_rightFrame,background="white")
+        self.experi_subTop4_frame = Frame(self.experi_rightFrame,background=midc)
         self.experi_subTop4_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -434,7 +462,7 @@ class makeGui:
             )
 
         # Make top 4 subframe for text
-        self.experi_subTop4_fText = Frame(self.experi_rightFrame,background="white")
+        self.experi_subTop4_fText = Frame(self.experi_rightFrame,background=midc)
         self.experi_subTop4_fText.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -442,7 +470,7 @@ class makeGui:
             )
 
         # Make top 5 subframe
-        self.experi_subTop5_frame = Frame(self.experi_rightFrame,background="white")
+        self.experi_subTop5_frame = Frame(self.experi_rightFrame,background=midc)
         self.experi_subTop5_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -450,7 +478,7 @@ class makeGui:
             )
 
         # Make top 5 subframe for text
-        self.experi_subTop5_fText = Frame(self.experi_rightFrame,background="white")
+        self.experi_subTop5_fText = Frame(self.experi_rightFrame,background=midc)
         self.experi_subTop5_fText.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -458,7 +486,7 @@ class makeGui:
             )
 
         # Make top 6 subframe
-        self.experi_subTop6_frame = Frame(self.experi_rightFrame,background="white")
+        self.experi_subTop6_frame = Frame(self.experi_rightFrame,background=midc)
         self.experi_subTop6_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -466,7 +494,7 @@ class makeGui:
             )
 
         # Make top 6 subframe for text
-        self.experi_subTop6_fText = Frame(self.experi_rightFrame,background="white")
+        self.experi_subTop6_fText = Frame(self.experi_rightFrame,background=midc)
         self.experi_subTop6_fText.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -474,7 +502,7 @@ class makeGui:
             )
 
         # Make top 7 subframe
-        self.experi_subTop7_frame = Frame(self.experi_rightFrame,background="white")
+        self.experi_subTop7_frame = Frame(self.experi_rightFrame,background=midc)
         self.experi_subTop7_frame.pack(
             side=TOP,
             ipadx=frame_ipadx,
@@ -497,7 +525,8 @@ class makeGui:
         # Make a label for the uniqueID entry
         self.experi_uniqueID_lbl = Label(self.experi_subTop2_frame, text="Unique ID: ")
         self.experi_uniqueID_lbl.configure(
-            background="white",
+            background=rightc,
+            foreground=fontc,
             padx=button_padx,
             pady=button_pady,
             )
@@ -508,14 +537,17 @@ class makeGui:
         self.experi_uniqueID_entry = Entry(
             self.experi_subTop2_frame,
             textvariable=self.uniqueIDEntry,
-            state="readonly"
+            state="readonly",
+            readonlybackground=rightc,
+            disabledforeground=fontc
             )
         self.experi_uniqueID_entry.pack(side=RIGHT)
 
         # Make a label for the temperature entry
         self.experi_temperature_lbl = Label(self.experi_subTop2_0_frame, text="Temperature: ")
         self.experi_temperature_lbl.configure(
-            background="white",
+            background=rightc,
+            foreground=fontc,
             padx=button_padx,
             pady=button_pady,
             )
@@ -526,14 +558,18 @@ class makeGui:
         self.experi_temperature_entry = Entry(
             self.experi_subTop2_0_frame,
             textvariable=self.tempEntry,
-            state="readonly"
+            state="readonly",
+            readonlybackground=rightc,
+            disabledforeground=fontc
             )
+        self.experi_temperature_entry.configure(bg=rightc,fg=fontc)
         self.experi_temperature_entry.pack(side=RIGHT)
 
         # Make a label for the main firmware ver entry
         self.experi_firmwareVer_lbl = Label(self.experi_subTop2_1_frame, text="Bridge Ver (Major): ")
         self.experi_firmwareVer_lbl.configure(
-            background="white",
+            background=rightc,
+            foreground=fontc,
             padx=button_padx,
             pady=button_pady,
             )
@@ -544,14 +580,17 @@ class makeGui:
         self.experi_firmwareVer_entry = Entry(
             self.experi_subTop2_1_frame,
             textvariable=self.firmwareVerEntry,
-            state="readonly"
+            state="readonly",
+            readonlybackground=rightc,
+            disabledforeground=fontc
             )
         self.experi_firmwareVer_entry.pack(side=RIGHT)
 
         # Make a label for the minor firmware ver entry
         self.experi_firmwareVerMin_lbl = Label(self.experi_subTop2_2_frame, text="Bridge Ver (Minor): ")
         self.experi_firmwareVerMin_lbl.configure(
-            background="white",
+            background=rightc,
+            foreground=fontc,
             padx=button_padx,
             pady=button_pady,
             )
@@ -562,14 +601,17 @@ class makeGui:
         self.experi_firmwareVerMin_entry = Entry(
             self.experi_subTop2_2_frame,
             textvariable=self.firmwareVerMinEntry,
-            state="readonly"
+            state="readonly",
+            readonlybackground=rightc,
+            disabledforeground=fontc
             )
         self.experi_firmwareVerMin_entry.pack(side=RIGHT)
 
         # Make a label for the other firmware entry
         self.experi_firmwareVerOther_lbl = Label(self.experi_subTop2_3_frame, text="Bridge Ver (Other): ")
         self.experi_firmwareVerOther_lbl.configure(
-            background="white",
+            background=rightc,
+            foreground=fontc,
             padx=button_padx,
             pady=button_pady,
             )
@@ -580,14 +622,17 @@ class makeGui:
         self.experi_firmwareVerOther_entry = Entry(
             self.experi_subTop2_3_frame,
             textvariable=self.firmwareVerOtherEntry,
-            state="readonly"
+            state="readonly",
+            readonlybackground=rightc,
+            disabledforeground=fontc
             )
         self.experi_firmwareVerOther_entry.pack(side=RIGHT)
 
         # Make a label for the major igloo firmware entry
         self.experi_iglooMajVer_lbl = Label(self.experi_subTop2_4_frame, text="Igloo Ver (Major): ")
         self.experi_iglooMajVer_lbl.configure(
-            background="white",
+            background=rightc,
+            foreground=fontc,
             padx=button_padx,
             pady=button_pady,
             )
@@ -597,7 +642,9 @@ class makeGui:
         self.experi_iglooMajVer_entry = Entry(
             self.experi_subTop2_4_frame,
             textvariable=self.iglooMajVerEntry,
-            state="readonly"
+            state="readonly",
+            readonlybackground=rightc,
+            disabledforeground=fontc
             )
         self.experi_iglooMajVer_entry.pack(side=RIGHT)
 
@@ -605,7 +652,8 @@ class makeGui:
         # Make a label for the minor igloo firmware entry
         self.experi_iglooMinVer_lbl = Label(self.experi_subTop2_4_5_frame, text="Igloo Ver (Minor): ")
         self.experi_iglooMinVer_lbl.configure(
-            background="white",
+            background=rightc,
+            foreground=fontc,
             padx=button_padx,
             pady=button_pady,
             )
@@ -615,60 +663,65 @@ class makeGui:
         self.experi_iglooMinVer_entry = Entry(
             self.experi_subTop2_4_5_frame,
             textvariable=self.iglooMinVerEntry,
-            state="readonly"
+            state="readonly",
+            readonlybackground=rightc,
+            disabledforeground=fontc
             )
         self.experi_iglooMinVer_entry.pack(side=RIGHT)
 
         # Make a label for the igloo toggle check
         self.iglooToggle_label = Label(self.experi_subTop_2_4_6_frame, text="Igloo Toggle Test: ")
-        self.iglooToggle_label.configure(bg="white",padx=button_padx,pady=button_pady)
+        self.iglooToggle_label.configure(bg=rightc,fg=fontc,padx=button_padx,pady=button_pady)
         self.iglooToggle_label.pack(side=LEFT)
 
         # Make an entry box for the minor firmware
         self.iglooToggle_entry = Entry(
             self.experi_subTop_2_4_6_frame,
             textvariable=self.iglooToggleEntry,
-            state="readonly"
+            state="readonly",
+            readonlybackground=rightc,
+            disabledforeground=fontc
             )
         self.iglooToggle_entry.pack(side=RIGHT)
 
 
         # Make a button to read the unique ID & firmware LEFT SIDE
         self.experi_uniqueID_left_get = Button(self.experi_subTop2_5_frame, text ="Get Unique ID & Firmware Ver. from Left", command=self.getUniqueIDPress_left)
-        self.experi_uniqueID_left_get.configure(bg="CadetBlue1")
+        self.experi_uniqueID_left_get.configure(bg=buttonsc[0],fg=fontc)
         self.experi_uniqueID_left_get.pack(side=TOP)
 
         # Make a button to read the unique ID & firmware RIGHT SIDE
         self.experi_uniqueID_right_get = Button(self.experi_subTop2_5_frame, text ="Get Unique ID & Firmware Ver. from Right", command=self.getUniqueIDPress_right)
-        self.experi_uniqueID_right_get.configure(bg="lemon chiffon")
+        self.experi_uniqueID_right_get.configure(bg=buttonsc[1],fg=fontc)
         self.experi_uniqueID_right_get.pack(side=TOP)
 
         # Make a button to submit the unique ID & firmware
         self.experi_uniqueID_give = Button(self.experi_subTop2_5_frame, text ="Upload Unique ID & Firmware Ver.", command=self.infoSubmitButtonPress)
-        self.experi_uniqueID_give.configure(bg="salmon2")
+        self.experi_uniqueID_give.configure(bg=buttonsc[2],fg=fontc)
         self.experi_uniqueID_give.pack(side=TOP)
 
         # Make a line of hypens
         self.experi_hyphenLine = Label(self.experi_subTop2_6_frame, text="----------------------------------")
-        self.experi_hyphenLine.configure(bg="white",padx=button_padx,pady=button_pady)
+        self.experi_hyphenLine.configure(bg=rightc,fg=fontc,padx=button_padx,pady=button_pady)
         self.experi_hyphenLine.pack()
 
         # Make a label for the GPIO selection
         self.gpioSelect_label = Label(self.experi_subTop2_7_frame, text="Select GPIO Option: ")
-        self.gpioSelect_label.configure(bg="white",padx=button_padx,pady=button_pady)
+        self.gpioSelect_label.configure(bg=rightc,fg=fontc,padx=button_padx,pady=button_pady)
         self.gpioSelect_label.pack(side=LEFT)
 
         # Make a option menu for GPIO selection
         self.gpioSelect_box = OptionMenu(self.experi_subTop2_7_frame, self.gpioChoiceVar,
                           "J2 and J21","J3 and J20","J4 and J19","J5 and J18",
                           "J7 and J26","J8 and J25","J9 and J24","J10 and J23")
+        self.gpioSelect_box.configure(bg=rightc,fg=fontc)
         self.gpioSelect_box.pack(side=LEFT)
         self.gpioChoiceVar.set("J2 and J21")
 
         # Make a button to submit GPIO option
         self.gpioSelect_bttn = Button(self.experi_subTop2_8_frame, command=self.gpioBttnPress,
                           text="Submit GPIO Choice")
-        self.gpioSelect_bttn.configure(bg="CadetBlue1")
+        self.gpioSelect_bttn.configure(bg=buttonsc[0],fg=fontc)
         self.gpioSelect_bttn.pack()
 
         ################################
@@ -696,47 +749,47 @@ class makeGui:
 
         for i in range(0,4):
             self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-            self.testPassInfo[i].configure(width=15,bg="#CCDDFF")
+            self.testPassInfo[i].configure(width=15,bg=buttonsc[3],fg=fontc)
             self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
-            self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg="white")
+            self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg=midc,fg=fontc)
             self.testPassLabel.configure(width=20)
             self.testPassLabel.pack(side=LEFT)
 
         for i in range(4,9):
             self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-            self.testPassInfo[i].configure(width=11, bg="#CCDDFF")
+            self.testPassInfo[i].configure(width=11, bg=buttonsc[3],fg=fontc)
             self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
-            self.testPassLabel=Label(self.experi_subTop4_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
+            self.testPassLabel=Label(self.experi_subTop4_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=midc,fg=fontc)
             self.testPassLabel.configure(width=15)
             self.testPassLabel.pack(side=LEFT)
 
         for i in range(9,14):
             self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-            self.testPassInfo[i].configure(width=11,bg="#CCDDFF")
+            self.testPassInfo[i].configure(width=11,bg=buttonsc[3],fg=fontc)
             self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
-            self.testPassLabel=Label(self.experi_subTop5_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
+            self.testPassLabel=Label(self.experi_subTop5_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=midc,fg=fontc)
             self.testPassLabel.configure(width=15)
             self.testPassLabel.pack(side=LEFT)
 
         for i in range(14,19):
             self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-            self.testPassInfo[i].configure(width=11,bg="#CCDDFF")
+            self.testPassInfo[i].configure(width=11,bg=buttonsc[3],fg=fontc)
             self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
-            self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
+            self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=midc,fg=fontc)
             self.testPassLabel.configure(width=15)
             self.testPassLabel.pack(side=LEFT)
 
         # Make a checkbox to overwrite/not overwrite pre-existing data
         self.overwriteBox = Checkbutton(self.experi_subTop7_frame, text="Overwrite existing QIE Card data (if applicable)?", variable=self.overwriteVar)
-        self.overwriteBox.configure(bg="lemon chiffon")
+        self.overwriteBox.configure(bg=buttonsc[1],fg=fontc)
         self.overwriteBox.pack(side=TOP,
                        padx = button_padx,
                        pady = button_pady,
@@ -745,17 +798,17 @@ class makeGui:
 
         # Make a button to submit tests and information
         self.passAllTestsBttn = Button(self.experi_subTop7_frame, text="Pass All Tests", command=self.throwPassAllBox)
-        self.passAllTestsBttn.configure(bg="#FFE699", width=40)
+        self.passAllTestsBttn.configure(bg=buttonsc[4],fg=fontc, width=40)
         self.passAllTestsBttn.pack(side=TOP)
 
         # Make a button to submit tests and information
         self.initSubmitBttn = Button(self.experi_subTop7_frame, text="Submit Inspections & Tests", command=self.initSubmitBttnPress)
-        self.initSubmitBttn.configure(bg="#FFCC66", width=40)
+        self.initSubmitBttn.configure(bg=buttonsc[5],fg=fontc, width=40)
         self.initSubmitBttn.pack(side=TOP)
 
         # Make a button to clear all results
         self.clearDataBttn = Button(self.experi_subTop7_frame, text="Clear Inspections, Tests, & Info", command=self.clearDataBttnPress)
-        self.clearDataBttn.configure(bg="orange", width=40)
+        self.clearDataBttn.configure(bg=buttonsc[6],fg=fontc, width=40)
         self.clearDataBttn.pack(side=TOP)
 
 
@@ -814,11 +867,11 @@ class makeGui:
         self.top.config(height=50, width=360)
         self.top.pack_propagate(False)
 
-        self.msg = Label(self.top, text="Please select a name before continuing.")
+        self.msg = Label(self.top, text="Please select a name before continuing.",fg=fontc)
         self.msg.pack()
 
         self.button = Button(self.top, text="Sorry...", command=self.top.destroy)
-        self.button.configure(bg="#ffbbbb")
+        self.button.configure(bg=buttonsc[7])
         self.button.pack()
 
 ##########################################################################################
@@ -833,11 +886,11 @@ class makeGui:
         self.passMsg.pack()
 
         self.yesButton = Button(self.passBox, text="Yes", command=self.passAllSelected)
-        self.yesButton.configure(bg="pale green")
+        self.yesButton.configure(bg=yesnoc[0])
         self.yesButton.pack()
 
         self.noButton = Button(self.passBox, text="No", command=self.passBox.destroy)
-        self.noButton.configure(bg="salmon")
+        self.noButton.configure(bg=yesnoc[1])
         self.noButton.pack()
 
     def passAllSelected(self):
@@ -959,7 +1012,7 @@ class makeGui:
             elif (self.testPassList[i].get() == "Pass"):
                 self.testPassInfo[i].configure(bg="#70ff70")
             else:
-                self.testPassInfo[i].configure(bg="#CCDDFF")
+                self.testPassInfo[i].configure(bg=buttonsc[3])
 
     # Duplicate of above function, but for non-event cases (IE hitting the "Clear" button)
     def infoValChangeNonevent(self):
@@ -969,7 +1022,7 @@ class makeGui:
                          elif (self.testPassList[i].get() == "Pass"):
                                  self.testPassInfo[i].configure(bg="#70ff70")
                          else:
-                                 self.testPassInfo[i].configure(bg="#CCDDFF")
+                                 self.testPassInfo[i].configure(bg=buttonsc[3])
 
 #############################################################################
 

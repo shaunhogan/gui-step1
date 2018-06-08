@@ -978,7 +978,7 @@ class makeGui(Tools):
 
         gpioVals = newJSlotDict[self.gpioChoiceVar.get()]
         self.jslots = dictStringToInts[self.gpioChoiceVar.get()]
-        print '\nGPIO '+self.gpioChoiceVar.get()+' values = '+str(gpioVals)
+        print 'GPIO '+self.gpioChoiceVar.get()+' values = '+str(gpioVals)
 
         for gpioValsIndex in xrange(len(gpioVals)):
             gpioVal = gpioVals[gpioValsIndex]
@@ -989,8 +989,8 @@ class makeGui(Tools):
             batch = self.myBus.sendBatch()
             self.myBus.write(0x74, [0x08]) # PCA9538 is bit 3 on ngccm mux
             # myBus.write(0x70,[0x01,0x00]) # GPIO PwrEn is register 3
-            #power on and reset
-                #register 3 is control reg for i/o modes
+            #backplane power enable and backplane reset
+            #register 3 is control reg for i/o modes
             self.myBus.write(0x70,[0x03,0x00]) # sets all GPIO pins to 'output' mode
             self.myBus.write(0x70,[0x01,0x08])
             self.myBus.write(0x70,[0x01,0x18]) # GPIO reset is 10
@@ -1002,19 +1002,17 @@ class makeGui(Tools):
             # myBus.write(0x70,[0x03,0x08])
             self.myBus.read(0x70,1)
             batch = self.myBus.sendBatch()
-            print 'GPIO Batch = '+str(batch)
+            print "GPIO Batch = "+str(batch)
     
             if (batch[-1] == "1 0"):
-                print "I2C communication error with GPIO!"
+                print "GPIO I2C_ERROR"
                 self.gpioSelect_bttn.configure(bg="#ff3333")
             elif (batch[-1] == "0 "+str(gpioVal)):
                 print "GPIO " + str(newJSlotDict[self.gpioChoiceVar.get()]) + " Opened!"
                 self.gpioSelect_bttn.configure(bg="#33ff33")
     
             else:
-                print 'message = '+str(batch[-1])
-                print 'GPIO Choice Error... state of confusion!'
-        # print 'initial = '+str(batch)
+                print "GPIO Error: unexpected message is {0}".format(message)
 
 ##################################################################################
 
@@ -1199,6 +1197,12 @@ class makeGui(Tools):
 
 ###########################################################################################
 
-root = Tk()
-myapp = makeGui(root)
-root.mainloop()
+# Main
+def main():
+    root = Tk()
+    myapp = makeGui(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
+

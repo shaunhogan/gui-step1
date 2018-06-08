@@ -4,17 +4,12 @@
 # with the setup in the lab.
 # Developed with the help of many people
 # For Baylor University, Summer 2016.
-#
-# This is a comment to see if I got git to work properly
-# round 2 electric boogaloo
-# what does that mean?
-# it's a reference to nonsensical titling and naming schemes that often accompany movie sequels
 
 from Tkinter import *
 from datetime import datetime
 from initialClass import initialTests
 from cardInfoClass import cardInformation
-import igloo_test as it
+from Tools import Tools
 import temp
 import json
 import client
@@ -38,15 +33,20 @@ else:
     buttonsc=["#000066","#115511","#551111","#445588","#AA9122","#AA0011","#666611","#880000"]
     yesnoc=["#118811","#881111"]
 
-
-class makeGui:
+class makeGui(Tools):
     def __init__(self, parent):
         # Create a webBus instance
         #self.myBus = client.webBus("192.168.1.41",0)
         self.myBus = client.webBus("pi7",0)
 
-        # Create a permanent address of QCard
+        # Create a permanent I2C address of QCard (slot 1)
         self.address = 0x19
+        
+        # Permanent I2C address of Igloo FPGA
+        self.iglooAddress = 0x09
+        
+        # Specify "top" or "bottom" Igloo FPGA
+        self.igloo = "top"
 
         # Create an instance of initialTests
         self.initialTest = initialTests()
@@ -54,8 +54,8 @@ class makeGui:
         # Create an instance of cardInformation
         self.cardInfo = cardInformation()
 
-	# Read info from left side?
-	self.readFromList = True
+        # Read info from left side?
+        self.readFromList = True
 
         # Make an empty list that will eventually contain all of
         # the active card slots
@@ -972,37 +972,6 @@ class makeGui:
 
 ###########################################################################################
 
-    def reverseBytes(self, message):
-        message_list = message.split()
-        message_list.reverse()
-        s = " "
-        return s.join(message_list)
-
-    def serialNum(self, message):
-        message_list = message.split()
-        message_list = message_list[1:-1]
-        s = " "
-        return s.join(message_list)
-
-    # Converts decimal messages to Hex messages. Mostly used for UID
-    def toHex(self, message, colon=0):
-        message_list = message.split()
-        for byte in xrange(len(message_list)):
-            message_list[byte] = hex(int(message_list[byte]))
-            message_list[byte] = message_list[byte][2:]
-            if len(message_list[byte]) == 1:
-                message_list[byte] = '0' + message_list[byte]
-        if colon == 2:
-            s = ":"
-            return s.join(message_list)
-        if colon == 1:
-            s = " "
-            return s.join(message_list)
-        s = ""
-        return '0x' + s.join(message_list)
-
-##############################################################################
-
     # A function that changes the menu colors depending on if a test passes
     # or fails. This function is for event cases (IE, changing a single menu value)
     def infoValChange(self,event):
@@ -1044,12 +1013,12 @@ class makeGui:
                         "J7 and J26" : [7, 26], "J8 and J25" : [8, 25],
                         "J9 and J24" : [9, 24], "J10 and J23" : [10, 23]}
 
-	gpioVals = newJSlotDict[self.gpioChoiceVar.get()]
+        gpioVals = newJSlotDict[self.gpioChoiceVar.get()]
         self.jslots = dictStringToInts[self.gpioChoiceVar.get()]
-        print '\nGPIO '+self.gpioChoiceVar.get()+' values = '+str(gpioVals)
+        print 'GPIO '+self.gpioChoiceVar.get()+' values = '+str(gpioVals)
 
-	for gpioValsIndex in xrange(len(gpioVals)):
-	    gpioVal = gpioVals[gpioValsIndex]
+        for gpioValsIndex in xrange(len(gpioVals)):
+            gpioVal = gpioVals[gpioValsIndex]
             if gpioValsIndex == 0:
                 self.myBus.write(0x72, [0x02])
             else:
@@ -1057,8 +1026,8 @@ class makeGui:
             batch = self.myBus.sendBatch()
             self.myBus.write(0x74, [0x08]) # PCA9538 is bit 3 on ngccm mux
             # myBus.write(0x70,[0x01,0x00]) # GPIO PwrEn is register 3
-            #power on and reset
-                #register 3 is control reg for i/o modes
+            #backplane power enable and backplane reset
+            #register 3 is control reg for i/o modes
             self.myBus.write(0x70,[0x03,0x00]) # sets all GPIO pins to 'output' mode
             self.myBus.write(0x70,[0x01,0x08])
             self.myBus.write(0x70,[0x01,0x18]) # GPIO reset is 10
@@ -1070,25 +1039,23 @@ class makeGui:
             # myBus.write(0x70,[0x03,0x08])
             self.myBus.read(0x70,1)
             batch = self.myBus.sendBatch()
-            print 'GPIO Batch = '+str(batch)
+            print "GPIO Batch = "+str(batch)
     
             if (batch[-1] == "1 0"):
-                print "I2C communication error with GPIO!"
+                print "GPIO I2C_ERROR"
                 self.gpioSelect_bttn.configure(bg="#ff3333")
             elif (batch[-1] == "0 "+str(gpioVal)):
                 print "GPIO " + str(newJSlotDict[self.gpioChoiceVar.get()]) + " Opened!"
                 self.gpioSelect_bttn.configure(bg="#33ff33")
     
             else:
-                print 'message = '+str(batch[-1])
-                print 'GPIO Choice Error... state of confusion!'
-        # print 'initial = '+str(batch)
+                print "GPIO Error: unexpected message is {0}".format(message)
 
 ##################################################################################
 
     def getUniqueIDPress_left(self):
-	self.readFromLeft = True
-	self.getUniqueIDPress()
+        self.readFromLeft = True
+        self.getUniqueIDPress()
 
 ##################################################################################
 
@@ -1098,6 +1065,7 @@ class makeGui:
 
 ##################################################################################
 
+    # Read UniqueID, Bridge and Igloo Firmware Versions
     def getUniqueIDPress(self):
 
         bridgeDict = { 18 : 0x19, 19 : 0x1A, 20: 0x1B, 21 : 0x1C,
@@ -1109,10 +1077,10 @@ class makeGui:
             self.jslot = self.jslots[1]
             self.slot = bridgeDict[self.jslot]
             if self.jslot in [18,19,20,21]:
-    	        self.myBus.write(0x72, [0x01])
+                self.myBus.write(0x72, [0x01])
                 self.myBus.write(0x74,[0x18])
             if self.jslot in [23,24,25,26]:
-         	self.myBus.write(0x72, [0x01])
+                self.myBus.write(0x72, [0x01])
                 self.myBus.write(0x74,[0x09])
         else:
             self.jslot = self.jslots[0]
@@ -1126,10 +1094,8 @@ class makeGui:
 
         self.myBus.sendBatch()
 
-        # slot = 0x19
-        # Use self.slot, which is defined through gpioChoiceVar
-        print 'JSlot for UniqueID Press = '+str(self.jslot)
-        print 'I2C Address for UniqueID Press = '+str(self.slot)
+        print "Reading Unique ID and Firmware versions."
+        print "JSlot = {0} ; I2C_Address = 0x{1:02x}".format(self.jslot, self.slot)
 
         # Getting unique ID
         # 0x05000000ea9c8b7000   <- From main gui
@@ -1138,7 +1104,7 @@ class makeGui:
         self.myBus.write(0x50,[0x00])
         self.myBus.read(0x50, 8)
         raw_bus = self.myBus.sendBatch()
-        print '\nRaw Unique ID = '+str(raw_bus[-1])
+        #print '\nRaw Unique ID = '+str(raw_bus[-1])
         if raw_bus[-1][0] != '0':
             print 'Unique ID i2c Error!'
         cooked_bus = self.reverseBytes(raw_bus[-1])
@@ -1146,6 +1112,11 @@ class makeGui:
         self.uniqueIDEntry.set(self.toHex(cooked_bus))
         self.uniqueIDPass = self.uniqueIDEntry.get()
         self.uniqueIDEntry.set("0x"+self.uniqueIDPass[4:(len(self.uniqueIDPass)-4)])
+
+        print "UniqueID: {0}".format(self.uniqueIDEntry.get())
+
+
+######### TODO: Add UniqueID Checksum to verify correct unique id is read
 
         # Getting bridge firmware
         self.myBus.write(0x00,[0x06])
@@ -1165,26 +1136,23 @@ class makeGui:
         self.tempEntry.set(str(round(temp.readManyTemps(self.myBus, self.slot, 10, "Temperature", "nohold"),4)))
 
         # Getting IGLOO firmware info
-        majorIglooVer = it.readIgloo(self.myBus, self.slot, 0x00)
-        minorIglooVer = it.readIgloo(self.myBus, self.slot, 0x01)
-        # Parse IGLOO firmware info
-        majorIglooVer = self.toHex(self.reverseBytes(majorIglooVer))
-        minorIglooVer = self.toHex(self.reverseBytes(minorIglooVer))
-        # Trim the entries of their error codes
-        majorIglooVer = majorIglooVer[0:-2]
-        minorIglooVer = minorIglooVer[0:-2]
+        majorIglooVer = self.readIgloo(0x00)
+        minorIglooVer = self.readIgloo(0x01)
+        # Write IGLOO firmware in hex
+        majorIglooVer = self.toHex(majorIglooVer)
+        minorIglooVer = self.toHex(minorIglooVer)
         # Display igloo FW info on gui
         self.iglooMajVerEntry.set(majorIglooVer)
         self.iglooMinVerEntry.set(minorIglooVer)
-        print 'Igloo2 FPGA Major Firmware Version = '+str(majorIglooVer)
-        print 'Igloo2 FPGA Minor Firmware Version = '+str(minorIglooVer)
+        print "{0} Igloo2 FPGA Major Firmware Version = {1}".format(self.igloo, majorIglooVer)
+        print "{0} Igloo2 FPGA Minor Firmware Version = {1}".format(self.igloo, minorIglooVer)
 
         # Verify that the Igloo can be power toggled
         self.iglooToggleEntry.set(str(self.checkIglooToggle()))
 
-##############################################################################################
-#   Functions to check igloo toggle
-##############################################################################################
+#########################################
+#   Functions to check igloo toggle     #
+#########################################
 
     def checkIglooToggle(self):
         print '\n--- Begin Toggle Igloo2 Power Test'
@@ -1233,61 +1201,29 @@ class makeGui:
         iglooControl = 0x22
         message = self.readBridge(iglooControl,4)
         value = self.getValue(message)
-        value = value ^ 0x400 # toggle igloo power!
+        value = value ^ 0x400 # toggle igloo power: Igloo2 VDD Enable
         messageList = self.getMessageList(value,4)
         self.writeBridge(iglooControl,messageList)
         return self.readBridge(iglooControl,4)
 
-    def writeBridge(self, regAddress,messageList):
-        self.myBus.write(self.address, [regAddress]+messageList)
-        return self.myBus.sendBatch()
-
-    def readBridge(self, regAddress, num_bytes):
-        self.myBus.write(0x00,[0x06])
-        self.myBus.sendBatch()
-        self.myBus.write(self.address,[regAddress])
-        self.myBus.read(self.address, num_bytes)
-        message = self.myBus.sendBatch()[-1]
-        if message[0] != '0':
-            print 'Bridge i2c error detected'
-        return self.reverseBytes(message[2:])
-
-    def readIgloo(self, regAddress, num_bytes):
+    def detectIglooError(self, registerAddress, num_bytes):
         self.myBus.write(0x00,[0x06])
         self.myBus.write(self.address,[0x11,0x03,0,0,0])
-        self.myBus.write(0x09,[regAddress])
-        self.myBus.read(0x09, num_bytes)
-        message = self.myBus.sendBatch()[-1]
-        if message[0] != '0':
-            print 'Igloo i2c error detected in readIgloo'
-        return self.reverseBytes(message[2:])
-
-    def detectIglooError(self, regAddress, num_bytes):
-        self.myBus.write(0x00,[0x06])
-        self.myBus.write(self.address,[0x11,0x03,0,0,0])
-        self.myBus.write(0x09,[regAddress])
+        self.myBus.write(0x09,[registerAddress])
         self.myBus.read(0x09, num_bytes)
         message = self.myBus.sendBatch()[-1]
         #  if message[0] != '0':
         #          print 'Igloo i2c error detected in detectIglooError'
         return message[0]
 
-    def getValue(self, message):
-        hex_message = self.toHex(message)[2:]
-        return int(hex_message,16)
-
-    def getMessageList(self, value, num_bytes):
-        hex_message = hex(value)[2:]
-        length = len(hex_message)
-        zeros = "".join(list('0' for i in xrange(8-length)))
-        hex_message = zeros + hex_message
-        # print 'hex message = '+str(hex_message)
-        mList = list(int(hex_message[a:a+2],16) for a in xrange(0,2*num_bytes,2))
-        mList.reverse()
-        return mList
-
 ###########################################################################################
 
-root = Tk()
-myapp = makeGui(root)
-root.mainloop()
+# Main
+def main():
+    root = Tk()
+    myapp = makeGui(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
+

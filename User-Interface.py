@@ -27,17 +27,18 @@ if (0):
     midc="white"
     backc="#DDDDDD"
     rightc="white"
-    yesnoc=["pale green","salmon"]
-    buttonsc=["CadetBlue1","lemon chiffon","salmon2","#CCDDFF","#FFE699","#FFCC66","orange","#ffbbbb"]
+    buttonsc=["CadetBlue1","lemon chiffon","salmon2","#CCDDFF","#FFE699","#FFCC66","orange","#ffbbbb","#99FF99"]
+    dimbuttonsc=["#76D3DD","#DDD8AB","#D86050","#AABBDD","#DDC477","#DDAA44","#AA6633","#DD9999","#77DD77"]
+    dimc="#DDDDDD"
 else:
     fontc='#DDDDDD'
     topc='#333333'
     rightc='#333333'
     midc='#333333'
     backc='#222222'
-    buttonsc=["#000066","#115511","#551111","#445588","#AA9122","#AA0011","#666611","#880000"]
-    yesnoc=["#118811","#881111"]
-
+    buttonsc=["#000066","#666611","#551111","#445588","#AA9122","#AA0011","#666611","#880000","#115511"]
+    dimbuttonsc=["#222288","#888822","#772222","#6677AA","#CCB344","#CC2233","#888822","#AA0000","#227722"]
+    dimc="#555555"
 
 class makeGui:
     def __init__(self, parent):
@@ -217,8 +218,9 @@ class makeGui:
                           "Shaun Hogan","Caleb Smith","Adryanna Smith","Jordan Potarf",
                           "John Lawrence","Andrew Baas","Mason Dorseth","Josh Hiltbrand")
         self.info_nameBox.pack(side=LEFT)
+        self.info_nameBox.configure(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
+        self.info_nameBox["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
         self.nameChoiceVar.set("Choose Name") # initializes the OptionMenu
-        self.info_nameBox.configure(bg=topc,fg=fontc)
         # Make a label for the name drop-down:
         self.info_commentLabel = Label(self.info_subBot_frame, text="User Testing Comments: ")
         self.info_commentLabel.configure(
@@ -539,7 +541,7 @@ class makeGui:
             textvariable=self.uniqueIDEntry,
             state="readonly",
             readonlybackground=rightc,
-            disabledforeground=fontc
+            foreground=fontc
             )
         self.experi_uniqueID_entry.pack(side=RIGHT)
 
@@ -560,7 +562,7 @@ class makeGui:
             textvariable=self.tempEntry,
             state="readonly",
             readonlybackground=rightc,
-            disabledforeground=fontc
+            foreground=fontc
             )
         self.experi_temperature_entry.configure(bg=rightc,fg=fontc)
         self.experi_temperature_entry.pack(side=RIGHT)
@@ -582,7 +584,7 @@ class makeGui:
             textvariable=self.firmwareVerEntry,
             state="readonly",
             readonlybackground=rightc,
-            disabledforeground=fontc
+            foreground=fontc
             )
         self.experi_firmwareVer_entry.pack(side=RIGHT)
 
@@ -603,7 +605,7 @@ class makeGui:
             textvariable=self.firmwareVerMinEntry,
             state="readonly",
             readonlybackground=rightc,
-            disabledforeground=fontc
+            foreground=fontc
             )
         self.experi_firmwareVerMin_entry.pack(side=RIGHT)
 
@@ -624,7 +626,7 @@ class makeGui:
             textvariable=self.firmwareVerOtherEntry,
             state="readonly",
             readonlybackground=rightc,
-            disabledforeground=fontc
+            foreground=fontc
             )
         self.experi_firmwareVerOther_entry.pack(side=RIGHT)
 
@@ -644,7 +646,7 @@ class makeGui:
             textvariable=self.iglooMajVerEntry,
             state="readonly",
             readonlybackground=rightc,
-            disabledforeground=fontc
+            foreground=fontc
             )
         self.experi_iglooMajVer_entry.pack(side=RIGHT)
 
@@ -665,7 +667,7 @@ class makeGui:
             textvariable=self.iglooMinVerEntry,
             state="readonly",
             readonlybackground=rightc,
-            disabledforeground=fontc
+            foreground=fontc
             )
         self.experi_iglooMinVer_entry.pack(side=RIGHT)
 
@@ -680,24 +682,24 @@ class makeGui:
             textvariable=self.iglooToggleEntry,
             state="readonly",
             readonlybackground=rightc,
-            disabledforeground=fontc
+            foreground=fontc
             )
         self.iglooToggle_entry.pack(side=RIGHT)
 
 
         # Make a button to read the unique ID & firmware LEFT SIDE
         self.experi_uniqueID_left_get = Button(self.experi_subTop2_5_frame, text ="Get Unique ID & Firmware Ver. from Left", command=self.getUniqueIDPress_left)
-        self.experi_uniqueID_left_get.configure(bg=buttonsc[0],fg=fontc)
+        self.experi_uniqueID_left_get.configure(bg=buttonsc[0],fg=fontc,activebackground=dimbuttonsc[0],activeforeground=fontc)
         self.experi_uniqueID_left_get.pack(side=TOP)
 
         # Make a button to read the unique ID & firmware RIGHT SIDE
         self.experi_uniqueID_right_get = Button(self.experi_subTop2_5_frame, text ="Get Unique ID & Firmware Ver. from Right", command=self.getUniqueIDPress_right)
-        self.experi_uniqueID_right_get.configure(bg=buttonsc[1],fg=fontc)
+        self.experi_uniqueID_right_get.configure(bg=buttonsc[1],fg=fontc,activebackground=dimbuttonsc[1],activeforeground=fontc)
         self.experi_uniqueID_right_get.pack(side=TOP)
 
         # Make a button to submit the unique ID & firmware
         self.experi_uniqueID_give = Button(self.experi_subTop2_5_frame, text ="Upload Unique ID & Firmware Ver.", command=self.infoSubmitButtonPress)
-        self.experi_uniqueID_give.configure(bg=buttonsc[2],fg=fontc)
+        self.experi_uniqueID_give.configure(bg=buttonsc[2],fg=fontc,activebackground=dimbuttonsc[2],activeforeground=fontc)
         self.experi_uniqueID_give.pack(side=TOP)
 
         # Make a line of hypens
@@ -714,14 +716,15 @@ class makeGui:
         self.gpioSelect_box = OptionMenu(self.experi_subTop2_7_frame, self.gpioChoiceVar,
                           "J2 and J21","J3 and J20","J4 and J19","J5 and J18",
                           "J7 and J26","J8 and J25","J9 and J24","J10 and J23")
-        self.gpioSelect_box.configure(bg=rightc,fg=fontc)
+        self.gpioSelect_box.configure(bg=rightc,fg=fontc,activebackground=dimc,activeforeground=fontc)
         self.gpioSelect_box.pack(side=LEFT)
+        self.gpioSelect_box["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
         self.gpioChoiceVar.set("J2 and J21")
 
         # Make a button to submit GPIO option
         self.gpioSelect_bttn = Button(self.experi_subTop2_8_frame, command=self.gpioBttnPress,
                           text="Submit GPIO Choice")
-        self.gpioSelect_bttn.configure(bg=buttonsc[0],fg=fontc)
+        self.gpioSelect_bttn.configure(bg=buttonsc[0],fg=fontc,activebackground=dimbuttonsc[0],activeforeground=fontc)
         self.gpioSelect_bttn.pack()
 
         ################################
@@ -749,7 +752,8 @@ class makeGui:
 
         for i in range(0,4):
             self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-            self.testPassInfo[i].configure(width=15,bg=buttonsc[3],fg=fontc)
+            self.testPassInfo[i].configure(width=15,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
+            self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
             self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
@@ -759,7 +763,8 @@ class makeGui:
 
         for i in range(4,9):
             self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-            self.testPassInfo[i].configure(width=11, bg=buttonsc[3],fg=fontc)
+            self.testPassInfo[i].configure(width=11, bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
+            self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
             self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
@@ -769,7 +774,8 @@ class makeGui:
 
         for i in range(9,14):
             self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-            self.testPassInfo[i].configure(width=11,bg=buttonsc[3],fg=fontc)
+            self.testPassInfo[i].configure(width=11,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
+            self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
             self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
@@ -779,7 +785,8 @@ class makeGui:
 
         for i in range(14,19):
             self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-            self.testPassInfo[i].configure(width=11,bg=buttonsc[3],fg=fontc)
+            self.testPassInfo[i].configure(width=11,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
+            self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
             self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
@@ -789,7 +796,7 @@ class makeGui:
 
         # Make a checkbox to overwrite/not overwrite pre-existing data
         self.overwriteBox = Checkbutton(self.experi_subTop7_frame, text="Overwrite existing QIE Card data (if applicable)?", variable=self.overwriteVar)
-        self.overwriteBox.configure(bg=buttonsc[1],fg=fontc)
+        self.overwriteBox.configure(bg=buttonsc[1],fg=fontc,activebackground=dimbuttonsc[1],activeforeground=fontc)
         self.overwriteBox.pack(side=TOP,
                        padx = button_padx,
                        pady = button_pady,
@@ -798,17 +805,17 @@ class makeGui:
 
         # Make a button to submit tests and information
         self.passAllTestsBttn = Button(self.experi_subTop7_frame, text="Pass All Tests", command=self.throwPassAllBox)
-        self.passAllTestsBttn.configure(bg=buttonsc[4],fg=fontc, width=40)
+        self.passAllTestsBttn.configure(bg=buttonsc[4], fg=fontc, width=40, activebackground=dimbuttonsc[4], activeforeground=fontc)
         self.passAllTestsBttn.pack(side=TOP)
 
         # Make a button to submit tests and information
         self.initSubmitBttn = Button(self.experi_subTop7_frame, text="Submit Inspections & Tests", command=self.initSubmitBttnPress)
-        self.initSubmitBttn.configure(bg=buttonsc[5],fg=fontc, width=40)
+        self.initSubmitBttn.configure(bg=buttonsc[5], fg=fontc, width=40, activebackground=dimbuttonsc[5], activeforeground=fontc)
         self.initSubmitBttn.pack(side=TOP)
 
         # Make a button to clear all results
         self.clearDataBttn = Button(self.experi_subTop7_frame, text="Clear Inspections, Tests, & Info", command=self.clearDataBttnPress)
-        self.clearDataBttn.configure(bg=buttonsc[6],fg=fontc, width=40)
+        self.clearDataBttn.configure(bg=buttonsc[6], fg=fontc, width=40, activebackground=dimbuttonsc[6], activeforeground=fontc)
         self.clearDataBttn.pack(side=TOP)
 
 
@@ -871,7 +878,7 @@ class makeGui:
         self.msg.pack()
 
         self.button = Button(self.top, text="Sorry...", command=self.top.destroy)
-        self.button.configure(bg=buttonsc[7])
+        self.button.configure(bg=buttonsc[7],fg=fontc,activebackground=dimbuttonsc[7],activeforeground=fontc)
         self.button.pack()
 
 ##########################################################################################
@@ -886,11 +893,11 @@ class makeGui:
         self.passMsg.pack()
 
         self.yesButton = Button(self.passBox, text="Yes", command=self.passAllSelected)
-        self.yesButton.configure(bg=yesnoc[0])
+        self.yesButton.configure(bg=buttonsc[8],fg=fontc,activebackground=dimbuttonsc[8],activeforeground=fontc)
         self.yesButton.pack()
 
         self.noButton = Button(self.passBox, text="No", command=self.passBox.destroy)
-        self.noButton.configure(bg=yesnoc[1])
+        self.noButton.configure(bg=buttonsc[2],fg=fontc,activebackground=dimbuttonsc[2],activeforeground=fontc)
         self.noButton.pack()
 
     def passAllSelected(self):
@@ -1008,21 +1015,21 @@ class makeGui:
     def infoValChange(self,event):
         for i in range(len(self.testPassInfo)):
             if (self.testPassList[i].get() == "Fail"):
-                self.testPassInfo[i].configure(bg="#ff5555")
+                self.testPassInfo[i].configure(bg=buttonsc[2],fg=fontc,activebackground=dimbuttonsc[2],activeforeground=fontc)
             elif (self.testPassList[i].get() == "Pass"):
-                self.testPassInfo[i].configure(bg="#70ff70")
+                self.testPassInfo[i].configure(bg=buttonsc[8],fg=fontc,activebackground=dimbuttonsc[8],activeforeground=fontc)
             else:
-                self.testPassInfo[i].configure(bg=buttonsc[3])
+                self.testPassInfo[i].configure(bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
 
     # Duplicate of above function, but for non-event cases (IE hitting the "Clear" button)
     def infoValChangeNonevent(self):
         for i in range(len(self.testPassInfo)):
                          if (self.testPassList[i].get() == "Fail"):
-                                 self.testPassInfo[i].configure(bg="#ff5555")
+                                 self.testPassInfo[i].configure(bg=buttonsc[2],fg=fontc,activebackground=dimbuttonsc[2],activeforeground=fontc)
                          elif (self.testPassList[i].get() == "Pass"):
-                                 self.testPassInfo[i].configure(bg="#70ff70")
+                                 self.testPassInfo[i].configure(bg=buttonsc[8],fg=fontc,activebackground=dimbuttonsc[8],activeforeground=fontc)
                          else:
-                                 self.testPassInfo[i].configure(bg=buttonsc[3])
+                                 self.testPassInfo[i].configure(bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
 
 #############################################################################
 
@@ -1074,10 +1081,10 @@ class makeGui:
     
             if (batch[-1] == "1 0"):
                 print "I2C communication error with GPIO!"
-                self.gpioSelect_bttn.configure(bg="#ff3333")
+                self.gpioSelect_bttn.configure(bg=buttonsc[2],fg=fontc,activebackground=dimbuttonsc[2],activeforeground=fontc)
             elif (batch[-1] == "0 "+str(gpioVal)):
                 print "GPIO " + str(newJSlotDict[self.gpioChoiceVar.get()]) + " Opened!"
-                self.gpioSelect_bttn.configure(bg="#33ff33")
+                self.gpioSelect_bttn.configure(bg=buttonsc[8],fg=fontc,activebackground=dimbuttonsc[8],activeforeground=fontc)
     
             else:
                 print 'message = '+str(batch[-1])

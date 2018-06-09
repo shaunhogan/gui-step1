@@ -15,7 +15,37 @@ import json
 import client
 import subprocess
 
-if (0):
+# WARNING: Technically you should not add total hex color values... add/subtract per color RGB
+def getDimColors(colors, change, sign=1):
+    change_str = change[1:]
+    change_list = list(int(change_str[i:i+2],16) for i in xrange(0,len(change_str),2))
+    dimColors = []
+    for color in colors:
+        rgb_str = color[1:]
+        rgb_list = list(int(rgb_str[i:i+2],16) for i in xrange(0,len(rgb_str),2))
+        rgb_values = list(rgb_list[i] + sign * change_list[i] for i in xrange(len(rgb_list)))
+        # keep RGB values bounded by 0x00 and 0xff
+        for i in xrange(len(rgb_values)):
+            if rgb_values[i] < 0x00:
+                rgb_values[i] = 0x00
+            if rgb_values[i] > 0xff:
+                rgb_values[i] = 0xff
+        new_rgb_list = list("{0:02X}".format(v) for v in rgb_values)
+        new_rgb_str = "#" + "".join(new_rgb_list)
+        print "In getDimColors(): Color addition {0} + {1} = {2}".format(color,change,new_rgb_str)
+        dimColors.append(new_rgb_str)
+    return dimColors
+
+# Choose a color theme from the list (or add your own)
+color_themes = ["bright", "dark", "sunrise", "nightfall"]
+color_theme = "nightfall"
+
+# Default color_theme is "bright"
+if color_theme not in color_themes:
+    color_theme = "bright"
+
+# bright
+if color_theme == "bright":
     fontc="black"
     topc="white"
     rightc="white"
@@ -25,7 +55,22 @@ if (0):
     buttonsc=["CadetBlue1","lemon chiffon","salmon2","#CCDDFF","#FFE699","#FFCC66","orange","#ffbbbb","#99FF99"]
     dimbuttonsc=["#76D3DD","#DDD8AB","#D86050","#AABBDD","#DDC477","#DDAA44","#AA6633","#DD9999","#77DD77"]
     dimc="#DDDDDD"
-else:
+
+# sunrise
+elif color_theme == "sunrise":
+    fontc="black"
+    topc="white"
+    rightc="white"
+    midc="white"
+    backc="#DDDDDD"
+    rightc="white"
+    buttonsc=["#4E7496","#ADF802","#F36196","#CCDDFF","#FFE699","#FFCC66","#FFA62B","#FFBBBB","#99FF99"]
+    dimbuttonsc=getDimColors(buttonsc, "#222222", -1)
+    #dimbuttonsc=["#76D3DD","#DDD8AB","#D86050","#AABBDD","#DDC477","#DDAA44","#AA6633","#DD9999","#77DD77"]
+    dimc="#DDDDDD"
+
+# dark
+elif color_theme == "dark":
     fontc='#DDDDDD'
     topc='#333333'
     rightc='#333333'
@@ -35,8 +80,25 @@ else:
     dimbuttonsc=["#222288","#888822","#772222","#6677AA","#CCB344","#CC2233","#888822","#AA0000","#227722"]
     dimc="#555555"
 
+# nightfall
+else:
+    fontc='#DDDDDD'
+    topc='#333333'
+    rightc='#333333'
+    midc='#333333'
+    backc='#222222'
+    buttonsc=["#5A7D9A","#658B38","#B00000","#445588","#0033CC","#402090","#B30059","#003399","#3F9B0B"]
+    dimbuttonsc=getDimColors(buttonsc, "#222222", 1)
+    #dimbuttonsc=["#7C9FBC","#87AD5A","#772222","#6677AA","#CCB344","#CC2233","#888822","#AA0000","#227722"]
+    dimc="#555555"
+
+
+print "color_theme is {0}".format(color_theme)
+
 class makeGui(Tools):
     def __init__(self, parent):
+        # full base path for database
+        self.databasePath = "/home/django/testing_database_hb"
         # Create a webBus instance
         #self.myBus = client.webBus("192.168.1.41",0)
         self.myBus = client.webBus("pi7",0)
@@ -49,6 +111,9 @@ class makeGui(Tools):
         
         # Specify "top" or "bottom" Igloo FPGA
         self.igloo = "top"
+
+        # Standard help message for I2C_ERROR
+        self.I2C_ERROR_HELP = "Please confirm that the card is in the selected slot.\nPlease confirm that the power source is on."
 
         # Create an instance of initialTests
         self.initialTest = initialTests()
@@ -246,11 +311,9 @@ class makeGui(Tools):
         #####                            #####
         ######################################
 
-        self.testLabelList = ["Res_1","Res_2","Res_3","Res_4",
-                          "Res_5","Res_6","Res_7","Res_8",
-                      "Res_9","Res_10","Res_11", "Res_12",
-                      "Res_13", "Res_14", "Res_15", "SuplCur", "Vis", "Program",
-                      "Res_16"]
+        self.testLabelList = ["Res_1","Res_2","Res_3","Res_4","Res_5","Res_6","Res_7","Res_8",
+                              "Res_9","Res_10","Res_11", "Res_12","Res_13", "Res_14", "Res_15",
+                              "SuplCur", "Vis", "Program","Res_16"]
 
         # Make a label for the entire left frame
         self.experi_subFrame_lbl = Label(self.experiment_frame,text="QIE Card Setup & Parameters")
@@ -520,9 +583,9 @@ class makeGui(Tools):
         self.testPassState = ("Pass","Fail")
 
         #################################
-        ###               ###
+        ###                           ###
         ###       Info for Card       ###
-        ###               ###
+        ###                           ###
         #################################
 
         # Make a label for the uniqueID entry
@@ -859,12 +922,12 @@ class makeGui(Tools):
 
         fileString = self.barcodeEntry.get()+"_step1_raw.json"
 
-        with open('/home/django/testing_database/uploader/temp_json/'+fileString,'w') as jsonFile:
+        with open(self.databasePath+'/uploader/temp_json/'+fileString,'w') as jsonFile:
 #       with open(fileString,'w') as jsonFile:     # Uncomment this line for debugging
             json.dump(self.initialTest, jsonFile, default = self.jdefault)
 
 
-        subprocess.call("/home/django/testing_database/uploader/step12.sh", shell=True)
+        subprocess.call(self.databasePath+"/uploader/step12.sh", shell=True)
         print "Preliminary step recorded. Thank you!"
 
 ##########################################################################################
@@ -924,10 +987,10 @@ class makeGui(Tools):
 
         fileString = self.barcodeEntry.get()+"_step2_raw.json"
 
-        with open('/home/django/testing_database/uploader/temp_json/'+fileString,'w') as jsonFile:
+        with open(self.databasePath+'/uploader/temp_json/'+fileString,'w') as jsonFile:
             json.dump(self.cardInfo, jsonFile, default = self.jdefault)
 
-        subprocess.call("/home/django/testing_database/uploader/step12.sh", shell=True)
+        subprocess.call(self.databasePath+"/uploader/step12.sh", shell=True)
         print "Secondary step recorded. Thank you!"
 
 ###########################################################################################
@@ -1050,10 +1113,12 @@ class makeGui(Tools):
             print "GPIO Batch = "+str(batch)
     
             if (batch[-1] == "1 0"):
-                print "GPIO I2C_ERROR"
+                print "In gpioBttnPress(): GPIO I2C_ERROR"
                 self.gpioSelect_bttn.configure(bg=buttonsc[2],fg=fontc,activebackground=dimbuttonsc[2],activeforeground=fontc)
+                print self.I2C_ERROR_HELP
+                return
             elif (batch[-1] == "0 "+str(gpioVal)):
-                print "GPIO " + str(newJSlotDict[self.gpioChoiceVar.get()]) + " Opened!"
+                print "GPIO " + str(newJSlotDict[self.gpioChoiceVar.get()]) + " communication SUCCESS"
                 self.gpioSelect_bttn.configure(bg=buttonsc[8],fg=fontc,activebackground=dimbuttonsc[8],activeforeground=fontc)
     
             else:
@@ -1077,9 +1142,9 @@ class makeGui(Tools):
     def getUniqueIDPress(self):
 
         bridgeDict = { 18 : 0x19, 19 : 0x1A, 20: 0x1B, 21 : 0x1C,
-                    23 : 0x19, 24 : 0x1A, 25: 0x1B, 26 : 0x1C,
-                     2 : 0x19, 3 : 0x1A, 4 : 0x1B, 5 : 0x1C,
-                     7 : 0x19, 8 : 0x1A, 9: 0x1B, 10: 0x1C }
+                       23 : 0x19, 24 : 0x1A, 25: 0x1B, 26 : 0x1C,
+                        2 : 0x19,  3 : 0x1A,  4 : 0x1B, 5 : 0x1C,
+                        7 : 0x19,  8 : 0x1A,  9: 0x1B, 10 : 0x1C }
 
         if self.readFromLeft:
             self.jslot = self.jslots[1]
@@ -1114,7 +1179,9 @@ class makeGui(Tools):
         raw_bus = self.myBus.sendBatch()
         #print '\nRaw Unique ID = '+str(raw_bus[-1])
         if raw_bus[-1][0] != '0':
-            print 'Unique ID i2c Error!'
+            print 'In getUniqueIDPress(): I2C_ERROR when reading Unique ID'
+            print self.I2C_ERROR_HELP
+            return
         cooked_bus = self.reverseBytes(raw_bus[-1])
         #cooked_bus = self.serialNum(cooked_bus)
         self.uniqueIDEntry.set(self.toHex(cooked_bus))
@@ -1201,8 +1268,7 @@ class makeGui(Tools):
             print 'Toggle Igloo Power Success!'
         else:
             print 'Toggle Igloo Power Fail!'
-            print '\nPlease confirm that the power source is on.'
-            print 'Please confirm that the card is in the selected slot (J18 or J23).'
+            print self.I2C_ERROR_HELP
         return retval
 
     def toggleIgloo(self):

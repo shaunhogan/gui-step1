@@ -11,13 +11,11 @@ from initialClass import initialTests
 from cardInfoClass import cardInformation
 from functools import partial
 from Tools import Tools
-import matplotlib
 import temp
 import json
 import client
 import subprocess
 
-matplotlib.use('Agg')
 
 if (0):
     fontc="black"
@@ -35,8 +33,8 @@ else:
     rightc='#333333'
     midc='#333333'
     backc='#222222'
-    buttonsc=["#000066","#666611","#551111","#445588","#AA9122","#AA0011","#666611","#880000","#115511"]
-    dimbuttonsc=["#222288","#888822","#772222","#6677AA","#CCB344","#CC2233","#888822","#AA0000","#227722"]
+    buttonsc=["#000066","#224411","#551111","#445588","#AA9122","#AA0011","#666611","#880000","#115511"]
+    dimbuttonsc=["#222288","#336622","#772222","#6677AA","#CCB344","#CC2233","#888822","#AA0000","#227722"]
     dimc="#555555"
 
 #toggles between lists and three-state buttons for Pass/Fail switches
@@ -109,7 +107,7 @@ class makeGui(Tools):
         #---------- end layout constants ------
         # Creates hotkey bindings for Pass/Fail buttons
         if not (listbuttons):
-            hotkeys = ['1','2','3','4','5','6','7','8','9','0','q','w','e','r','t','y','u','i','o']
+            hotkeys = ['1','2','3','4','5','q','w','e','r','t','a','s','d','f','g','z','x','c','v']
             for i in range(len(hotkeys)):
                 parent.bind(hotkeys[i], partial(self.togglepstate,i))
         ##########################################
@@ -256,11 +254,10 @@ class makeGui(Tools):
         #####                            #####
         ######################################
 
-        self.testLabelList = ["Res_1","Res_2","Res_3","Res_4",
-                          "Res_5","Res_6","Res_7","Res_8",
-                      "Res_9","Res_10","Res_11", "Res_12",
-                      "Res_13", "Res_14", "Res_15", "SuplCur", "Vis", "Program",
-                      "Res_16"]
+        self.testLabelList = ["BPL-GND","1.2-GND","1.5-GND","2.5-GND",
+                          "3.3-GND","5.0-GND","1.2-1.5","1.2-2.5","1.5-2.5",
+                      "1.2-3.3","1.5-3.3","2.5-3.3","1.2-5.0", "1.5-5.0",
+                      "2.5-5.0", "3.3-5.0", "SuplCur", "Vis", "Program"]
 
         # Make a label for the entire left frame
         self.experi_subFrame_lbl = Label(self.experiment_frame,text="QIE Card Setup & Parameters")
@@ -744,12 +741,12 @@ class makeGui(Tools):
         ###                          ###
         ################################
 
-        self.testDescDict = {"Res_1" : "Bkpln to GND", "Res_2" : "1.2V to GND", "Res_3" : "1.5V to GND",
-                     "Res_4" : "2.5V to GND", "Res_5" : "3.3V to GND", "Res_6" : "5.0V to GND",
-                     "Res_7" : "1.2V to 1.5V", "Res_8" : "1.2V to 2.5V", "Res_9" : "1.2V to 3.3V",
-                     "Res_10" : "1.2V to 5.0V", "Res_11" : "1.5V to 2.5V", "Res_12" : "1.5V to 5.0V",
-                     "Res_13" : "2.5V to 3.3V", "Res_14" : "2.5V to 5.0V", "Res_15" : "3.3V to 5.0V",
-                     "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK", "Res_16" : "1.5V to 3.3V"}
+        self.testDescDict = {"BPL-GND" : "Bkpln to GND", "1.2-GND" : "1.2V to GND", "1.5-GND" : "1.5V to GND",
+                     "2.5-GND" : "2.5V to GND", "3.3-GND" : "3.3V to GND", "5.0-GND" : "5.0V to GND",
+                     "1.2-1.5" : "1.2V to 1.5V", "1.2-2.5" : "1.2V to 2.5V", "1.5-2.5" : "1.5V to 2.5V", "1.2-3.3" : "1.2V to 3.3V",
+                     "1.5-3.3" : "1.5V to 3.3V", "2.5-3.3" : "2.5V to 3.3V", "1.2-5.0" : "1.2V to 5.0V", "1.5-5.0" : "1.5V to 5.0V",
+                     "2.5-5.0" : "2.5V to 5.0V", "3.3-5.0" : "3.3V to 5.0V",
+                     "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK"}
 
 #       self.testPassList = [StringVar() for i in range(0,19)]
 
@@ -761,21 +758,21 @@ class makeGui(Tools):
 
         self.testPassInfo = []
 
-        for i in range(0,4):
+        for i in range(0,5):
             if (listbuttons):
                 self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
                 self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
                 self.testPassList[i].set("N/A")
             else: 
                 self.testPassInfo.append(Button(self.experi_subTop3_frame,text="N/A",command=partial(self.togglepstate,i)))
-            self.testPassInfo[i].configure(width=15,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
+            self.testPassInfo[i].configure(width=11,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
             self.testPassInfo[i].pack(side=LEFT)
 
             self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg=midc,fg=fontc)
-            self.testPassLabel.configure(width=20)
+            self.testPassLabel.configure(width=15)
             self.testPassLabel.pack(side=LEFT)
 
-        for i in range(4,9):
+        for i in range(5,10):
             if (listbuttons):
                 self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
                 self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
@@ -789,7 +786,7 @@ class makeGui(Tools):
             self.testPassLabel.configure(width=15)
             self.testPassLabel.pack(side=LEFT)
 
-        for i in range(9,14):
+        for i in range(10,15):
             if (listbuttons):
                 self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
                 self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
@@ -803,18 +800,18 @@ class makeGui(Tools):
             self.testPassLabel.configure(width=15)
             self.testPassLabel.pack(side=LEFT)
 
-        for i in range(14,19):
+        for i in range(15,19):
             if (listbuttons):
                 self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
                 self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
                 self.testPassList[i].set("N/A")
             else: 
                 self.testPassInfo.append(Button(self.experi_subTop6_frame,text="N/A",command=partial(self.togglepstate,i)))
-            self.testPassInfo[i].configure(width=11,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
+            self.testPassInfo[i].configure(width=15,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
             self.testPassInfo[i].pack(side=LEFT)
 
             self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=midc,fg=fontc)
-            self.testPassLabel.configure(width=15)
+            self.testPassLabel.configure(width=20)
             self.testPassLabel.pack(side=LEFT)
 
         # Make a checkbox to overwrite/not overwrite pre-existing data

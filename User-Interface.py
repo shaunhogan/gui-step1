@@ -1199,6 +1199,7 @@ class makeGui(Tools):
         #print '\nRaw Unique ID = '+str(raw_bus[-1])
         if raw_bus[-1][0] != '0':
             print 'Unique ID i2c Error!'
+            return("I2C Fast Stop Engaged")
         cooked_bus = self.reverseBytes(raw_bus[-1])
         #cooked_bus = self.serialNum(cooked_bus)
         self.uniqueIDEntry.set(self.toHex(cooked_bus))

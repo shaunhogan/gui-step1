@@ -9,11 +9,13 @@ from Tkinter import *
 from datetime import datetime
 from initialClass import initialTests
 from cardInfoClass import cardInformation
+from functools import partial
 from Tools import Tools
 import temp
 import json
 import client
 import subprocess
+
 
 # WARNING: Technically you should not add total hex color values... add/subtract per color RGB
 def getDimColors(colors, change, sign=1):
@@ -76,11 +78,10 @@ elif color_theme == "dark":
     rightc='#333333'
     midc='#333333'
     backc='#222222'
-    buttonsc=["#000066","#666611","#551111","#445588","#AA9122","#AA0011","#666611","#880000","#115511"]
-    dimbuttonsc=["#222288","#888822","#772222","#6677AA","#CCB344","#CC2233","#888822","#AA0000","#227722"]
+    buttonsc=["#000066","#224411","#551111","#445588","#AA9122","#AA0011","#666611","#880000","#115511"]
+    dimbuttonsc=["#222288","#336622","#772222","#6677AA","#CCB344","#CC2233","#888822","#AA0000","#227722"]
     dimc="#555555"
 
-# nightfall
 else:
     fontc='#DDDDDD'
     topc='#333333'
@@ -94,6 +95,10 @@ else:
 
 
 print "color_theme is {0}".format(color_theme)
+
+#toggles between lists and three-state buttons for Pass/Fail switches
+listbuttons = 0
+
 
 class makeGui(Tools):
     def __init__(self, parent):
@@ -145,8 +150,10 @@ class makeGui(Tools):
         self.firmwareVerMinEntry   =  StringVar()
         self.firmwareVerOtherEntry =  StringVar()
         self.iglooToggleEntry      =  StringVar()
-        self.iglooMajVerEntry      =  StringVar()
-        self.iglooMinVerEntry      =  StringVar()
+        self.iglooMajVerEntryT     =  StringVar()
+        self.iglooMajVerEntryB     =  StringVar()
+        self.iglooMinVerEntryT     =  StringVar()
+        self.iglooMinVerEntryB     =  StringVar()
         self.overwriteVar          =  IntVar()
 
         # Place an all-encompassing frame in the parent window. All of the following
@@ -165,8 +172,11 @@ class makeGui(Tools):
         frame_ipadx = "3m"
         frame_ipady = "1m"
         #---------- end layout constants ------
-
-
+        # Creates hotkey bindings for Pass/Fail buttons
+        if not (listbuttons):
+            hotkeys = ['1','2','3','4','5','q','w','e','r','t','a','s','d','f','g','z','x','c','v']
+            for i in range(len(hotkeys)):
+                parent.bind(hotkeys[i], partial(self.togglepstate,i))
         ##########################################
         ###                                    ###
         ###     BEGIN MAKING SUB-FRAMES        ###
@@ -280,9 +290,7 @@ class makeGui(Tools):
         self.info_nameLabel.pack(side=LEFT)
 
         # Make and pack a listbox to pick which QIE card to talk to:
-        self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar,
-                          "Shaun Hogan","Caleb Smith","Adryanna Smith","Jordan Potarf",
-                          "John Lawrence","Andrew Baas","Mason Dorseth","Josh Hiltbrand")
+        self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar, "Nesta Lenhert", "Chris Madrid", "Bryan Caraway", "Brooks McMaster", "Caleb Smith")
         self.info_nameBox.pack(side=LEFT)
         self.info_nameBox.configure(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
         self.info_nameBox["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
@@ -311,9 +319,12 @@ class makeGui(Tools):
         #####                            #####
         ######################################
 
-        self.testLabelList = ["Res_1","Res_2","Res_3","Res_4","Res_5","Res_6","Res_7","Res_8",
-                              "Res_9","Res_10","Res_11", "Res_12","Res_13", "Res_14", "Res_15",
-                              "SuplCur", "Vis", "Program","Res_16"]
+
+        self.testLabelList = ["BPL-GND","1.2-GND","1.5-GND","2.5-GND",  
+                              "3.3-GND","5.0-GND","1.2-1.5","1.2-2.5","1.5-2.5",
+                              "1.2-3.3","1.5-3.3","2.5-3.3","1.2-5.0", "1.5-5.0",
+                              "2.5-5.0", "3.3-5.0", "SuplCur", "Vis", "Program"]
+        
 
         # Make a label for the entire left frame
         self.experi_subFrame_lbl = Label(self.experiment_frame,text="QIE Card Setup & Parameters")
@@ -694,47 +705,92 @@ class makeGui(Tools):
             )
         self.experi_firmwareVerOther_entry.pack(side=RIGHT)
 
-        # Make a label for the major igloo firmware entry
-        self.experi_iglooMajVer_lbl = Label(self.experi_subTop2_4_frame, text="Igloo Ver (Major): ")
-        self.experi_iglooMajVer_lbl.configure(
+        # Make a label for the major top igloo firmware entry
+        self.experi_iglooMajVerT_lbl = Label(self.experi_subTop2_4_frame, text="T Igloo Ver (Major): ")
+        self.experi_iglooMajVerT_lbl.configure(
             background=rightc,
             foreground=fontc,
             padx=button_padx,
             pady=button_pady,
             )
-        self.experi_iglooMajVer_lbl.pack(side=LEFT)
+        self.experi_iglooMajVerT_lbl.pack(side=LEFT)
 
-        # Make an entry box for the major firmware
-        self.experi_iglooMajVer_entry = Entry(
+        # Make an entry box for the major top firmware
+        self.experi_iglooMajVerT_entry = Entry(
             self.experi_subTop2_4_frame,
-            textvariable=self.iglooMajVerEntry,
+            textvariable=self.iglooMajVerEntryT,
             state="readonly",
             readonlybackground=rightc,
-            foreground=fontc
+            foreground=fontc,
+            width=5
             )
-        self.experi_iglooMajVer_entry.pack(side=RIGHT)
+        self.experi_iglooMajVerT_entry.pack(side=LEFT)
 
+        # Make an entry box for the minor top# firmware
+        self.experi_iglooMinVerT_entry = Entry(
+            self.experi_subTop2_4_frame,
+            textvariable=self.iglooMinVerEntryT,
+            state="readonly",
+            readonlybackground=rightc,
+            foreground=fontc,
+            width=5
+            )
+        self.experi_iglooMinVerT_entry.pack(side=RIGHT)
 
-        # Make a label for the minor igloo firmware entry
-        self.experi_iglooMinVer_lbl = Label(self.experi_subTop2_4_5_frame, text="Igloo Ver (Minor): ")
-        self.experi_iglooMinVer_lbl.configure(
+        # Make a label for the minor top# igloo firmware entry
+        self.experi_iglooMinVerT_lbl = Label(self.experi_subTop2_4_frame, text="T Igloo Ver (Minor): ")
+        self.experi_iglooMinVerT_lbl.configure(
             background=rightc,
             foreground=fontc,
             padx=button_padx,
             pady=button_pady,
             )
-        self.experi_iglooMinVer_lbl.pack(side=LEFT)
+        self.experi_iglooMinVerT_lbl.pack(side=RIGHT)
 
-        # Make an entry box for the minor firmware
-        self.experi_iglooMinVer_entry = Entry(
+
+        # Make a label for the major bottom# igloo firmware entry
+        self.experi_iglooMajVerB_lbl = Label(self.experi_subTop2_4_5_frame, text="B Igloo Ver (Major): ")
+        self.experi_iglooMajVerB_lbl.configure(
+            background=rightc,
+            foreground=fontc,
+            padx=button_padx,
+            pady=button_pady,
+            )
+        self.experi_iglooMajVerB_lbl.pack(side=LEFT)
+
+        # Make an entry box for the major bottom# firmware
+        self.experi_iglooMajVerB_entry = Entry(
             self.experi_subTop2_4_5_frame,
-            textvariable=self.iglooMinVerEntry,
+            textvariable=self.iglooMajVerEntryB,
             state="readonly",
             readonlybackground=rightc,
-            foreground=fontc
+            foreground=fontc,
+            width=5
             )
-        self.experi_iglooMinVer_entry.pack(side=RIGHT)
+        self.experi_iglooMajVerB_entry.pack(side=LEFT)
 
+        # Make an entry box for the minor bottom firmware
+        self.experi_iglooMinVerB_entry = Entry(
+            self.experi_subTop2_4_5_frame,
+            textvariable=self.iglooMinVerEntryB,
+            state="readonly",
+            readonlybackground=rightc,
+            foreground=fontc,
+            width=5
+            )
+        self.experi_iglooMinVerB_entry.pack(side=RIGHT)
+          
+
+        # Make a label for the minor bottom igloo firmware entry
+        self.experi_iglooMinVerB_lbl = Label(self.experi_subTop2_4_5_frame, text="B Igloo Ver (Minor): ")
+        self.experi_iglooMinVerB_lbl.configure(
+            background=rightc,
+            foreground=fontc,
+            padx=button_padx,
+            pady=button_pady,
+            )
+        self.experi_iglooMinVerB_lbl.pack(side=RIGHT)
+ 
         # Make a label for the igloo toggle check
         self.iglooToggle_label = Label(self.experi_subTop_2_4_6_frame, text="Igloo Toggle Test: ")
         self.iglooToggle_label.configure(bg=rightc,fg=fontc,padx=button_padx,pady=button_pady)
@@ -797,12 +853,12 @@ class makeGui(Tools):
         ###                          ###
         ################################
 
-        self.testDescDict = {"Res_1" : "Bkpln to GND", "Res_2" : "1.2V to GND", "Res_3" : "1.5V to GND",
-                     "Res_4" : "2.5V to GND", "Res_5" : "3.3V to GND", "Res_6" : "5.0V to GND",
-                     "Res_7" : "1.2V to 1.5V", "Res_8" : "1.2V to 2.5V", "Res_9" : "1.2V to 3.3V",
-                     "Res_10" : "1.2V to 5.0V", "Res_11" : "1.5V to 2.5V", "Res_12" : "1.5V to 5.0V",
-                     "Res_13" : "2.5V to 3.3V", "Res_14" : "2.5V to 5.0V", "Res_15" : "3.3V to 5.0V",
-                     "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK", "Res_16" : "1.5V to 3.3V"}
+        self.testDescDict = {"BPL-GND" : "Bkpln to GND", "1.2-GND" : "1.2V to GND", "1.5-GND" : "1.5V to GND",
+                     "2.5-GND" : "2.5V to GND", "3.3-GND" : "3.3V to GND", "5.0-GND" : "5.0V to GND",
+                     "1.2-1.5" : "1.2V to 1.5V", "1.2-2.5" : "1.2V to 2.5V", "1.5-2.5" : "1.5V to 2.5V", "1.2-3.3" : "1.2V to 3.3V",
+                     "1.5-3.3" : "1.5V to 3.3V", "2.5-3.3" : "2.5V to 3.3V", "1.2-5.0" : "1.2V to 5.0V", "1.5-5.0" : "1.5V to 5.0V",
+                     "2.5-5.0" : "2.5V to 5.0V", "3.3-5.0" : "3.3V to 5.0V",
+                     "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK"}
 
 #       self.testPassList = [StringVar() for i in range(0,19)]
 
@@ -814,48 +870,60 @@ class makeGui(Tools):
 
         self.testPassInfo = []
 
-        for i in range(0,4):
-            self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-            self.testPassInfo[i].configure(width=15,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
-            self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
-            self.testPassList[i].set("N/A")
+        for i in range(0,5):
+            if (listbuttons):
+                self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+                self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
+                self.testPassList[i].set("N/A")
+            else: 
+                self.testPassInfo.append(Button(self.experi_subTop3_frame,text="N/A",command=partial(self.togglepstate,i)))
+            self.testPassInfo[i].configure(width=11,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
             self.testPassInfo[i].pack(side=LEFT)
 
             self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg=midc,fg=fontc)
-            self.testPassLabel.configure(width=20)
+            self.testPassLabel.configure(width=15)
             self.testPassLabel.pack(side=LEFT)
 
-        for i in range(4,9):
-            self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+        for i in range(5,10):
+            if (listbuttons):
+                self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+                self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
+                self.testPassList[i].set("N/A")
+            else:
+                self.testPassInfo.append(Button(self.experi_subTop4_frame,text="N/A",command=partial(self.togglepstate,i)))
             self.testPassInfo[i].configure(width=11, bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
-            self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
-            self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
             self.testPassLabel=Label(self.experi_subTop4_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=midc,fg=fontc)
             self.testPassLabel.configure(width=15)
             self.testPassLabel.pack(side=LEFT)
 
-        for i in range(9,14):
-            self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+        for i in range(10,15):
+            if (listbuttons):
+                self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+                self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
+                self.testPassList[i].set("N/A")
+            else:
+                self.testPassInfo.append(Button(self.experi_subTop5_frame,text="N/A",command=partial(self.togglepstate,i)))
             self.testPassInfo[i].configure(width=11,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
-            self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
-            self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
             self.testPassLabel=Label(self.experi_subTop5_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=midc,fg=fontc)
             self.testPassLabel.configure(width=15)
             self.testPassLabel.pack(side=LEFT)
 
-        for i in range(14,19):
-            self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-            self.testPassInfo[i].configure(width=11,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
-            self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
-            self.testPassList[i].set("N/A")
+        for i in range(15,19):
+            if (listbuttons):
+                self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+                self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
+                self.testPassList[i].set("N/A")
+            else: 
+                self.testPassInfo.append(Button(self.experi_subTop6_frame,text="N/A",command=partial(self.togglepstate,i)))
+            self.testPassInfo[i].configure(width=15,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
             self.testPassInfo[i].pack(side=LEFT)
 
             self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=midc,fg=fontc)
-            self.testPassLabel.configure(width=15)
+            self.testPassLabel.configure(width=20)
             self.testPassLabel.pack(side=LEFT)
 
         # Make a checkbox to overwrite/not overwrite pre-existing data
@@ -895,6 +963,23 @@ class makeGui(Tools):
         return o.__dict__
 
 ##########################################################################################
+
+    # Controls the three-state button behavior (when enabled) for Pass/Fail buttons
+    def togglepstate(self,i,event=None):
+        for o in range(1):#len(self.testPassInfo)):
+            if(self.testPassList[i].get() == "Pass"):
+                self.testPassInfo[i].configure(text="Fail",bg=buttonsc[2],fg=fontc,activebackground=dimbuttonsc[2],activeforeground=fontc)
+                self.testPassList[i].set("Fail")
+            elif(self.testPassList[i].get() == "Fail"):
+                self.testPassList[i].set("N/A")
+                self.testPassInfo[i].configure(text="N/A",bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
+            else:
+                self.testPassList[i].set("Pass")
+                self.testPassInfo[i].configure(text="Pass",bg=buttonsc[8],fg=fontc,activebackground=dimbuttonsc[8],activeforeground=fontc)
+
+
+#########################################################################################
+
 
     # Dumps the results of the tests & inspections to a json file
     def initSubmitBttnPress(self):
@@ -967,6 +1052,7 @@ class makeGui(Tools):
     def passAllSelected(self):
         for i in range(len(self.testPassList)):
             self.testPassList[i].set("Pass")
+            self.testPassInfo[i].configure(text="Pass")
         self.infoValChangeNonevent()
         self.passBox.destroy()
 
@@ -1211,16 +1297,24 @@ class makeGui(Tools):
         self.tempEntry.set(str(round(temp.readManyTemps(self.myBus, self.slot, 10, "Temperature", "nohold"),4)))
 
         # Getting IGLOO firmware info
-        majorIglooVer = self.readIgloo(0x00)
-        minorIglooVer = self.readIgloo(0x01)
+        majorIglooVerT = self.readIgloo("top",0x00)
+        minorIglooVerT = self.readIgloo("top",0x01)
+        majorIglooVerB = self.readIgloo("bottom",0x00)
+        minorIglooVerB = self.readIgloo("bottom",0x01)
         # Write IGLOO firmware in hex
-        majorIglooVer = self.toHex(majorIglooVer)
-        minorIglooVer = self.toHex(minorIglooVer)
+        majorIglooVerT = self.toHex(majorIglooVerT)
+        minorIglooVerT = self.toHex(minorIglooVerT)
+        majorIglooVerB = self.toHex(majorIglooVerB)
+        minorIglooVerB = self.toHex(minorIglooVerB)
         # Display igloo FW info on gui
-        self.iglooMajVerEntry.set(majorIglooVer)
-        self.iglooMinVerEntry.set(minorIglooVer)
-        print "{0} Igloo2 FPGA Major Firmware Version = {1}".format(self.igloo, majorIglooVer)
-        print "{0} Igloo2 FPGA Minor Firmware Version = {1}".format(self.igloo, minorIglooVer)
+        self.iglooMajVerEntryT.set(majorIglooVerT)
+        self.iglooMinVerEntryT.set(minorIglooVerT)
+        self.iglooMajVerEntryB.set(majorIglooVerB)
+        self.iglooMinVerEntryB.set(minorIglooVerB)
+        print "{0} Igloo2 FPGA Top Major Firmware Version = {1}".format(self.igloo, majorIglooVerT)
+        print "{0} Igloo2 FPGA Top Minor Firmware Version = {1}".format(self.igloo, minorIglooVerT)
+        print "{0} Igloo2 FPGA Bottom Major Firmware Version = {1}".format(self.igloo, majorIglooVerB)
+        print "{0} Igloo2 FPGA Bottom Minor Firmware Version = {1}".format(self.igloo, minorIglooVerB)
 
         # Verify that the Igloo can be power toggled
         self.iglooToggleEntry.set(str(self.checkIglooToggle()))
@@ -1243,7 +1337,7 @@ class makeGui(Tools):
         self.myBus.write(0x00,[0x06])
         self.myBus.sendBatch()
 
-        register = self.readIgloo(ones_address, 4)
+        register = self.readIgloo("top",ones_address, 4)
         if register != all_ones:
             retval = False
         # print 'Igloo Ones = '+str(register)
@@ -1259,7 +1353,7 @@ class makeGui(Tools):
         # Turn Igloo On
         # print 'Igloo Control = '+str(self.toggleIgloo())
         self.toggleIgloo()
-        register = self.readIgloo(ones_address, 4)
+        register = self.readIgloo("top",ones_address, 4)
         if register != all_ones:
             retval = False
         # print 'Igloo Ones = '+str(register)

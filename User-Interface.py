@@ -661,48 +661,48 @@ class makeGui(Tools):
             )
         self.experi_iglooMajVerT_entry.pack(side=LEFT)
 
-        # Make an entry box for the major bottom firmware
-        self.experi_iglooMajVerB_entry = Entry(
-            self.experi_subTop2_4_frame,
-            textvariable=self.iglooMajVerEntryB,
-            state="readonly",
-            readonlybackground=rightc,
-            foreground=fontc,
-            width=5
-            )
-        self.experi_iglooMajVerB_entry.pack(side=RIGHT)
-
-        # Make a label for the major top igloo firmware entry
-        self.experi_iglooMajVerT_lbl = Label(self.experi_subTop2_4_frame, text="B Igloo Ver (Major): ")
-        self.experi_iglooMajVerT_lbl.configure(
-            background=rightc,
-            foreground=fontc,
-            padx=button_padx,
-            pady=button_pady,
-            )
-        self.experi_iglooMajVerT_lbl.pack(side=RIGHT)
-
-
-        # Make a label for the minor top igloo firmware entry
-        self.experi_iglooMinVerT_lbl = Label(self.experi_subTop2_4_5_frame, text="T Igloo Ver (Minor): ")
-        self.experi_iglooMinVerT_lbl.configure(
-            background=rightc,
-            foreground=fontc,
-            padx=button_padx,
-            pady=button_pady,
-            )
-        self.experi_iglooMinVerT_lbl.pack(side=LEFT)
-
-        # Make an entry box for the minor top firmware
+        # Make an entry box for the minor top# firmware
         self.experi_iglooMinVerT_entry = Entry(
-            self.experi_subTop2_4_5_frame,
+            self.experi_subTop2_4_frame,
             textvariable=self.iglooMinVerEntryT,
             state="readonly",
             readonlybackground=rightc,
             foreground=fontc,
             width=5
             )
-        self.experi_iglooMinVerT_entry.pack(side=LEFT)
+        self.experi_iglooMinVerT_entry.pack(side=RIGHT)
+
+        # Make a label for the minor top# igloo firmware entry
+        self.experi_iglooMinVerT_lbl = Label(self.experi_subTop2_4_frame, text="T Igloo Ver (Minor): ")
+        self.experi_iglooMinVerT_lbl.configure(
+            background=rightc,
+            foreground=fontc,
+            padx=button_padx,
+            pady=button_pady,
+            )
+        self.experi_iglooMinVerT_lbl.pack(side=RIGHT)
+
+
+        # Make a label for the major bottom# igloo firmware entry
+        self.experi_iglooMajVerB_lbl = Label(self.experi_subTop2_4_5_frame, text="B Igloo Ver (Major): ")
+        self.experi_iglooMajVerB_lbl.configure(
+            background=rightc,
+            foreground=fontc,
+            padx=button_padx,
+            pady=button_pady,
+            )
+        self.experi_iglooMajVerB_lbl.pack(side=LEFT)
+
+        # Make an entry box for the major bottom# firmware
+        self.experi_iglooMajVerB_entry = Entry(
+            self.experi_subTop2_4_5_frame,
+            textvariable=self.iglooMajVerEntryB,
+            state="readonly",
+            readonlybackground=rightc,
+            foreground=fontc,
+            width=5
+            )
+        self.experi_iglooMajVerB_entry.pack(side=LEFT)
 
         # Make an entry box for the minor bottom firmware
         self.experi_iglooMinVerB_entry = Entry(

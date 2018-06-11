@@ -22,6 +22,7 @@ import subprocess
 class makeGui:
     def __init__(self, parent):
         # Create a webBus instance
+        #self.myBus = client.webBus("192.168.1.41",0)
         self.myBus = client.webBus("pi7",0)
 
         # Create a permanent address of QCard
@@ -189,9 +190,7 @@ class makeGui:
         self.info_nameLabel.pack(side=LEFT)
 
         # Make and pack a listbox to pick which QIE card to talk to:
-        self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar,
-                          "Shaun Hogan","Caleb Smith","Adryanna Smith","Jordan Potarf",
-                          "John Lawrence","Andrew Baas","Mason Dorseth","Josh Hiltbrand")
+        self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar, "Nesta Lenhert", "Chris Madrid", "Bryan Caraway", "Brooks McMaster", "Caleb Smith")
         self.info_nameBox.pack(side=LEFT)
         self.nameChoiceVar.set("Choose Name") # initializes the OptionMenu
 
@@ -1108,11 +1107,11 @@ class makeGui:
         self.firmwareVerOtherEntry.set("0x"+data_well_done[4:8])
 
         # Getting temperature
-        self.tempEntry.set(str(round(temp.readManyTemps(self.slot, 10, "Temperature", "nohold"),4)))
+        self.tempEntry.set(str(round(temp.readManyTemps(self.myBus, self.slot, 10, "Temperature", "nohold"),4)))
 
         # Getting IGLOO firmware info
-        majorIglooVer = it.readIgloo(self.slot, 0x00)
-        minorIglooVer = it.readIgloo(self.slot, 0x01)
+        majorIglooVer = it.readIgloo(self.myBus, self.slot, 0x00)
+        minorIglooVer = it.readIgloo(self.myBus, self.slot, 0x01)
         # Parse IGLOO firmware info
         majorIglooVer = self.toHex(self.reverseBytes(majorIglooVer))
         minorIglooVer = self.toHex(self.reverseBytes(minorIglooVer))

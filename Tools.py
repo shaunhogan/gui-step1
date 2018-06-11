@@ -91,14 +91,14 @@ class Tools:
         return self.myBus.sendBatch()
 
     # Function to read from Igloo FPGA (top or bottom)
-    def readIgloo(self, registerAddress, num_bytes=1):
+    def readIgloo(self, igloo, registerAddress, num_bytes=1):
         i2cSelectValue = -1
         iglooSelectDictionary = {"top":0x03, "bottom":0x06}
         try:
-            i2cSelectValue = iglooSelectDictionary[self.igloo]
+            i2cSelectValue = iglooSelectDictionary[igloo]
         except KeyError:
             print "In readIgloo(): i2cSelectValue = {0} (should be 0x03 or 0x07, -1 is the default if not set)".format(i2cSelectValue)
-            print "In readIgloo(): igloo = {0} which is not 'top' or 'bototm'".format(self.igloo)
+            print "In readIgloo(): igloo = {0} which is not 'top' or 'bototm'".format(igloo)
             sys.exit(1)
         self.myBus.write(0x00,[0x06])
         self.myBus.write(self.slot,[0x11,i2cSelectValue,0,0,0])
@@ -107,7 +107,7 @@ class Tools:
         message = self.myBus.sendBatch()[-1]
         if message[0] != '0':
             print 'In readIgloo(): Igloo I2C_ERROR'
-        print "In readIgloo(): Reading {0} Igloo; message = {1}".format(self.igloo, message)
+        print "In readIgloo(): Reading {0} Igloo; message = {1}".format(igloo, message)
         return self.reverseBytes(message[2:])
 
 

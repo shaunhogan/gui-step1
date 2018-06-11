@@ -85,8 +85,10 @@ class makeGui(Tools):
         self.firmwareVerMinEntry   =  StringVar()
         self.firmwareVerOtherEntry =  StringVar()
         self.iglooToggleEntry      =  StringVar()
-        self.iglooMajVerEntry      =  StringVar()
-        self.iglooMinVerEntry      =  StringVar()
+        self.iglooMajVerEntryT     =  StringVar()
+        self.iglooMajVerEntryB     =  StringVar()
+        self.iglooMinVerEntryT     =  StringVar()
+        self.iglooMinVerEntryB     =  StringVar()
         self.overwriteVar          =  IntVar()
 
         # Place an all-encompassing frame in the parent window. All of the following
@@ -638,47 +640,92 @@ class makeGui(Tools):
             )
         self.experi_firmwareVerOther_entry.pack(side=RIGHT)
 
-        # Make a label for the major igloo firmware entry
-        self.experi_iglooMajVer_lbl = Label(self.experi_subTop2_4_frame, text="Igloo Ver (Major): ")
-        self.experi_iglooMajVer_lbl.configure(
+        # Make a label for the major top igloo firmware entry
+        self.experi_iglooMajVerT_lbl = Label(self.experi_subTop2_4_frame, text="T Igloo Ver (Major): ")
+        self.experi_iglooMajVerT_lbl.configure(
             background=rightc,
             foreground=fontc,
             padx=button_padx,
             pady=button_pady,
             )
-        self.experi_iglooMajVer_lbl.pack(side=LEFT)
+        self.experi_iglooMajVerT_lbl.pack(side=LEFT)
 
-        # Make an entry box for the major firmware
-        self.experi_iglooMajVer_entry = Entry(
+        # Make an entry box for the major top firmware
+        self.experi_iglooMajVerT_entry = Entry(
             self.experi_subTop2_4_frame,
-            textvariable=self.iglooMajVerEntry,
+            textvariable=self.iglooMajVerEntryT,
             state="readonly",
             readonlybackground=rightc,
-            foreground=fontc
+            foreground=fontc,
+            width=5
             )
-        self.experi_iglooMajVer_entry.pack(side=RIGHT)
+        self.experi_iglooMajVerT_entry.pack(side=LEFT)
 
+        # Make an entry box for the major bottom firmware
+        self.experi_iglooMajVerB_entry = Entry(
+            self.experi_subTop2_4_frame,
+            textvariable=self.iglooMajVerEntryB,
+            state="readonly",
+            readonlybackground=rightc,
+            foreground=fontc,
+            width=5
+            )
+        self.experi_iglooMajVerB_entry.pack(side=RIGHT)
 
-        # Make a label for the minor igloo firmware entry
-        self.experi_iglooMinVer_lbl = Label(self.experi_subTop2_4_5_frame, text="Igloo Ver (Minor): ")
-        self.experi_iglooMinVer_lbl.configure(
+        # Make a label for the major top igloo firmware entry
+        self.experi_iglooMajVerT_lbl = Label(self.experi_subTop2_4_frame, text="B Igloo Ver (Major): ")
+        self.experi_iglooMajVerT_lbl.configure(
             background=rightc,
             foreground=fontc,
             padx=button_padx,
             pady=button_pady,
             )
-        self.experi_iglooMinVer_lbl.pack(side=LEFT)
+        self.experi_iglooMajVerT_lbl.pack(side=RIGHT)
 
-        # Make an entry box for the minor firmware
-        self.experi_iglooMinVer_entry = Entry(
+
+        # Make a label for the minor top igloo firmware entry
+        self.experi_iglooMinVerT_lbl = Label(self.experi_subTop2_4_5_frame, text="T Igloo Ver (Minor): ")
+        self.experi_iglooMinVerT_lbl.configure(
+            background=rightc,
+            foreground=fontc,
+            padx=button_padx,
+            pady=button_pady,
+            )
+        self.experi_iglooMinVerT_lbl.pack(side=LEFT)
+
+        # Make an entry box for the minor top firmware
+        self.experi_iglooMinVerT_entry = Entry(
             self.experi_subTop2_4_5_frame,
-            textvariable=self.iglooMinVerEntry,
+            textvariable=self.iglooMinVerEntryT,
             state="readonly",
             readonlybackground=rightc,
-            foreground=fontc
+            foreground=fontc,
+            width=5
             )
-        self.experi_iglooMinVer_entry.pack(side=RIGHT)
+        self.experi_iglooMinVerT_entry.pack(side=LEFT)
 
+        # Make an entry box for the minor bottom firmware
+        self.experi_iglooMinVerB_entry = Entry(
+            self.experi_subTop2_4_5_frame,
+            textvariable=self.iglooMinVerEntryB,
+            state="readonly",
+            readonlybackground=rightc,
+            foreground=fontc,
+            width=5
+            )
+        self.experi_iglooMinVerB_entry.pack(side=RIGHT)
+          
+
+        # Make a label for the minor bottom igloo firmware entry
+        self.experi_iglooMinVerB_lbl = Label(self.experi_subTop2_4_5_frame, text="B Igloo Ver (Minor): ")
+        self.experi_iglooMinVerB_lbl.configure(
+            background=rightc,
+            foreground=fontc,
+            padx=button_padx,
+            pady=button_pady,
+            )
+        self.experi_iglooMinVerB_lbl.pack(side=RIGHT)
+ 
         # Make a label for the igloo toggle check
         self.iglooToggle_label = Label(self.experi_subTop_2_4_6_frame, text="Igloo Toggle Test: ")
         self.iglooToggle_label.configure(bg=rightc,fg=fontc,padx=button_padx,pady=button_pady)
@@ -1181,16 +1228,24 @@ class makeGui(Tools):
         self.tempEntry.set(str(round(temp.readManyTemps(self.myBus, self.slot, 10, "Temperature", "nohold"),4)))
 
         # Getting IGLOO firmware info
-        majorIglooVer = self.readIgloo(0x00)
-        minorIglooVer = self.readIgloo(0x01)
+        majorIglooVerT = self.readIgloo("top",0x00)
+        minorIglooVerT = self.readIgloo("top",0x01)
+        majorIglooVerB = self.readIgloo("bottom",0x00)
+        minorIglooVerB = self.readIgloo("bottom",0x01)
         # Write IGLOO firmware in hex
-        majorIglooVer = self.toHex(majorIglooVer)
-        minorIglooVer = self.toHex(minorIglooVer)
+        majorIglooVerT = self.toHex(majorIglooVerT)
+        minorIglooVerT = self.toHex(minorIglooVerT)
+        majorIglooVerB = self.toHex(majorIglooVerB)
+        minorIglooVerB = self.toHex(minorIglooVerB)
         # Display igloo FW info on gui
-        self.iglooMajVerEntry.set(majorIglooVer)
-        self.iglooMinVerEntry.set(minorIglooVer)
-        print "{0} Igloo2 FPGA Major Firmware Version = {1}".format(self.igloo, majorIglooVer)
-        print "{0} Igloo2 FPGA Minor Firmware Version = {1}".format(self.igloo, minorIglooVer)
+        self.iglooMajVerEntryT.set(majorIglooVerT)
+        self.iglooMinVerEntryT.set(minorIglooVerT)
+        self.iglooMajVerEntryB.set(majorIglooVerB)
+        self.iglooMinVerEntryB.set(minorIglooVerB)
+        print "{0} Igloo2 FPGA Top Major Firmware Version = {1}".format(self.igloo, majorIglooVerT)
+        print "{0} Igloo2 FPGA Top Minor Firmware Version = {1}".format(self.igloo, minorIglooVerT)
+        print "{0} Igloo2 FPGA Bottom Major Firmware Version = {1}".format(self.igloo, majorIglooVerB)
+        print "{0} Igloo2 FPGA Bottom Minor Firmware Version = {1}".format(self.igloo, minorIglooVerB)
 
         # Verify that the Igloo can be power toggled
         self.iglooToggleEntry.set(str(self.checkIglooToggle()))
@@ -1213,7 +1268,7 @@ class makeGui(Tools):
         self.myBus.write(0x00,[0x06])
         self.myBus.sendBatch()
 
-        register = self.readIgloo(ones_address, 4)
+        register = self.readIgloo("top",ones_address, 4)
         if register != all_ones:
             retval = False
         # print 'Igloo Ones = '+str(register)
@@ -1229,7 +1284,7 @@ class makeGui(Tools):
         # Turn Igloo On
         # print 'Igloo Control = '+str(self.toggleIgloo())
         self.toggleIgloo()
-        register = self.readIgloo(ones_address, 4)
+        register = self.readIgloo("top",ones_address, 4)
         if register != all_ones:
             retval = False
         # print 'Igloo Ones = '+str(register)

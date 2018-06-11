@@ -108,7 +108,7 @@ class makeGui(Tools):
         frame_ipady = "1m"
         #---------- end layout constants ------
         # Creates hotkey bindings for Pass/Fail buttons
-        if (!listbuttons):
+        if not (listbuttons):
             hotkeys = ['1','2','3','4','5','6','7','8','9','0','q','w','e','r','t','y','u','i','o']
             for i in range(len(hotkeys)):
                 parent.bind(hotkeys[i], partial(self.togglepstate,i))

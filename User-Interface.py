@@ -215,9 +215,7 @@ class makeGui(Tools):
         self.info_nameLabel.pack(side=LEFT)
 
         # Make and pack a listbox to pick which QIE card to talk to:
-        self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar,
-                          "Shaun Hogan","Caleb Smith","Adryanna Smith","Jordan Potarf",
-                          "John Lawrence","Andrew Baas","Mason Dorseth","Josh Hiltbrand")
+        self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar, "Nesta Lenhert", "Chris Madrid", "Bryan Caraway", "Brooks McMaster", "Caleb Smith")
         self.info_nameBox.pack(side=LEFT)
         self.info_nameBox.configure(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
         self.info_nameBox["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)

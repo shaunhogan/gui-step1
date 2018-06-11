@@ -9,11 +9,15 @@ from Tkinter import *
 from datetime import datetime
 from initialClass import initialTests
 from cardInfoClass import cardInformation
+from functools import partial
 from Tools import Tools
+import matplotlib
 import temp
 import json
 import client
 import subprocess
+
+matplotlib.use('Agg')
 
 if (0):
     fontc="black"
@@ -34,6 +38,7 @@ else:
     buttonsc=["#000066","#666611","#551111","#445588","#AA9122","#AA0011","#666611","#880000","#115511"]
     dimbuttonsc=["#222288","#888822","#772222","#6677AA","#CCB344","#CC2233","#888822","#AA0000","#227722"]
     dimc="#555555"
+listbuttons = 0
 
 class makeGui(Tools):
     def __init__(self, parent):
@@ -100,8 +105,9 @@ class makeGui(Tools):
         frame_ipadx = "3m"
         frame_ipady = "1m"
         #---------- end layout constants ------
-
-
+        hotkeys = ['1','2','3','4','5','6','7','8','9','0','q','w','e','r','t','y','u','i','o']
+        for i in range(len(hotkeys)):
+            parent.bind(hotkeys[i], partial(self.togglepstate,i))
         ##########################################
         ###                                    ###
         ###     BEGIN MAKING SUB-FRAMES        ###
@@ -752,10 +758,13 @@ class makeGui(Tools):
         self.testPassInfo = []
 
         for i in range(0,4):
-            self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+            if (listbuttons):
+                self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+                self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
+                self.testPassList[i].set("N/A")
+            else: 
+                self.testPassInfo.append(Button(self.experi_subTop3_frame,text="N/A",command=partial(self.togglepstate,i)))
             self.testPassInfo[i].configure(width=15,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
-            self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
-            self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
             self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg=midc,fg=fontc)
@@ -763,10 +772,13 @@ class makeGui(Tools):
             self.testPassLabel.pack(side=LEFT)
 
         for i in range(4,9):
-            self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+            if (listbuttons):
+                self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+                self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
+                self.testPassList[i].set("N/A")
+            else:
+                self.testPassInfo.append(Button(self.experi_subTop4_frame,text="N/A",command=partial(self.togglepstate,i)))
             self.testPassInfo[i].configure(width=11, bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
-            self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
-            self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
             self.testPassLabel=Label(self.experi_subTop4_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=midc,fg=fontc)
@@ -774,10 +786,13 @@ class makeGui(Tools):
             self.testPassLabel.pack(side=LEFT)
 
         for i in range(9,14):
-            self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+            if (listbuttons):
+                self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+                self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
+                self.testPassList[i].set("N/A")
+            else:
+                self.testPassInfo.append(Button(self.experi_subTop5_frame,text="N/A",command=partial(self.togglepstate,i)))
             self.testPassInfo[i].configure(width=11,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
-            self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
-            self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
             self.testPassLabel=Label(self.experi_subTop5_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=midc,fg=fontc)
@@ -785,10 +800,13 @@ class makeGui(Tools):
             self.testPassLabel.pack(side=LEFT)
 
         for i in range(14,19):
-            self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+            if (listbuttons):
+                self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+                self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
+                self.testPassList[i].set("N/A")
+            else: 
+                self.testPassInfo.append(Button(self.experi_subTop6_frame,text="N/A",command=partial(self.togglepstate,i)))
             self.testPassInfo[i].configure(width=11,bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
-            self.testPassInfo[i]["menu"].config(bg=topc,fg=fontc,activebackground=dimc,activeforeground=fontc)
-            self.testPassList[i].set("N/A")
             self.testPassInfo[i].pack(side=LEFT)
 
             self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=midc,fg=fontc)
@@ -832,6 +850,24 @@ class makeGui(Tools):
         return o.__dict__
 
 ##########################################################################################
+
+#####TEST#####
+
+    def togglepstate(self,i,event=None):
+        for o in range(1):#len(self.testPassInfo)):
+            if(self.testPassList[i].get() == "Pass"):
+                self.testPassInfo[i].configure(text="Fail",bg=buttonsc[2],fg=fontc,activebackground=dimbuttonsc[2],activeforeground=fontc)
+                self.testPassList[i].set("Fail")
+            elif(self.testPassList[i].get() == "Fail"):
+                self.testPassList[i].set("N/A")
+                self.testPassInfo[i].configure(text="N/A",bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
+            else:
+                self.testPassList[i].set("Pass")
+                self.testPassInfo[i].configure(text="Pass",bg=buttonsc[8],fg=fontc,activebackground=dimbuttonsc[8],activeforeground=fontc)
+
+
+#####TEST#####
+
 
     # Dumps the results of the tests & inspections to a json file
     def initSubmitBttnPress(self):
@@ -904,6 +940,7 @@ class makeGui(Tools):
     def passAllSelected(self):
         for i in range(len(self.testPassList)):
             self.testPassList[i].set("Pass")
+            self.testPassInfo[i].configure(text="Pass")
         self.infoValChangeNonevent()
         self.passBox.destroy()
 

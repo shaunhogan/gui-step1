@@ -38,6 +38,8 @@ else:
     buttonsc=["#000066","#666611","#551111","#445588","#AA9122","#AA0011","#666611","#880000","#115511"]
     dimbuttonsc=["#222288","#888822","#772222","#6677AA","#CCB344","#CC2233","#888822","#AA0000","#227722"]
     dimc="#555555"
+
+#toggles between lists and three-state buttons for Pass/Fail switches
 listbuttons = 0
 
 class makeGui(Tools):
@@ -105,9 +107,11 @@ class makeGui(Tools):
         frame_ipadx = "3m"
         frame_ipady = "1m"
         #---------- end layout constants ------
-        hotkeys = ['1','2','3','4','5','6','7','8','9','0','q','w','e','r','t','y','u','i','o']
-        for i in range(len(hotkeys)):
-            parent.bind(hotkeys[i], partial(self.togglepstate,i))
+        # Creates hotkey bindings for Pass/Fail buttons
+        if (!listbuttons):
+            hotkeys = ['1','2','3','4','5','6','7','8','9','0','q','w','e','r','t','y','u','i','o']
+            for i in range(len(hotkeys)):
+                parent.bind(hotkeys[i], partial(self.togglepstate,i))
         ##########################################
         ###                                    ###
         ###     BEGIN MAKING SUB-FRAMES        ###
@@ -851,8 +855,7 @@ class makeGui(Tools):
 
 ##########################################################################################
 
-#####TEST#####
-
+    # Controls the three-state button behavior (when enabled) for Pass/Fail buttons
     def togglepstate(self,i,event=None):
         for o in range(1):#len(self.testPassInfo)):
             if(self.testPassList[i].get() == "Pass"):
@@ -866,7 +869,7 @@ class makeGui(Tools):
                 self.testPassInfo[i].configure(text="Pass",bg=buttonsc[8],fg=fontc,activebackground=dimbuttonsc[8],activeforeground=fontc)
 
 
-#####TEST#####
+#########################################################################################
 
 
     # Dumps the results of the tests & inspections to a json file

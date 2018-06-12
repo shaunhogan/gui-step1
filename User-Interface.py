@@ -1229,13 +1229,21 @@ class makeGui(Tools):
         self.myBus.write(self.slot,[0x11,0x04,0,0,0])
         self.myBus.write(0x50,[0x00])
         self.myBus.read(0x50, 8)
+        
+        # raw_bus is list of strings (list of messages)
+        # the last entry in raw_bus is the message string containing the unique id
         raw_bus = self.myBus.sendBatch()
+        
+        # Verify checksum
         self.check = Checksum(raw_bus[-1],0).result
-        if self.check is 0:
+        if self.check is 0: # passed checksum test
             self.check = 1
-        else:
+            print "UniqueID checksum test passed"
+        else:               # failed checksum test
             self.check = 0
-        #print '\nRaw Unique ID = '+str(raw_bus[-1])
+            print "UniqueID checksum test failed"            
+        
+        # I2C_ERROR
         if raw_bus[-1][0] != '0':
             print 'In getUniqueIDPress(): I2C_ERROR when reading Unique ID'
             print self.I2C_ERROR_HELP
@@ -1248,9 +1256,6 @@ class makeGui(Tools):
         self.uniqueIDEntry.set("0x"+self.uniqueIDPass[4:(len(self.uniqueIDPass)-4)])
 
         print "UniqueID: {0}".format(self.uniqueIDEntry.get())
-
-
-######### TODO: Add UniqueID Checksum to verify correct unique id is read
 
         # Getting bridge firmware
         self.myBus.write(0x00,[0x06])

@@ -72,7 +72,7 @@ class Tools:
             self.buttonsc=["CadetBlue1","lemon chiffon","salmon2","#CCDDFF","#FFE699","#FFCC66","orange","#ffbbbb","#99FF99"]
             self.dimbuttonsc=["#76D3DD","#DDD8AB","#D86050","#AABBDD","#DDC477","#DDAA44","#AA6633","#DD9999","#77DD77"]
             self.dimc="#DDDDDD"
-            self.checkc="whitei"
+            self.checkc="white"
 
     # getDimColors(): return slightly brighter or darker colors 
     # WARNING: Technically you should not add total hex color values... add/subtract per color RGB

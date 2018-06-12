@@ -15,10 +15,84 @@ import sys
 
 class Tools:
 
-#########################################################
-#   Methods (formatting, etc) used by makeGui class     #
-#########################################################
+######################################################################
+#   Methods (color theme, formatting, etc) used by makeGui class     #
+######################################################################
 
+    # setColorTheme(): set color theme
+    def setColorTheme(self):
+        print "color theme: {0}".format(self.color_theme)
+        # sunrise
+        if self.color_theme == "sunrise":
+            self.fontc="black"
+            self.topc="white"
+            self.rightc="white"
+            self.midc="white"
+            self.backc="#DDDDDD"
+            self.rightc="white"
+            self.buttonsc=["#4E7496","#ADF802","#F36196","#CCDDFF","#FFE699","#FFCC66","#FFA62B","#FFBBBB","#99FF99"]
+            self.dimbuttonsc=self.getDimColors(self.buttonsc, "#222222", -1)
+            #self.dimbuttonsc=["#76D3DD","#DDD8AB","#D86050","#AABBDD","#DDC477","#DDAA44","#AA6633","#DD9999","#77DD77"]
+            self.dimc="#DDDDDD"
+        
+        # dark
+        elif self.color_theme == "dark":
+            self.fontc='#DDDDDD'
+            self.topc='#333333'
+            self.rightc='#333333'
+            self.midc='#333333'
+            self.backc='#222222'
+            self.buttonsc=["#000066","#666611","#551111","#445588","#AA9122","#AA0011","#666611","#880000","#115511"]
+            self.dimbuttonsc=["#222288","#888822","#772222","#6677AA","#CCB344","#CC2233","#888822","#AA0000","#227722"]
+            self.dimc="#555555"
+        
+        # nightfall
+        elif self.color_theme == "nightfall":
+            self.fontc='#DDDDDD'
+            self.topc='#333333'
+            self.rightc='#333333'
+            self.midc='#333333'
+            self.backc='#222222'
+            self.buttonsc=["#5A7D9A","#658B38","#B00000","#445588","#0033CC","#402090","#B30059","#003399","#3F9B0B"]
+            self.dimbuttonsc=self.getDimColors(self.buttonsc, "#222222", 1)
+            #self.dimbuttonsc=["#7C9FBC","#87AD5A","#772222","#6677AA","#CCB344","#CC2233","#888822","#AA0000","#227722"]
+            self.dimc="#555555"
+        
+        # bright is default
+        else:
+            self.fontc="black"
+            self.topc="white"
+            self.rightc="white"
+            self.midc="white"
+            self.backc="#DDDDDD"
+            self.rightc="white"
+            self.buttonsc=["CadetBlue1","lemon chiffon","salmon2","#CCDDFF","#FFE699","#FFCC66","orange","#ffbbbb","#99FF99"]
+            self.dimbuttonsc=["#76D3DD","#DDD8AB","#D86050","#AABBDD","#DDC477","#DDAA44","#AA6633","#DD9999","#77DD77"]
+            self.dimc="#DDDDDD"
+        
+
+    # getDimColors(): return slightly brighter or darker colors 
+    # WARNING: Technically you should not add total hex color values... add/subtract per color RGB
+    def getDimColors(self, colors, change, sign=1):
+        change_str = change[1:]
+        change_list = list(int(change_str[i:i+2],16) for i in xrange(0,len(change_str),2))
+        dimColors = []
+        for color in colors:
+            rgb_str = color[1:]
+            rgb_list = list(int(rgb_str[i:i+2],16) for i in xrange(0,len(rgb_str),2))
+            rgb_values = list(rgb_list[i] + sign * change_list[i] for i in xrange(len(rgb_list)))
+            # keep RGB values bounded by 0x00 and 0xff
+            for i in xrange(len(rgb_values)):
+                if rgb_values[i] < 0x00:
+                    rgb_values[i] = 0x00
+                if rgb_values[i] > 0xff:
+                    rgb_values[i] = 0xff
+            new_rgb_list = list("{0:02X}".format(v) for v in rgb_values)
+            new_rgb_str = "#" + "".join(new_rgb_list)
+            print "In getDimColors(): Color addition {0} + {1} = {2}".format(color,change,new_rgb_str)
+            dimColors.append(new_rgb_str)
+        return dimColors
+        
     # reverseBytes(): input message and output message with bytes reversed
     def reverseBytes(self, message):
         message_list = message.split()

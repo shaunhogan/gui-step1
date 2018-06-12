@@ -1,9 +1,12 @@
 # User-Interface.py
 #
-# This is the main Graphical User Interface for communicating
-# with the setup in the lab.
+# This is the main Graphical User Interface for for Teststand 1. 
+# A server runs on a RaspberryPi, which connects to the Fanout.
+# The Fanout connects to the ngCCM Emulator.
+# QIE cards can be inserted into any QIE card backplane slot.
+#
 # Developed with the help of many people
-# For Baylor University, Summer 2016.
+# For Baylor University, Summer 2016 (HE) and Summer 2018 (HB).
 
 from Tkinter import *
 from datetime import datetime
@@ -16,17 +19,11 @@ import client
 import subprocess
 import argparse
 
-# Choose a color theme from the list (or add your own)
-#color_themes = ["bright", "dark", "sunrise", "nightfall"]
-#color_theme = "nightfall"
-
-#print "color_theme is {0}".format(color_theme)
 
 class makeGui(Tools):
-    #def __init__(self, parent, color_themes, color_theme="bright"):
-    def __init__(self, parent):
-        color_themes = ["bright", "dark", "sunrise", "nightfall"]
-        color_theme = "nightfall"
+    def __init__(self, parent, color_themes, color_theme="bright"):
+        #color_themes = ["bright", "dark", "sunrise", "nightfall"]
+        #color_theme = "nightfall"
 
         # color themes
         self.color_themes = color_themes
@@ -1246,12 +1243,12 @@ def main():
     color_theme = options.color_theme
     list_colors = options.list_colors
 
+    # print color themes and exit
     if list_colors:
-        sys.exit("color themes: " + " ".join(color_themes))
+        sys.exit("color themes: {0}".format(" ".join(color_themes)))
 
     root = Tk()
-    #myapp = makeGui(root, color_themes, color_theme)
-    myapp = makeGui(root)
+    myapp = makeGui(root, color_themes, color_theme)
     root.mainloop()
 
 if __name__ == "__main__":

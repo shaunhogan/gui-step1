@@ -1118,7 +1118,7 @@ class makeGui(Tools):
         self.iglooMinVerEntryT.set("")
         self.iglooMajVerEntryB.set("")
         self.iglooMinVerEntryB.set("")
-        self.iglooTogglentry.set("")
+        self.iglooToggleEntry.set("")
         self.overwriteVar.set(0)
 
         # On the gui, change all the tests to "N/A"

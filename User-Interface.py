@@ -686,8 +686,8 @@ class makeGui(Tools):
             self.experi_subTop2_4_frame,
             textvariable=self.iglooMinVerEntryT,
             state="readonly",
-            readonlybackground=rightc,
-            foreground=fontc,
+            readonlybackground=self.rightc,
+            foreground=self.fontc,
             width=5
             )
         self.experi_iglooMinVerT_entry.pack(side=RIGHT)
@@ -706,8 +706,8 @@ class makeGui(Tools):
         # Make a label for the major bottom igloo firmware entry
         self.experi_iglooMajVerB_lbl = Label(self.experi_subTop2_4_5_frame, text="Bottom Igloo Ver (Major): ")
         self.experi_iglooMajVerB_lbl.configure(
-            background=rightc,
-            foreground=fontc,
+            background=self.rightc,
+            foreground=self.fontc,
             padx=button_padx,
             pady=button_pady,
             )
@@ -729,8 +729,8 @@ class makeGui(Tools):
             self.experi_subTop2_4_5_frame,
             textvariable=self.iglooMinVerEntryB,
             state="readonly",
-            readonlybackground=rightc,
-            foreground=fontc,
+            readonlybackground=self.rightc,
+            foreground=self.fontc,
             width=5
             )
         self.experi_iglooMinVerB_entry.pack(side=RIGHT)
@@ -739,8 +739,8 @@ class makeGui(Tools):
         # Make a label for the minor bottom igloo firmware entry
         self.experi_iglooMinVerB_lbl = Label(self.experi_subTop2_4_5_frame, text="(Minor): ")
         self.experi_iglooMinVerB_lbl.configure(
-            background=rightc,
-            foreground=fontc,
+            background=self.rightc,
+            foreground=self.fontc,
             padx=button_padx,
             pady=button_pady,
             )
@@ -835,7 +835,7 @@ class makeGui(Tools):
             self.testPassInfo[i].configure(width=11,bg=self.buttonsc[3],fg=self.fontc,activebackground=self.dimbuttonsc[3],activeforeground=self.fontc)
             self.testPassInfo[i].pack(side=LEFT)
 
-            self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg=midc,fg=self.fontc)
+            self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg=self.midc,fg=self.fontc)
             self.testPassLabel.configure(width=15)
             self.testPassLabel.pack(side=LEFT)
 
@@ -877,7 +877,7 @@ class makeGui(Tools):
             self.testPassInfo[i].configure(width=15,bg=self.buttonsc[3],fg=self.fontc,activebackground=self.dimbuttonsc[3],activeforeground=self.fontc)
             self.testPassInfo[i].pack(side=LEFT)
 
-            self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=midc,fg=self.fontc)
+            self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=self.midc,fg=self.fontc)
             self.testPassLabel.configure(width=20)
             self.testPassLabel.pack(side=LEFT)
 
@@ -925,14 +925,14 @@ class makeGui(Tools):
             return
         for o in range(1):#len(self.testPassInfo)):
             if(self.testPassList[i].get() == "Pass"):
-                self.testPassInfo[i].configure(text="Fail",bg=buttonsc[2],fg=fontc,activebackground=dimbuttonsc[2],activeforeground=fontc)
+                self.testPassInfo[i].configure(text="Fail",bg=self.buttonsc[2],fg=self.fontc,activebackground=self.dimbuttonsc[2],activeforeground=self.fontc)
                 self.testPassList[i].set("Fail")
             elif(self.testPassList[i].get() == "Fail"):
                 self.testPassList[i].set("N/A")
-                self.testPassInfo[i].configure(text="N/A",bg=buttonsc[3],fg=fontc,activebackground=dimbuttonsc[3],activeforeground=fontc)
+                self.testPassInfo[i].configure(text="N/A",bg=self.buttonsc[3],fg=self.fontc,activebackground=self.dimbuttonsc[3],activeforeground=self.fontc)
             else:
                 self.testPassList[i].set("Pass")
-                self.testPassInfo[i].configure(text="Pass",bg=buttonsc[8],fg=fontc,activebackground=dimbuttonsc[8],activeforeground=fontc)
+                self.testPassInfo[i].configure(text="Pass",bg=self.buttonsc[8],fg=self.fontc,activebackground=self.dimbuttonsc[8],activeforeground=self.fontc)
 
 
 #########################################################################################
@@ -1073,8 +1073,10 @@ class makeGui(Tools):
         self.cardInfo.FirmwareOth = self.firmwareVerOtherEntry.get()
         self.initialTest.DateRun     = str(datetime.now())
         self.cardInfo.User = self.nameChoiceVar.get()
-        self.cardInfo.IglooMinVer = self.iglooMinVerEntry.get()
-        self.cardInfo.IglooMajVer = self.iglooMajVerEntry.get()
+        self.cardInfo.IglooMinVerT = self.iglooMinVerEntryT.get()
+        self.cardInfo.IglooMajVerT = self.iglooMajVerEntryT.get()
+        self.cardInfo.IglooMinVerB = self.iglooMinVerEntryB.get()
+        self.cardInfo.IglooMajVerB = self.iglooMajVerEntryB.get()
         self.cardInfo.Igloo2_FPGA_Control = self.iglooToggleEntry.get()
         self.initialTest.Overwrite = False
 

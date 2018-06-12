@@ -40,7 +40,7 @@ def getDimColors(colors, change, sign=1):
 
 # Choose a color theme from the list (or add your own)
 color_themes = ["bright", "dark", "sunrise", "nightfall"]
-color_theme = "nightfall"
+color_theme = "bright"
 
 # Default color_theme is "bright"
 if color_theme not in color_themes:
@@ -1094,10 +1094,10 @@ class makeGui(Tools):
         self.firmwareVerEntry.set("")
         self.firmwareVerMinEntry.set("")
         self.firmwareVerOtherEntry.set("")
-        self.iglooMajVerTEntry.set("")
-        self.iglooMinVerTEntry.set("")
-        self.iglooMajVerBEntry.set("")
-        self.iglooMinVerBEntry.set("")
+        self.iglooMajVerEntryT.set("")
+        self.iglooMinVerEntryT.set("")
+        self.iglooMajVerEntryB.set("")
+        self.iglooMinVerEntryB.set("")
         self.iglooToggleEntry.set("")
         self.overwriteVar.set(0)
 

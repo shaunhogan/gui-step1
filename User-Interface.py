@@ -14,6 +14,7 @@ from initialClass import initialTests
 from cardInfoClass import cardInformation
 from functools import partial
 from Tools import Tools
+from checksumClass import Checksum
 import temp
 import json
 import client
@@ -94,6 +95,7 @@ class makeGui(Tools):
         self.iglooMinVerEntryT     =  StringVar()
         self.iglooMinVerEntryB     =  StringVar()
         self.overwriteVar          =  IntVar()
+        self.check                 =  0
 
         # Place an all-encompassing frame in the parent window. All of the following
         # frames will be placed here (topMost_frame) and not in the parent window.
@@ -453,7 +455,7 @@ class makeGui(Tools):
             textvariable=self.barcodeEntry
             )
         self.experi_barcode_entry.pack(side=RIGHT)
-        self.experi_barcode_entry.configure(bg=self.midc,fg=self.fontc)
+        self.experi_barcode_entry.configure(bg=self.midc,fg=self.fontc,width=7)
         self.experi_barcode_entry.bind("<FocusIn>",lockon)
         self.experi_barcode_entry.bind("<FocusOut>",lockoff)
 
@@ -677,7 +679,7 @@ class makeGui(Tools):
             state="readonly",
             readonlybackground=self.rightc,
             foreground=self.fontc,
-            width=5
+            width=4
             )
         self.experi_iglooMajVerT_entry.pack(side=LEFT)
 
@@ -688,7 +690,7 @@ class makeGui(Tools):
             state="readonly",
             readonlybackground=self.rightc,
             foreground=self.fontc,
-            width=5
+            width=4
             )
         self.experi_iglooMinVerT_entry.pack(side=RIGHT)
 
@@ -720,7 +722,7 @@ class makeGui(Tools):
             state="readonly",
             readonlybackground=self.rightc,
             foreground=self.fontc,
-            width=5
+            width=4
             )
         self.experi_iglooMajVerB_entry.pack(side=LEFT)
 
@@ -731,7 +733,7 @@ class makeGui(Tools):
             state="readonly",
             readonlybackground=self.rightc,
             foreground=self.fontc,
-            width=5
+            width=4
             )
         self.experi_iglooMinVerB_entry.pack(side=RIGHT)
           
@@ -883,7 +885,7 @@ class makeGui(Tools):
 
         # Make a checkbox to overwrite/not overwrite pre-existing data
         self.overwriteBox = Checkbutton(self.experi_subTop7_frame, text="Overwrite existing QIE Card data (if applicable)?", variable=self.overwriteVar)
-        self.overwriteBox.configure(bg=self.buttonsc[1],fg=self.fontc,activebackground=self.dimbuttonsc[1],activeforeground=self.fontc)
+        self.overwriteBox.configure(bg=self.buttonsc[1],fg=self.fontc,activebackground=self.dimbuttonsc[1],activeforeground=self.fontc,selectcolor=self.checkc)
         self.overwriteBox.pack(side=TOP,
                        padx = button_padx,
                        pady = button_pady,
@@ -1029,6 +1031,8 @@ class makeGui(Tools):
         self.cardInfo.Igloo_FPGA_Control = self.iglooToggleEntry.get()
         self.cardInfo.User = self.nameChoiceVar.get()
         self.cardInfo.DateRun = str(datetime.now())
+        self.cardInfo.Checksum = self.check
+        print self.check
 
         fileString = self.barcodeEntry.get()+"_step2_raw.json"
 
@@ -1225,8 +1229,21 @@ class makeGui(Tools):
         self.myBus.write(self.slot,[0x11,0x04,0,0,0])
         self.myBus.write(0x50,[0x00])
         self.myBus.read(0x50, 8)
+        
+        # raw_bus is list of strings (list of messages)
+        # the last entry in raw_bus is the message string containing the unique id
         raw_bus = self.myBus.sendBatch()
-        #print '\nRaw Unique ID = '+str(raw_bus[-1])
+        
+        # Verify checksum
+        self.check = Checksum(raw_bus[-1],0).result
+        if self.check is 0: # passed checksum test
+            self.check = 1
+            print "UniqueID checksum test passed"
+        else:               # failed checksum test
+            self.check = 0
+            print "UniqueID checksum test failed"            
+        
+        # I2C_ERROR
         if raw_bus[-1][0] != '0':
             print 'In getUniqueIDPress(): I2C_ERROR when reading Unique ID'
             print self.I2C_ERROR_HELP
@@ -1239,9 +1256,6 @@ class makeGui(Tools):
         self.uniqueIDEntry.set("0x"+self.uniqueIDPass[4:(len(self.uniqueIDPass)-4)])
 
         print "UniqueID: {0}".format(self.uniqueIDEntry.get())
-
-
-######### TODO: Add UniqueID Checksum to verify correct unique id is read
 
         # Getting bridge firmware
         self.myBus.write(0x00,[0x06])

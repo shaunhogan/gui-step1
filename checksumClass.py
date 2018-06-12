@@ -26,9 +26,9 @@ def toIntList(message):
     return intlist
 
 class Checksum:
-    def __init__(self, message, temp):
+    def __init__(self, message, istemp=0):
         self.message = message
-        if temp: # 1 = True for temp
+        if istemp: # 1 = True for temp
             self.result = self.tempCRC(0)
         else: # 0 = False for uniqueID
             self.result = self.idCRC()

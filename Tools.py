@@ -34,7 +34,8 @@ class Tools:
             self.dimbuttonsc=self.getDimColors(self.buttonsc, "#222222", -1)
             #self.dimbuttonsc=["#76D3DD","#DDD8AB","#D86050","#AABBDD","#DDC477","#DDAA44","#AA6633","#DD9999","#77DD77"]
             self.dimc="#DDDDDD"
-        
+            self.checkc="White"
+
         # dark
         elif self.color_theme == "dark":
             self.fontc='#DDDDDD'
@@ -45,7 +46,8 @@ class Tools:
             self.buttonsc=["#000066","#666611","#551111","#445588","#AA9122","#AA0011","#666611","#880000","#115511"]
             self.dimbuttonsc=["#222288","#888822","#772222","#6677AA","#CCB344","#CC2233","#888822","#AA0000","#227722"]
             self.dimc="#555555"
-        
+            self.checkc="#222222"
+
         # nightfall
         elif self.color_theme == "nightfall":
             self.fontc='#DDDDDD'
@@ -57,7 +59,8 @@ class Tools:
             self.dimbuttonsc=self.getDimColors(self.buttonsc, "#222222", 1)
             #self.dimbuttonsc=["#7C9FBC","#87AD5A","#772222","#6677AA","#CCB344","#CC2233","#888822","#AA0000","#227722"]
             self.dimc="#555555"
-        
+            self.checkc="#222222"
+
         # bright is default
         else:
             self.fontc="black"
@@ -69,7 +72,7 @@ class Tools:
             self.buttonsc=["CadetBlue1","lemon chiffon","salmon2","#CCDDFF","#FFE699","#FFCC66","orange","#ffbbbb","#99FF99"]
             self.dimbuttonsc=["#76D3DD","#DDD8AB","#D86050","#AABBDD","#DDC477","#DDAA44","#AA6633","#DD9999","#77DD77"]
             self.dimc="#DDDDDD"
-        
+            self.checkc="white"
 
     # getDimColors(): return slightly brighter or darker colors 
     # WARNING: Technically you should not add total hex color values... add/subtract per color RGB

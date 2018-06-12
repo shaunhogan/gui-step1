@@ -136,7 +136,7 @@ class makeGui(Tools):
         self.outSlotNumbers = []
 
         # Name the parent. This is mostly for bookkeeping purposes
-        # and doesn't really get used too much.
+        # and doesn't really get used too much... as in not at all!
         self.myParent = parent
 
         # Make a placeholder for the shortened unique ID

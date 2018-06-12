@@ -89,7 +89,10 @@ class Tools:
                     rgb_values[i] = 0xff
             new_rgb_list = list("{0:02X}".format(v) for v in rgb_values)
             new_rgb_str = "#" + "".join(new_rgb_list)
-            print "In getDimColors(): Color addition {0} + {1} = {2}".format(color,change,new_rgb_str)
+            if sign > 0:
+                print "In getDimColors(): Color addition {0} + {1} = {2}".format(color,change,new_rgb_str)
+            else:
+                print "In getDimColors(): Color subtraction {0} - {1} = {2}".format(color,change,new_rgb_str)
             dimColors.append(new_rgb_str)
         return dimColors
         

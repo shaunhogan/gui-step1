@@ -40,7 +40,7 @@ def getDimColors(colors, change, sign=1):
 
 # Choose a color theme from the list (or add your own)
 color_themes = ["bright", "dark", "sunrise", "nightfall"]
-color_theme = "nightfall"
+color_theme = "dark"
 
 # Default color_theme is "bright"
 if color_theme not in color_themes:
@@ -99,6 +99,8 @@ print "color_theme is {0}".format(color_theme)
 #toggles between lists and three-state buttons for Pass/Fail switches
 listbuttons = 0
 
+#initalizes the global hotkey lockout variable. Setting this to '2' will disable hotkeys
+lockout=0
 
 class makeGui(Tools):
     def __init__(self, parent):
@@ -173,10 +175,19 @@ class makeGui(Tools):
         frame_ipady = "1m"
         #---------- end layout constants ------
         # Creates hotkey bindings for Pass/Fail buttons
-        if not (listbuttons):
+        if (not listbuttons) and (lockout is not 2):
             hotkeys = ['1','2','3','4','5','q','w','e','r','t','a','s','d','f','g','z','x','c','v']
             for i in range(len(hotkeys)):
                 parent.bind(hotkeys[i], partial(self.togglepstate,i))
+
+        def lockon (self,event=None):
+            global lockout
+            lockout=1
+        def lockoff (self,event=None):
+            global lockout
+            lockout=0
+                                                                                              
+
         ##########################################
         ###                                    ###
         ###     BEGIN MAKING SUB-FRAMES        ###
@@ -237,6 +248,10 @@ class makeGui(Tools):
             pady=frame_pady
             )
 
+        if not (listbuttons):
+            hotkeys = ['1','2','3','4','5','q','w','e','r','t','a','s','d','f','g','z','x','c','v']
+            for i in range(len(hotkeys)):
+                parent.bind(hotkeys[i], partial(self.togglepstate,i))
         ##########################################
         ###                                    ###
         ###     BEGIN MAKING WIDGETS           ###
@@ -312,7 +327,8 @@ class makeGui(Tools):
             )
         self.info_commentBox.pack(side=LEFT)
         self.info_commentBox.configure(bg=topc,fg=fontc)
-
+        self.info_commentBox.bind("<FocusIn>",lockon)
+        self.info_commentBox.bind("<FocusOut>",lockoff)
         ######################################
         #####                            #####
         #####  Experiment Setup Frames   #####
@@ -501,6 +517,8 @@ class makeGui(Tools):
             )
         self.experi_barcode_entry.pack(side=RIGHT)
         self.experi_barcode_entry.configure(bg=midc,fg=fontc)
+        self.experi_barcode_entry.bind("<FocusIn>",lockon)
+        self.experi_barcode_entry.bind("<FocusOut>",lockoff)
 
         # Make another buffer frame
         self.experi_subTopBuffer2_frame = Frame(self.experi_rightFrame,bg=midc)
@@ -966,6 +984,9 @@ class makeGui(Tools):
 
     # Controls the three-state button behavior (when enabled) for Pass/Fail buttons
     def togglepstate(self,i,event=None):
+        print lockout
+        if ((event is not None) and lockout):
+            return
         for o in range(1):#len(self.testPassInfo)):
             if(self.testPassList[i].get() == "Pass"):
                 self.testPassInfo[i].configure(text="Fail",bg=buttonsc[2],fg=fontc,activebackground=dimbuttonsc[2],activeforeground=fontc)
@@ -1065,10 +1086,10 @@ class makeGui(Tools):
         self.cardInfo.FirmwareMaj = self.firmwareVerEntry.get()
         self.cardInfo.FirmwareMin = self.firmwareVerMinEntry.get()
         self.cardInfo.FirmwareOth = self.firmwareVerOtherEntry.get()
-        self.cardInfo.IglooMinVerT = self.iglooMinVerTEntry.get()
-        self.cardInfo.IglooMajVerT = self.iglooMajVerTEntry.get()
-        self.cardInfo.IglooMinVerB = self.iglooMinVerBEntry.get()
-        self.cardInfo.IglooMajVerB = self.iglooMajVerBEntry.get()
+        self.cardInfo.IglooMinVerT = self.iglooMinVerEntryT.get()
+        self.cardInfo.IglooMajVerT = self.iglooMajVerEntryT.get()
+        self.cardInfo.IglooMinVerB = self.iglooMinVerEntryB.get()
+        self.cardInfo.IglooMajVerB = self.iglooMajVerEntryB.get()
         self.cardInfo.Igloo_FPGA_Control = self.iglooToggleEntry.get()
         self.cardInfo.User = self.nameChoiceVar.get()
         self.cardInfo.DateRun = str(datetime.now())
@@ -1094,11 +1115,11 @@ class makeGui(Tools):
         self.firmwareVerEntry.set("")
         self.firmwareVerMinEntry.set("")
         self.firmwareVerOtherEntry.set("")
-        self.iglooMajVerTEntry.set("")
-        self.iglooMinVerTEntry.set("")
-        self.iglooMajVerBEntry.set("")
-        self.iglooMinVerBEntry.set("")
-        self.iglooToggleEntry.set("")
+        self.iglooMajVerEntryT.set("")
+        self.iglooMinVerEntryT.set("")
+        self.iglooMajVerEntryB.set("")
+        self.iglooMinVerEntryB.set("")
+        self.iglooTogglentry.set("")
         self.overwriteVar.set(0)
 
         # On the gui, change all the tests to "N/A"

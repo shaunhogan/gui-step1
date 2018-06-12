@@ -1095,7 +1095,7 @@ class makeGui(Tools):
         self.firmwareVerMinEntry.set("")
         self.firmwareVerOtherEntry.set("")
         self.iglooMajVerTEntry.set("")
-        self.iglooMinVerTEntry.set("")i
+        self.iglooMinVerTEntry.set("")
         self.iglooMajVerBEntry.set("")
         self.iglooMinVerBEntry.set("")
         self.iglooToggleEntry.set("")

@@ -14,6 +14,7 @@ from initialClass import initialTests
 from cardInfoClass import cardInformation
 from functools import partial
 from Tools import Tools
+from checksumClass import Checksum
 import temp
 import json
 import client
@@ -1029,6 +1030,7 @@ class makeGui(Tools):
         self.cardInfo.Igloo_FPGA_Control = self.iglooToggleEntry.get()
         self.cardInfo.User = self.nameChoiceVar.get()
         self.cardInfo.DateRun = str(datetime.now())
+        #self.cardInfo.Checksum = Checksum(self.uniqueIDEntry.get(),0)
 
         fileString = self.barcodeEntry.get()+"_step2_raw.json"
 

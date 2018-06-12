@@ -984,7 +984,6 @@ class makeGui(Tools):
 
     # Controls the three-state button behavior (when enabled) for Pass/Fail buttons
     def togglepstate(self,i,event=None):
-        print lockout
         if ((event is not None) and lockout):
             return
         for o in range(1):#len(self.testPassInfo)):

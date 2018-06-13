@@ -54,7 +54,7 @@ if __name__ ==  "__main__":
     if ts.piStatus and ts.busStatus:
         for slot in slots:
             print ""
-            print "Initiated ProTaming of SpecifiedSlot: ", slot
+            print "Initiated Programing of SpecifiedSlot: ", slot
             print ""
 
             ts.selectGpio(slot)

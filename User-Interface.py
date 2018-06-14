@@ -781,7 +781,8 @@ class makeGui(Tools):
             textvariable=self.iglooToggleEntry,
             state="readonly",
             readonlybackground=self.rightc,
-            foreground=self.fontc
+            foreground=self.fontc,
+            width=6
             )
         self.iglooToggle_entry.pack(side=RIGHT)
 
@@ -1053,7 +1054,7 @@ class makeGui(Tools):
         self.cardInfo.Igloo_FPGA_Control = self.iglooToggleEntry.get()
         self.cardInfo.User = self.nameChoiceVar.get()
         self.cardInfo.DateRun = str(datetime.now())
-        self.cardInfo.Checksum = self.check
+        self.cardInfo.Checksum = self.check.get()
 
         fileString = self.barcodeEntry.get()+"_step2_raw.json"
 

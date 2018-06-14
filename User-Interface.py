@@ -792,7 +792,7 @@ class makeGui(Tools):
         # Make a option menu for GPIO selection
         self.gpioSelect_box = OptionMenu(self.experi_subTop2_7_frame, self.gpioChoiceVar,
                           "J2 and J21","J3 and J20","J4 and J19","J5 and J18",
-                          "J7 and J26","J8 and J25","J9 and J24","J10 and J23")
+                          "J7 and J26","J8 and J25","J9 and J24","J10 and J23", command=self.gpioBttnPress)
         self.gpioSelect_box.configure(bg=self.rightc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
         self.gpioSelect_box.pack(side=LEFT)
         self.gpioSelect_box["menu"].config(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
@@ -1120,7 +1120,7 @@ class makeGui(Tools):
 #############################################################################
 
     # Opens the proper GPIO slot. Used for programming cards.
-    def gpioBttnPress(self):
+    def gpioBttnPress(self,*args):
         jSlotDict = {"J2 and J18" : 0x29, "J3 and J19" : 0x89, "J4 and J20" : 0xA9,
                     "J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
                     "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}

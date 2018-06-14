@@ -20,7 +20,7 @@ import json
 import client
 import subprocess
 import argparse
-
+import time
 
 #toggles between lists and three-state buttons for Pass/Fail switches
 listbuttons=0
@@ -1305,44 +1305,54 @@ class makeGui(Tools):
         print '\n--- Begin Toggle Igloo2 Power Test'
         control_address = 0x22
         message = self.readBridge(control_address,4)
-        # print 'Igloo Control = '+str(message)
+        print 'Igloo Powered on Bridge Control Igloos = '+str(message)
 
+        igloos = ("top","bottom")
         ones_address = 0x02
         all_ones = '255 255 255 255'
-
-        retval = False
+        all_zeros = '0 0 0 0'  
 
         self.myBus.write(0x00,[0x06])
         self.myBus.sendBatch()
+        # check that igloos are powered on  
+        for igloo in igloos:
 
-        register = self.readIgloo("top",ones_address, 4)
-        if register != all_ones:
-            retval = False
-        # print 'Igloo Ones = '+str(register)
+            register = self.readIgloo(igloo,ones_address, 4)
+            if register != all_ones:
+                print 'Toggle Igloo Power Fail!'
+                return False
+            # print 'Igloo Ones = '+str(register)
 
         # Turn Igloo Off
-        # print 'Igloo Control = '+str(self.toggleIgloo())
-        self.toggleIgloo()
-        register = self.detectIglooError(ones_address, 4)
-        if register != '0':
-            retval = True
-        # print 'Igloo Ones = '+str(register)
+        message = self.toggleIgloo()
+        time.sleep(2) 
+        print 'Igloo Powered off Bridge Control Igloos = '+str(message)
+        # check that igloos are powered off  
+        for igloo in igloos:
+
+            register = self.readIgloo(igloo,ones_address, 4)
+            if register != all_zeros:
+                print 'Toggle Igloo Power Fail!'
+                return False
+            # print 'Igloo Ones = '+str(register)
 
         # Turn Igloo On
-        # print 'Igloo Control = '+str(self.toggleIgloo())
-        self.toggleIgloo()
-        register = self.readIgloo("top",ones_address, 4)
-        if register != all_ones:
-            retval = False
-        # print 'Igloo Ones = '+str(register)
+        message=self.toggleIgloo()
+        print 'Igloo Powered on Bridge Control Igloos = '+str(message)
+        time.sleep(2) 
+        # check that igloos are powered on  
+        for igloo in igloos:
 
-        if retval:
-            print 'Toggle Igloo Power Success!'
-        else:
-            print 'Toggle Igloo Power Fail!'
-            print self.I2C_ERROR_HELP
-        return retval
+            register = self.readIgloo(igloo,ones_address, 4)
+            if register != all_ones:
+                print 'Toggle Igloo Power Fail!'
+                return False
+            # print 'Igloo Ones = '+str(register)
 
+        print 'Toggle Igloo Power Success!'
+        return True
+
+    # turning igloo on and off using bridge vdd enable register
     def toggleIgloo(self):
         iglooControl = 0x22
         message = self.readBridge(iglooControl,4)
@@ -1352,15 +1362,6 @@ class makeGui(Tools):
         self.writeBridge(iglooControl,messageList)
         return self.readBridge(iglooControl,4)
 
-    def detectIglooError(self, registerAddress, num_bytes):
-        self.myBus.write(0x00,[0x06])
-        self.myBus.write(self.address,[0x11,0x03,0,0,0])
-        self.myBus.write(0x09,[registerAddress])
-        self.myBus.read(0x09, num_bytes)
-        message = self.myBus.sendBatch()[-1]
-        #  if message[0] != '0':
-        #          print 'Igloo i2c error detected in detectIglooError'
-        return message[0]
 
 ###########################################################################################
 

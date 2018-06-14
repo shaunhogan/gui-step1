@@ -94,8 +94,8 @@ class makeGui(Tools):
         self.iglooMajVerEntryB     =  StringVar()
         self.iglooMinVerEntryT     =  StringVar()
         self.iglooMinVerEntryB     =  StringVar()
+        self.check                 =  StringVar()
         self.overwriteVar          =  IntVar()
-        self.check                 =  0
 
         # Place an all-encompassing frame in the parent window. All of the following
         # frames will be placed here (topMost_frame) and not in the parent window.
@@ -562,7 +562,7 @@ class makeGui(Tools):
             background=self.rightc,
             foreground=self.fontc,
             padx=button_padx,
-            pady=button_pady,
+            pady=button_pady
             )
         self.experi_uniqueID_lbl.pack(side=LEFT)
 
@@ -573,9 +573,31 @@ class makeGui(Tools):
             textvariable=self.uniqueIDEntry,
             state="readonly",
             readonlybackground=self.rightc,
-            foreground=self.fontc
+            foreground=self.fontc,
+            width=21
             )
-        self.experi_uniqueID_entry.pack(side=RIGHT)
+        self.experi_uniqueID_entry.pack(side=LEFT)
+
+        self.experi_uniqueID_lbl = Label(self.experi_subTop2_frame, text="Checksum: ")
+        self.experi_uniqueID_lbl.configure(
+            background=self.rightc,
+            foreground=self.fontc,
+            padx=button_padx,
+            pady=button_pady
+            )
+        self.experi_uniqueID_lbl.pack(side=LEFT)
+       
+        # Make an entry box for the Checksum
+        # Make a entrybox for results
+        self.experi_uniqueID_entry = Entry(
+            self.experi_subTop2_frame,
+            textvariable=self.check,
+            state="readonly",
+            readonlybackground=self.rightc,
+            foreground=self.fontc,
+            width=6
+            )
+        self.experi_uniqueID_entry.pack(side=LEFT)
 
         # Make a label for the temperature entry
         self.experi_temperature_lbl = Label(self.experi_subTop2_0_frame, text="Temperature: ")
@@ -1032,7 +1054,6 @@ class makeGui(Tools):
         self.cardInfo.User = self.nameChoiceVar.get()
         self.cardInfo.DateRun = str(datetime.now())
         self.cardInfo.Checksum = self.check
-        print self.check
 
         fileString = self.barcodeEntry.get()+"_step2_raw.json"
 
@@ -1060,6 +1081,7 @@ class makeGui(Tools):
         self.iglooMajVerEntryB.set("")
         self.iglooMinVerEntryB.set("")
         self.iglooToggleEntry.set("")
+        self.check.set("")
         self.overwriteVar.set(0)
 
         # On the gui, change all the tests to "N/A"
@@ -1235,12 +1257,12 @@ class makeGui(Tools):
         raw_bus = self.myBus.sendBatch()
         
         # Verify checksum
-        self.check = Checksum(raw_bus[-1],0).result
-        if self.check is 0: # passed checksum test
-            self.check = 1
+        selfcheck = Checksum(raw_bus[-1],0).result
+        if selfcheck is 0: # passed checksum test
+            self.check.set("Passed")
             print "UniqueID checksum test passed"
         else:               # failed checksum test
-            self.check = 0
+            self.check.set("Failed")
             print "UniqueID checksum test failed"            
         
         # I2C_ERROR

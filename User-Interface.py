@@ -1317,7 +1317,7 @@ class makeGui(Tools):
         print "{0} Igloo2 FPGA Bottom Minor Firmware Version = {1}".format(self.igloo, minorIglooVerB)
 
         # Verify that the Igloo can be power toggled
-        self.iglooToggleEntry.set(str(self.checkIglooToggle()))
+        self.iglooToggleEntry.set(self.checkIglooToggle())
 
 #########################################
 #   Functions to check igloo toggle     #
@@ -1342,7 +1342,7 @@ class makeGui(Tools):
             register = self.readIgloo(igloo,ones_address, 4)
             if register != all_ones:
                 print 'Toggle Igloo Power Fail!'
-                return False
+                return "Failed"
             # print 'Igloo Ones = '+str(register)
 
         # Turn Igloo Off
@@ -1355,7 +1355,7 @@ class makeGui(Tools):
             register = self.readIgloo(igloo,ones_address, 4)
             if register != all_zeros:
                 print 'Toggle Igloo Power Fail!'
-                return False
+                return "Failed"
             # print 'Igloo Ones = '+str(register)
 
         # Turn Igloo On
@@ -1368,11 +1368,11 @@ class makeGui(Tools):
             register = self.readIgloo(igloo,ones_address, 4)
             if register != all_ones:
                 print 'Toggle Igloo Power Fail!'
-                return False
+                return "Failed"
             # print 'Igloo Ones = '+str(register)
 
         print 'Toggle Igloo Power Success!'
-        return True
+        return "Passed"
 
     # turning igloo on and off using bridge vdd enable register
     def toggleIgloo(self):

@@ -244,7 +244,7 @@ class makeGui(Tools):
         self.info_nameLabel.pack(side=LEFT)
 
         # Make and pack a listbox to pick which QIE card to talk to:
-        self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar, "Nesta Lenhert", "Chris Madrid", "Bryan Caraway", "Brooks McMaster", "Caleb Smith")
+        self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar, "Nesta Lenhert", "Chris Madrid", "Bryan Caraway", "Brooks McMaster", "Caleb Smith", "Danny \"HF\" Noonan")
         self.info_nameBox.pack(side=LEFT)
         self.info_nameBox.configure(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
         self.info_nameBox["menu"].config(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
@@ -276,9 +276,9 @@ class makeGui(Tools):
         ######################################
 
         self.testLabelList = ["BPL-GND","1.2-GND","1.5-GND","2.5-GND",  
-                              "3.3-GND","5.0-GND","1.2-1.5","1.2-2.5","1.5-2.5",
-                              "1.2-3.3","1.5-3.3","2.5-3.3","1.2-5.0", "1.5-5.0",
-                              "2.5-5.0", "3.3-5.0", "SuplCur", "Vis", "Program"]
+                              "3.3-GND","5.0-GND","1.2-1.5","1.2-2.5","1.2-3.3",
+                              "1.2-AVCC","1.5-2.5","1.5-3.3","1.5-AVCC", "2.5-3.3",
+                              "2.5-AVCC", "3.3-AVCC", "SuplCur", "Vis", "Program"]
         
 
         # Make a label for the entire left frame
@@ -832,12 +832,12 @@ class makeGui(Tools):
         ###                          ###
         ################################
 
-        self.testDescDict = {"BPL-GND" : "Bkpln to GND", "1.2-GND" : "1.2V to GND", "1.5-GND" : "1.5V to GND",
-                     "2.5-GND" : "2.5V to GND", "3.3-GND" : "3.3V to GND", "5.0-GND" : "5.0V to GND",
-                     "1.2-1.5" : "1.2V to 1.5V", "1.2-2.5" : "1.2V to 2.5V", "1.5-2.5" : "1.5V to 2.5V", "1.2-3.3" : "1.2V to 3.3V",
-                     "1.5-3.3" : "1.5V to 3.3V", "2.5-3.3" : "2.5V to 3.3V", "1.2-5.0" : "1.2V to 5.0V", "1.5-5.0" : "1.5V to 5.0V",
-                     "2.5-5.0" : "2.5V to 5.0V", "3.3-5.0" : "3.3V to 5.0V",
-                     "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK"}
+        self.testDescDict = {"BPL-GND" : "  Bkpln to GND", "1.2-GND" : "1.2V to GND", "1.5-GND" : "1.5V to GND",
+                     "2.5-GND" : "2.5V to GND", "3.3-GND" : "3.3V to GND  ", "5.0-GND" : "  5.0V to GND",
+                     "1.2-1.5" : "1.2V to 1.5V", "1.2-2.5" : "1.2V to 2.5V", "1.2-3.3" : "1.2V to 3.3V", "1.2-AVCC" : "1.2V to AVCC  ",
+                     "1.5-2.5" : "  1.5V to 2.5V", "1.5-3.3" : "1.5V to 3.3V", "1.5-AVCC" : "1.5V to AVCC", "2.5-3.3" : "2.5V to 3.3V",
+                     "2.5-AVCC" : "2.5V to AVCC  ", "3.3-AVCC" : "  3.3V to AVCC",
+                     "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK  "}
 
 #       self.testPassList = [StringVar() for i in range(0,19)]
 

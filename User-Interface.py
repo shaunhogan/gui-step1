@@ -94,8 +94,8 @@ class makeGui(Tools):
         self.iglooMajVerEntryB     =  StringVar()
         self.iglooMinVerEntryT     =  StringVar()
         self.iglooMinVerEntryB     =  StringVar()
+        self.check                 =  StringVar()
         self.overwriteVar          =  IntVar()
-        self.check                 =  0
 
         # Place an all-encompassing frame in the parent window. All of the following
         # frames will be placed here (topMost_frame) and not in the parent window.
@@ -244,7 +244,7 @@ class makeGui(Tools):
         self.info_nameLabel.pack(side=LEFT)
 
         # Make and pack a listbox to pick which QIE card to talk to:
-        self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar, "Nesta Lenhert", "Chris Madrid", "Bryan Caraway", "Brooks McMaster", "Caleb Smith")
+        self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar, "Nesta Lenhert", "Chris Madrid", "Bryan Caraway", "Brooks McMaster", "Caleb Smith", "Danny \"HF\" Noonan")
         self.info_nameBox.pack(side=LEFT)
         self.info_nameBox.configure(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
         self.info_nameBox["menu"].config(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
@@ -276,9 +276,9 @@ class makeGui(Tools):
         ######################################
 
         self.testLabelList = ["BPL-GND","1.2-GND","1.5-GND","2.5-GND",  
-                              "3.3-GND","5.0-GND","1.2-1.5","1.2-2.5","1.5-2.5",
-                              "1.2-3.3","1.5-3.3","2.5-3.3","1.2-5.0", "1.5-5.0",
-                              "2.5-5.0", "3.3-5.0", "SuplCur", "Vis", "Program"]
+                              "3.3-GND","5.0-GND","1.2-1.5","1.2-2.5","1.2-3.3",
+                              "1.2-AVCC","1.5-2.5","1.5-3.3","1.5-AVCC", "2.5-3.3",
+                              "2.5-AVCC", "3.3-AVCC", "SuplCur", "Vis", "Program"]
         
 
         # Make a label for the entire left frame
@@ -562,7 +562,7 @@ class makeGui(Tools):
             background=self.rightc,
             foreground=self.fontc,
             padx=button_padx,
-            pady=button_pady,
+            pady=button_pady
             )
         self.experi_uniqueID_lbl.pack(side=LEFT)
 
@@ -573,9 +573,31 @@ class makeGui(Tools):
             textvariable=self.uniqueIDEntry,
             state="readonly",
             readonlybackground=self.rightc,
-            foreground=self.fontc
+            foreground=self.fontc,
+            width=21
             )
-        self.experi_uniqueID_entry.pack(side=RIGHT)
+        self.experi_uniqueID_entry.pack(side=LEFT)
+
+        self.experi_uniqueID_lbl = Label(self.experi_subTop2_frame, text="Checksum: ")
+        self.experi_uniqueID_lbl.configure(
+            background=self.rightc,
+            foreground=self.fontc,
+            padx=button_padx,
+            pady=button_pady
+            )
+        self.experi_uniqueID_lbl.pack(side=LEFT)
+       
+        # Make an entry box for the Checksum
+        # Make a entrybox for results
+        self.experi_uniqueID_entry = Entry(
+            self.experi_subTop2_frame,
+            textvariable=self.check,
+            state="readonly",
+            readonlybackground=self.rightc,
+            foreground=self.fontc,
+            width=6
+            )
+        self.experi_uniqueID_entry.pack(side=LEFT)
 
         # Make a label for the temperature entry
         self.experi_temperature_lbl = Label(self.experi_subTop2_0_frame, text="Temperature: ")
@@ -759,7 +781,8 @@ class makeGui(Tools):
             textvariable=self.iglooToggleEntry,
             state="readonly",
             readonlybackground=self.rightc,
-            foreground=self.fontc
+            foreground=self.fontc,
+            width=6
             )
         self.iglooToggle_entry.pack(side=RIGHT)
 
@@ -810,12 +833,12 @@ class makeGui(Tools):
         ###                          ###
         ################################
 
-        self.testDescDict = {"BPL-GND" : "Bkpln to GND", "1.2-GND" : "1.2V to GND", "1.5-GND" : "1.5V to GND",
-                     "2.5-GND" : "2.5V to GND", "3.3-GND" : "3.3V to GND", "5.0-GND" : "5.0V to GND",
-                     "1.2-1.5" : "1.2V to 1.5V", "1.2-2.5" : "1.2V to 2.5V", "1.5-2.5" : "1.5V to 2.5V", "1.2-3.3" : "1.2V to 3.3V",
-                     "1.5-3.3" : "1.5V to 3.3V", "2.5-3.3" : "2.5V to 3.3V", "1.2-5.0" : "1.2V to 5.0V", "1.5-5.0" : "1.5V to 5.0V",
-                     "2.5-5.0" : "2.5V to 5.0V", "3.3-5.0" : "3.3V to 5.0V",
-                     "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK"}
+        self.testDescDict = {"BPL-GND" : "  Bkpln to GND", "1.2-GND" : "1.2V to GND", "1.5-GND" : "1.5V to GND",
+                     "2.5-GND" : "2.5V to GND", "3.3-GND" : "3.3V to GND  ", "5.0-GND" : "  5.0V to GND",
+                     "1.2-1.5" : "1.2V to 1.5V", "1.2-2.5" : "1.2V to 2.5V", "1.2-3.3" : "1.2V to 3.3V", "1.2-AVCC" : "1.2V to AVCC  ",
+                     "1.5-2.5" : "  1.5V to 2.5V", "1.5-3.3" : "1.5V to 3.3V", "1.5-AVCC" : "1.5V to AVCC", "2.5-3.3" : "2.5V to 3.3V",
+                     "2.5-AVCC" : "2.5V to AVCC  ", "3.3-AVCC" : "  3.3V to AVCC",
+                     "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK  "}
 
 #       self.testPassList = [StringVar() for i in range(0,19)]
 
@@ -1031,8 +1054,7 @@ class makeGui(Tools):
         self.cardInfo.Igloo_FPGA_Control = self.iglooToggleEntry.get()
         self.cardInfo.User = self.nameChoiceVar.get()
         self.cardInfo.DateRun = str(datetime.now())
-        self.cardInfo.Checksum = self.check
-        print self.check
+        self.cardInfo.Checksum = self.check.get()
 
         fileString = self.barcodeEntry.get()+"_step2_raw.json"
 
@@ -1060,6 +1082,7 @@ class makeGui(Tools):
         self.iglooMajVerEntryB.set("")
         self.iglooMinVerEntryB.set("")
         self.iglooToggleEntry.set("")
+        self.check.set("")
         self.overwriteVar.set(0)
 
         # On the gui, change all the tests to "N/A"
@@ -1235,12 +1258,12 @@ class makeGui(Tools):
         raw_bus = self.myBus.sendBatch()
         
         # Verify checksum
-        self.check = Checksum(raw_bus[-1],0).result
-        if self.check is 0: # passed checksum test
-            self.check = 1
+        selfcheck = Checksum(raw_bus[-1],0).result
+        if selfcheck is 0: # passed checksum test
+            self.check.set("Passed")
             print "UniqueID checksum test passed"
         else:               # failed checksum test
-            self.check = 0
+            self.check.set("Failed")
             print "UniqueID checksum test failed"            
         
         # I2C_ERROR
@@ -1295,7 +1318,7 @@ class makeGui(Tools):
         print "{0} Igloo2 FPGA Bottom Minor Firmware Version = {1}".format(self.igloo, minorIglooVerB)
 
         # Verify that the Igloo can be power toggled
-        self.iglooToggleEntry.set(str(self.checkIglooToggle()))
+        self.iglooToggleEntry.set(self.checkIglooToggle())
 
 #########################################
 #   Functions to check igloo toggle     #
@@ -1320,7 +1343,7 @@ class makeGui(Tools):
             register = self.readIgloo(igloo,ones_address, 4)
             if register != all_ones:
                 print 'Toggle Igloo Power Fail!'
-                return False
+                return "Failed"
             # print 'Igloo Ones = '+str(register)
 
         # Turn Igloo Off
@@ -1333,7 +1356,7 @@ class makeGui(Tools):
             register = self.readIgloo(igloo,ones_address, 4)
             if register != all_zeros:
                 print 'Toggle Igloo Power Fail!'
-                return False
+                return "Failed"
             # print 'Igloo Ones = '+str(register)
 
         # Turn Igloo On
@@ -1346,11 +1369,11 @@ class makeGui(Tools):
             register = self.readIgloo(igloo,ones_address, 4)
             if register != all_ones:
                 print 'Toggle Igloo Power Fail!'
-                return False
+                return "Failed"
             # print 'Igloo Ones = '+str(register)
 
         print 'Toggle Igloo Power Success!'
-        return True
+        return "Passed"
 
     # turning igloo on and off using bridge vdd enable register
     def toggleIgloo(self):

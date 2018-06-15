@@ -1276,7 +1276,7 @@ class makeGui(Tools):
         #cooked_bus = self.serialNum(cooked_bus)
         self.uniqueIDEntry.set(self.toHex(cooked_bus))
         self.uniqueIDPass = self.uniqueIDEntry.get()
-        self.uniqueIDEntry.set("0x"+self.uniqueIDPass[4:(len(self.uniqueIDPass)-4)])
+        self.uniqueIDEntry.set("0x" + self.uniqueIDPass[2:10].upper() + "_0x" + self.uniqueIDPass[10:18].upper())
 
         print "UniqueID: {0}".format(self.uniqueIDEntry.get())
 

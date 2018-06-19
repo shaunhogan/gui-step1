@@ -144,8 +144,8 @@ class Tools:
         #zeros = "".join(list('0' for i in xrange(total_length - message_length)))
         #zeros = (total_length - message_length) * "0"
         #hex_message = zeros + hex_message
-        print "In getMessageList(): hex value = 0x{0:x}".format(value)
-        print "In getMessageList(): hex message = {0}".format(hex_message)
+        #print "In getMessageList(): hex value = 0x{0:x}".format(value)
+        #print "In getMessageList(): hex message = {0}".format(hex_message)
         mList = list(int(hex_message[a:a+2],16) for a in xrange(0,total_length,2))
         mList.reverse()
         return mList
@@ -154,12 +154,27 @@ class Tools:
 #   Methods for communication (read,write) with FPGAs (Bridge, Igloo)   #
 #########################################################################
 
+    def multiplex(self):
+
+        if self.jslot in [18,19,20,21]:
+            self.myBus.write(0x72, [0x01])
+            self.myBus.write(0x74,[0x18])
+        if self.jslot in [23,24,25,26]:
+            self.myBus.write(0x72, [0x01])
+        if self.jslot in [2,3,4,5]:
+           self.myBus.write(0x72, [0x02])
+           self.myBus.write(0x74, [0x0A])
+        if self.jslot in [7,8,9,10]:
+           self.myBus.write(0x72, [0x02])
+           self.myBus.write(0x74, [0x28])
+
     # Function to read from Bridge FPGA
     def readBridge(self, registerAddress, num_bytes):
         self.myBus.write(0x00,[0x06])
-        self.myBus.sendBatch()
-        self.myBus.write(self.address,[registerAddress])
-        self.myBus.read(self.address, num_bytes)
+        self.multiplex()
+        #self.myBus.sendBatch()
+        self.myBus.write(self.card_i2c_address,[registerAddress])
+        self.myBus.read(self.card_i2c_address, num_bytes)
         message = self.myBus.sendBatch()[-1]
         if message[0] != '0':
             print "In readBridge(): Bridge I2C_ERROR"
@@ -167,7 +182,8 @@ class Tools:
 
     # Function to write to Bridge FPGA
     def writeBridge(self, registerAddress,messageList):
-        self.myBus.write(self.address, [registerAddress]+messageList)
+        self.multiplex()
+        self.myBus.write(self.card_i2c_address, [registerAddress]+messageList)
         return self.myBus.sendBatch()
 
     # Function to read from Igloo FPGA (top or bottom)
@@ -181,7 +197,8 @@ class Tools:
             print "In readIgloo(): igloo = {0} which is not 'top' or 'bototm'".format(igloo)
             sys.exit(1)
         self.myBus.write(0x00,[0x06])
-        self.myBus.write(self.slot,[0x11,i2cSelectValue,0,0,0])
+        self.multiplex()
+        self.myBus.write(self.card_i2c_address,[0x11,i2cSelectValue,0,0,0])
         self.myBus.write(self.iglooAddress,[registerAddress])
         self.myBus.read(self.iglooAddress, num_bytes)
         message = self.myBus.sendBatch()[-1]

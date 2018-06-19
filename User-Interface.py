@@ -115,7 +115,7 @@ class makeGui(Tools):
         #---------- end layout constants ------
         # Creates hotkey bindings for Pass/Fail buttons
         if (not listbuttons) and (lockout is not 2):
-            hotkeys = ['1','2','3','4','5','q','w','e','r','t','a','s','d','f','g','z','x','c','v']
+            hotkeys = ['1','2','3','4','5','q','w','e','r','t','a','s','d','f','g','z','x','o','p']
             for i in range(len(hotkeys)):
                 parent.bind(hotkeys[i], partial(self.togglepstate,i))
 
@@ -187,10 +187,6 @@ class makeGui(Tools):
             pady=frame_pady
             )
 
-        if not (listbuttons):
-            hotkeys = ['1','2','3','4','5','q','w','e','r','t','a','s','d','f','g','z','x','c','v']
-            for i in range(len(hotkeys)):
-                parent.bind(hotkeys[i], partial(self.togglepstate,i))
         ##########################################
         ###                                    ###
         ###     BEGIN MAKING WIDGETS           ###
@@ -278,7 +274,7 @@ class makeGui(Tools):
         self.testLabelList = ["BPL-GND","1.2-GND","1.5-GND","2.5-GND",  
                               "3.3-GND","5.0-GND","1.2-1.5","1.2-2.5","1.2-3.3",
                               "1.2-AVCC","1.5-2.5","1.5-3.3","1.5-AVCC", "2.5-3.3",
-                              "2.5-AVCC", "3.3-AVCC", "SuplCur", "Vis", "Program"]
+                              "2.5-AVCC", "3.3-AVCC", "Vis", "SuplCur","Program"]
         
 
         # Make a label for the entire left frame
@@ -313,6 +309,16 @@ class makeGui(Tools):
             side=TOP,
             ipadx=frame_ipadx, padx=frame_padx,
             ipady=frame_ipady, pady=frame_pady,
+            )
+
+        #!!!TEST!!!
+
+        self.experi_subTop2_6_fText = Frame(self.experiment_frame,background=self.rightc)
+        self.experi_subTop2_6_fText.pack(
+            side=TOP,
+            ipadx=frame_ipadx,
+            ipady=frame_ipady,
+            padx=frame_padx,
             )
 
         # Make top 2 subframe
@@ -802,10 +808,13 @@ class makeGui(Tools):
         self.experi_uniqueID_give.configure(bg=self.buttonsc[2],fg=self.fontc,activebackground=self.dimbuttonsc[2],activeforeground=self.fontc)
         self.experi_uniqueID_give.pack(side=TOP)
 
+#!!!!!!!!!!!!!!!TEST AREA!!!!!!!!!!!!!!!#
         # Make a line of hypens
-        self.experi_hyphenLine = Label(self.experi_subTop2_6_frame, text="----------------------------------")
-        self.experi_hyphenLine.configure(bg=self.rightc,fg=self.fontc,padx=button_padx,pady=button_pady)
-        self.experi_hyphenLine.pack()
+        #self.experi_hyphenLine = Label(self.experi_subTop2_6_frame, text="----------------------------------")
+        #self.experi_hyphenLine.configure(bg=self.rightc,fg=self.fontc,padx=button_padx,pady=button_pady)
+        #self.experi_hyphenLine.pack()
+
+
 
         # Make a label for the GPIO selection
         self.gpioSelect_label = Label(self.experi_subTop2_7_frame, text="Select GPIO Option: ")
@@ -837,8 +846,8 @@ class makeGui(Tools):
                      "2.5-GND" : "2.5V to GND", "3.3-GND" : "3.3V to GND  ", "5.0-GND" : "  5.0V to GND",
                      "1.2-1.5" : "1.2V to 1.5V", "1.2-2.5" : "1.2V to 2.5V", "1.2-3.3" : "1.2V to 3.3V", "1.2-AVCC" : "1.2V to AVCC  ",
                      "1.5-2.5" : "  1.5V to 2.5V", "1.5-3.3" : "1.5V to 3.3V", "1.5-AVCC" : "1.5V to AVCC", "2.5-3.3" : "2.5V to 3.3V",
-                     "2.5-AVCC" : "2.5V to AVCC  ", "3.3-AVCC" : "  3.3V to AVCC",
-                     "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK  "}
+                     "2.5-AVCC" : "2.5V to AVCC  ", "3.3-AVCC" : "  3.3V to AVCC", "Vis" : "Visual Inspec.  ", "SuplCur" : "  Supply Current","Program" : "Programming OK  "}
+
 
 #       self.testPassList = [StringVar() for i in range(0,19)]
 
@@ -892,7 +901,7 @@ class makeGui(Tools):
             self.testPassLabel.configure(width=15)
             self.testPassLabel.pack(side=LEFT)
 
-        for i in range(15,19):
+        for i in range(15,17):
             if (listbuttons):
                 self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
                 self.testPassInfo[i]["menu"].config(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
@@ -905,6 +914,25 @@ class makeGui(Tools):
             self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=self.midc,fg=self.fontc)
             self.testPassLabel.configure(width=20)
             self.testPassLabel.pack(side=LEFT)
+
+        #!!!!!!!!!!!!!!!TEST AREA!!!!!!!!!!!!!!!#
+
+
+
+     
+        for i in range(17,19):
+            if (listbuttons):
+                self.testPassInfo.append(OptionMenu(self.experi_subTop2_6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
+                self.testPassInfo[i]["menu"].config(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
+                self.testPassList[i].set("N/A")
+            else:
+                self.testPassInfo.append(Button(self.experi_subTop2_6_frame,text="N/A",command=partial(self.togglepstate,i)))
+                self.testPassInfo[i].configure(width=16,bg=self.buttonsc[3],fg=self.fontc,activebackground=self.dimbuttonsc[3],activeforeground=self.fontc)
+                self.testPassInfo[i].pack(side=LEFT)
+     
+                self.testPassLabel=Label(self.experi_subTop2_6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg=self.midc,fg=self.fontc)
+                self.testPassLabel.configure(width=20)
+                self.testPassLabel.pack(side=LEFT)
 
         # Make a checkbox to overwrite/not overwrite pre-existing data
         self.overwriteBox = Checkbutton(self.experi_subTop7_frame, text="Overwrite existing QIE Card data (if applicable)?", variable=self.overwriteVar)
@@ -977,7 +1005,7 @@ class makeGui(Tools):
         if self.overwriteVar.get() == 1: self.initialTest.Overwrite = True
         if self.overwriteVar.get() == 0: self.initialTest.Overwrite = False
 
-        for i in range(len(self.testPassList)):
+        for i in range(len(self.testPassList)-2):       #Last two are part of the firmware check
             if self.testPassList[i].get() == "Pass":
                 self.initialTest.testResults[self.testLabelList[i]] = True
             elif self.testPassList[i].get() == "Fail":
@@ -1055,6 +1083,10 @@ class makeGui(Tools):
         self.cardInfo.User = self.nameChoiceVar.get()
         self.cardInfo.DateRun = str(datetime.now())
         self.cardInfo.Checksum = self.check.get()
+        self.cardInfo.SupplyI = self.testPassList[17].get() + "ed"
+        self.cardInfo.PrgmChk = self.testPassList[18].get() + "ed"
+
+        print self.cardInfo.SupplyI
 
         fileString = self.barcodeEntry.get()+"_step2_raw.json"
 

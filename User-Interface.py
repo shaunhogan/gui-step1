@@ -311,8 +311,6 @@ class makeGui(Tools):
             ipady=frame_ipady, pady=frame_pady,
             )
 
-        #!!!TEST!!!
-
         self.experi_subTop2_6_fText = Frame(self.experiment_frame,background=self.rightc)
         self.experi_subTop2_6_fText.pack(
             side=TOP,
@@ -808,7 +806,6 @@ class makeGui(Tools):
         self.experi_uniqueID_give.configure(bg=self.buttonsc[2],fg=self.fontc,activebackground=self.dimbuttonsc[2],activeforeground=self.fontc)
         self.experi_uniqueID_give.pack(side=TOP)
 
-#!!!!!!!!!!!!!!!TEST AREA!!!!!!!!!!!!!!!#
         # Make a line of hypens
         #self.experi_hyphenLine = Label(self.experi_subTop2_6_frame, text="----------------------------------")
         #self.experi_hyphenLine.configure(bg=self.rightc,fg=self.fontc,padx=button_padx,pady=button_pady)
@@ -914,10 +911,6 @@ class makeGui(Tools):
             self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=self.midc,fg=self.fontc)
             self.testPassLabel.configure(width=20)
             self.testPassLabel.pack(side=LEFT)
-
-        #!!!!!!!!!!!!!!!TEST AREA!!!!!!!!!!!!!!!#
-
-
 
      
         for i in range(17,19):
@@ -1085,8 +1078,6 @@ class makeGui(Tools):
         self.cardInfo.Checksum = self.check.get()
         self.cardInfo.SupplyI = self.testPassList[17].get() + "ed"
         self.cardInfo.PrgmChk = self.testPassList[18].get() + "ed"
-
-        print self.cardInfo.SupplyI
 
         fileString = self.barcodeEntry.get()+"_step2_raw.json"
 

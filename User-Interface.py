@@ -49,14 +49,11 @@ class makeGui(Tools):
         self.myBus = client.webBus("pi7",0)
 
         # Create a permanent I2C address of QCard (slot 1)
-        self.address = 0x19
+        self.card_i2c_address = 0x19
         
         # Permanent I2C address of Igloo FPGA
         self.iglooAddress = 0x09
         
-        # Specify "top" or "bottom" Igloo FPGA
-        self.igloo = "top"
-
         # Standard help message for I2C_ERROR
         self.I2C_ERROR_HELP = "Please confirm that the card is in the selected slot.\nPlease confirm that the power source is on."
 
@@ -1133,20 +1130,20 @@ class makeGui(Tools):
     # Duplicate of above function, but for non-event cases (IE hitting the "Clear" button)
     def infoValChangeNonevent(self):
         for i in range(len(self.testPassInfo)):
-                         if (self.testPassList[i].get() == "Fail"):
-                                 self.testPassInfo[i].configure(bg=self.buttonsc[2],fg=self.fontc,activebackground=self.dimbuttonsc[2],activeforeground=self.fontc)
-                         elif (self.testPassList[i].get() == "Pass"):
-                                 self.testPassInfo[i].configure(bg=self.buttonsc[8],fg=self.fontc,activebackground=self.dimbuttonsc[8],activeforeground=self.fontc)
-                         else:
-                                 self.testPassInfo[i].configure(bg=self.buttonsc[3],fg=self.fontc,activebackground=self.dimbuttonsc[3],activeforeground=self.fontc)
+            if (self.testPassList[i].get() == "Fail"):
+                self.testPassInfo[i].configure(bg=self.buttonsc[2],fg=self.fontc,activebackground=self.dimbuttonsc[2],activeforeground=self.fontc)
+            elif (self.testPassList[i].get() == "Pass"):
+                self.testPassInfo[i].configure(bg=self.buttonsc[8],fg=self.fontc,activebackground=self.dimbuttonsc[8],activeforeground=self.fontc)
+            else:
+                self.testPassInfo[i].configure(bg=self.buttonsc[3],fg=self.fontc,activebackground=self.dimbuttonsc[3],activeforeground=self.fontc)
 
 #############################################################################
 
     # Opens the proper GPIO slot. Used for programming cards.
     def gpioBttnPress(self,*args):
         jSlotDict = {"J2 and J18" : 0x29, "J3 and J19" : 0x89, "J4 and J20" : 0xA9,
-                    "J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
-                    "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
+                     "J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
+                     "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
 
 
         # Full Backplane Functionality
@@ -1156,19 +1153,20 @@ class makeGui(Tools):
                         "J9 and J24" : [0xAA,0x8A], "J10 and J23" : [0x4A,0x2A]}
 
         dictStringToInts = {"J2 and J21" : [2, 21], "J3 and J20" : [3, 20],
-                        "J4 and J19" : [4, 19], "J5 and J18" : [5, 18],
-                        "J7 and J26" : [7, 26], "J8 and J25" : [8, 25],
-                        "J9 and J24" : [9, 24], "J10 and J23" : [10, 23]}
+                            "J4 and J19" : [4, 19], "J5 and J18" : [5, 18],
+                            "J7 and J26" : [7, 26], "J8 and J25" : [8, 25],
+                            "J9 and J24" : [9, 24], "J10 and J23" : [10, 23]}
 
         gpioVals = newJSlotDict[self.gpioChoiceVar.get()]
         self.jslots = dictStringToInts[self.gpioChoiceVar.get()]
         print 'GPIO '+self.gpioChoiceVar.get()+' values = '+str(gpioVals)
 
         for gpioValsIndex in xrange(len(gpioVals)):
+            self.jslot = self.jslots[gpioValsIndex]
             gpioVal = gpioVals[gpioValsIndex]
-            if gpioValsIndex == 0:
+            if gpioValsIndex == 0: # right side, J2-10
                 self.myBus.write(0x72, [0x02])
-            else:
+            else: # left side, J18-26
                 self.myBus.write(0x72, [0x01])
             batch = self.myBus.sendBatch()
             self.myBus.write(0x74, [0x08]) # PCA9538 is bit 3 on ngccm mux
@@ -1176,9 +1174,9 @@ class makeGui(Tools):
             #backplane power enable and backplane reset
             #register 3 is control reg for i/o modes
             self.myBus.write(0x70,[0x03,0x00]) # sets all GPIO pins to 'output' mode
-            self.myBus.write(0x70,[0x01,0x08])
-            self.myBus.write(0x70,[0x01,0x18]) # GPIO reset is 10
-            self.myBus.write(0x70,[0x01,0x08])
+            self.myBus.write(0x70,[0x01,0x08]) # GPIO value 0x08: bakplane power enable 1
+            self.myBus.write(0x70,[0x01,0x18]) # GPIO reset 0x18: backplane reset 1
+            self.myBus.write(0x70,[0x01,0x08]) # GPIO reset 0x08: backplane reset 0
     
             #jtag selectors finnagling for slot 26
             self.myBus.write(0x70,[0x01,gpioVal])
@@ -1200,6 +1198,25 @@ class makeGui(Tools):
             else:
                 print "GPIO Error: unexpected message is {0}".format(message)
 
+            
+            # select JTAG to program top/bottom igloo using Bridge register BRDG_ADDR_IGLO_CONTROL: 0x22
+            igloo = "top"
+            iglooControl = 0x22
+            message = self.readBridge(iglooControl,4)
+            print "Reading from BRDG_ADDR_IGLO_CONTROL before selecting JTAG: message = {0}".format(message)
+            value = self.getValue(message)
+            # select top (0) or bottom (1) igloo to program; maintain settings for other bits
+            if igloo == "top":
+                value = value & 0xFFE
+            if igloo == "bottom":
+                value = value | 0x001
+            messageList = self.getMessageList(value,4)
+            self.writeBridge(iglooControl,messageList)
+            message = self.readBridge(iglooControl,4)
+            print "Reading from BRDG_ADDR_IGLO_CONTROL after selecting JTAG: message = {0}".format(message)
+            
+            print "Ready to program {0} igloo".format(igloo)
+
 ##################################################################################
 
     def getUniqueIDPress_left(self):
@@ -1216,15 +1233,16 @@ class makeGui(Tools):
 
     # Read UniqueID, Bridge and Igloo Firmware Versions
     def getUniqueIDPress(self):
-
-        bridgeDict = { 18 : 0x19, 19 : 0x1A, 20: 0x1B, 21 : 0x1C,
-                       23 : 0x19, 24 : 0x1A, 25: 0x1B, 26 : 0x1C,
-                        2 : 0x19,  3 : 0x1A,  4 : 0x1B, 5 : 0x1C,
-                        7 : 0x19,  8 : 0x1A,  9: 0x1B, 10 : 0x1C }
+        
+        """
+        bridgeDict = { 18 : 0x19, 19 : 0x1A, 20 : 0x1B, 21 : 0x1C,
+                       23 : 0x19, 24 : 0x1A, 25 : 0x1B, 26 : 0x1C,
+                        2 : 0x19,  3 : 0x1A,  4 : 0x1B,  5 : 0x1C,
+                        7 : 0x19,  8 : 0x1A,  9 : 0x1B, 10 : 0x1C }
 
         if self.readFromLeft:
             self.jslot = self.jslots[1]
-            self.slot = bridgeDict[self.jslot]
+            self.card_i2c_address = bridgeDict[self.jslot]
             if self.jslot in [18,19,20,21]:
                 self.myBus.write(0x72, [0x01])
                 self.myBus.write(0x74,[0x18])
@@ -1233,23 +1251,36 @@ class makeGui(Tools):
                 self.myBus.write(0x74,[0x09])
         else:
             self.jslot = self.jslots[0]
-            self.slot = bridgeDict[self.jslot]
+            self.card_i2c_address = bridgeDict[self.jslot]
             if self.jslot in [2,3,4,5]:
                self.myBus.write(0x72, [0x02])
                self.myBus.write(0x74, [0x0A])
             if self.jslot in [7,8,9,10]:
                self.myBus.write(0x72, [0x02])
                self.myBus.write(0x74, [0x28])
+        """
 
+        if self.readFromLeft:
+            self.jslot = self.jslots[1]
+        else:
+            self.jslot = self.jslots[0]
+        self.multiplex()
         self.myBus.sendBatch()
+        
+        bridgeDict = { 18 : 0x19, 19 : 0x1A, 20 : 0x1B, 21 : 0x1C,
+                       23 : 0x19, 24 : 0x1A, 25 : 0x1B, 26 : 0x1C,
+                        2 : 0x19,  3 : 0x1A,  4 : 0x1B,  5 : 0x1C,
+                        7 : 0x19,  8 : 0x1A,  9 : 0x1B, 10 : 0x1C }
+        self.card_i2c_address = bridgeDict[self.jslot]
 
         print "Reading Unique ID and Firmware versions."
-        print "JSlot = {0} ; I2C_Address = 0x{1:02x}".format(self.jslot, self.slot)
+        print "JSlot = {0} ; I2C_Address = 0x{1:02x}".format(self.jslot, self.card_i2c_address)
 
         # Getting unique ID
         # 0x05000000ea9c8b7000   <- From main gui
         self.myBus.write(0x00,[0x06])
-        self.myBus.write(self.slot,[0x11,0x04,0,0,0])
+        self.multiplex()
+        self.myBus.write(self.card_i2c_address,[0x11,0x04,0,0,0])
         self.myBus.write(0x50,[0x00])
         self.myBus.read(0x50, 8)
         
@@ -1281,21 +1312,23 @@ class makeGui(Tools):
         print "UniqueID: {0}".format(self.uniqueIDEntry.get())
 
         # Getting bridge firmware
-        self.myBus.write(0x00,[0x06])
-        self.myBus.write(self.slot,[0x04])
-        self.myBus.read(self.slot, 4)
-        raw_data = self.myBus.sendBatch()[-1]
-        med_rare_data = raw_data[2:]
-        cooked_data = self.reverseBytes(med_rare_data)
-        data_well_done = self.toHex(cooked_data)    # my apologies for the cooking references
-        data_well_done = data_well_done[2:]
-        print 'Bridge FPGA Firmware Version = 0x'+str(data_well_done)
-        self.firmwareVerEntry.set("0x"+data_well_done[0:2])    #these are the worst (best?) variable names ever
-        self.firmwareVerMinEntry.set("0x"+data_well_done[2:4])
-        self.firmwareVerOtherEntry.set("0x"+data_well_done[4:8])
+        #self.myBus.write(0x00,[0x06])
+        #self.myBus.write(self.card_i2c_address,[0x04])
+        #self.myBus.read(self.card_i2c_address, 4)
+        #raw_data = self.myBus.sendBatch()[-1]
+        #med_rare_data = raw_data[2:]
+        #cooked_data = self.reverseBytes(med_rare_data)
+        bridge_fw_message = self.readBridge(0x04,4)
+        bridge_fw = self.toHex(bridge_fw_message)    # my apologies for the cooking references
+        bridge_fw = bridge_fw[2:]
+        print 'Bridge FPGA Firmware Version = 0x'+str(bridge_fw)
+        self.firmwareVerEntry.set("0x"+bridge_fw[0:2])    #these are the worst (best?) variable names ever
+        self.firmwareVerMinEntry.set("0x"+bridge_fw[2:4])
+        self.firmwareVerOtherEntry.set("0x"+bridge_fw[4:8])
 
         # Getting temperature
-        self.tempEntry.set(str(round(temp.readManyTemps(self.myBus, self.slot, 10, "Temperature", "nohold"),4)))
+        self.multiplex()
+        self.tempEntry.set(str(round(temp.readManyTemps(self.myBus, self.card_i2c_address, 10, "Temperature", "nohold"),4)))
 
         # Getting IGLOO firmware info
         majorIglooVerT = self.readIgloo("top",0x00)
@@ -1312,10 +1345,10 @@ class makeGui(Tools):
         self.iglooMinVerEntryT.set(minorIglooVerT)
         self.iglooMajVerEntryB.set(majorIglooVerB)
         self.iglooMinVerEntryB.set(minorIglooVerB)
-        print "{0} Igloo2 FPGA Top Major Firmware Version = {1}".format(self.igloo, majorIglooVerT)
-        print "{0} Igloo2 FPGA Top Minor Firmware Version = {1}".format(self.igloo, minorIglooVerT)
-        print "{0} Igloo2 FPGA Bottom Major Firmware Version = {1}".format(self.igloo, majorIglooVerB)
-        print "{0} Igloo2 FPGA Bottom Minor Firmware Version = {1}".format(self.igloo, minorIglooVerB)
+        print "Top Igloo2 FPGA Major Firmware Version = {0}".format(majorIglooVerT)
+        print "Top Igloo2 FPGA Minor Firmware Version = {0}".format(minorIglooVerT)
+        print "Bottom Igloo2 FPGA Major Firmware Version = {0}".format(majorIglooVerB)
+        print "Bottom Igloo2 FPGA Minor Firmware Version = {0}".format(minorIglooVerB)
 
         # Verify that the Igloo can be power toggled
         self.iglooToggleEntry.set(self.checkIglooToggle())

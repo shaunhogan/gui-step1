@@ -30,9 +30,6 @@ lockout=0
 
 class makeGui(Tools):
     def __init__(self, parent, color_themes, color_theme="bright"):
-        #color_themes = ["bright", "dark", "sunrise", "nightfall"]
-        #color_theme = "nightfall"
-
         # color themes
         self.color_themes = color_themes
         self.color_theme = color_theme

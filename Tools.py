@@ -30,7 +30,7 @@ class Tools:
             self.midc="white"
             self.backc="#DDDDDD"
             self.rightc="white"
-            self.buttonsc=["#4E7496","#ADF802","#F36196","#CCDDFF","#FFE699","#FFCC66","#FFA62B","#FFBBBB","#99FF99"]
+            self.buttonsc=["#75BBFD","#C9643B","#EC2D01","#748B97","#48C072","#FF964F","#FFA62B","#FFBBBB","#99FF99"]
             self.dimbuttonsc=self.getDimColors(self.buttonsc, "#222222", -1)
             #self.dimbuttonsc=["#76D3DD","#DDD8AB","#D86050","#AABBDD","#DDC477","#DDAA44","#AA6633","#DD9999","#77DD77"]
             self.dimc="#DDDDDD"
@@ -154,6 +154,7 @@ class Tools:
 #   Methods for communication (read,write) with FPGAs (Bridge, Igloo)   #
 #########################################################################
 
+    # Function to setup multiplex steps for fanout and ngCCM emulator (but without sendbatch)
     def multiplex(self):
 
         if self.jslot in [18,19,20,21]:

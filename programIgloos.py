@@ -50,27 +50,30 @@ if __name__ ==  "__main__":
     else:
         slots = ts.active_slots
     
+    # program top and bottom igloos
+    igloos = ["top","bottom"]
     iglooData = []
     if ts.piStatus and ts.busStatus:
         for slot in slots:
-            print ""
-            print "Initiated Programing of SpecifiedSlot: ", slot
-            print ""
+            for igloo in igloos:
+                print ""
+                print "Initiated Programing of SpecifiedSlot: {0} {1} Igloo FPGA".format(slot,igloo)
+                print ""
 
-            ts.selectGpio(slot)
-            data = ts.readInfo(slot)
-            print "time: ", data["date_time"]
-            print "temp: ", data["temperature"]
+                ts.selectGpio(slot)
+                data = ts.readInfo(slot)
+                print "time: ", data["date_time"]
+                print "temp: ", data["temperature"]
 
-            print "Starting Flashpro batch programming mode"
-            # Please include the correct Microsemi path here 
-            #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:C:\\Users\\pastika\\Desktop\\program_igloo.tcl console_mode:brief", shell=True)
-            sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
-            
-            data = ts.readInfo(slot)
-            print "time: ", data["date_time"]
-            print "temp: ", data["temperature"]
-            iglooData.append(data)
+                print "Starting Flashpro batch programming mode"
+                # Please include the correct Microsemi path here 
+                #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:C:\\Users\\pastika\\Desktop\\program_igloo.tcl console_mode:brief", shell=True)
+                sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
+                
+                data = ts.readInfo(slot)
+                print "time: ", data["date_time"]
+                print "temp: ", data["temperature"]
+                iglooData.append(data)
         for datum in iglooData:
             print "Igloo FW: {0} {1}".format(datum["igloo_fw_maj"], datum["igloo_fw_min"])
     else:

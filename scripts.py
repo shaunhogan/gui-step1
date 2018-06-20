@@ -185,21 +185,21 @@ class Teststand:
         return self.toHex(self.reverseBytes(message[2:]))
 '''
 
-    # Function to read from Igloo FPGA (top or bottom)
+    # Function to read from Igloo FPGA (top or bot)
     def readIgloo(self, igloo, registerAddress, num_bytes=1):
         i2cSelectValue = -1
-        iglooSelectDictionary = {"top":0x03, "bottom":0x06}
+        iglooSelectDictionary = {"top":0x03, "bot":0x06}
         try:
             i2cSelectValue = iglooSelectDictionary[igloo]
         except KeyError:
-            print "In readIgloo(): igloo = {0} which is not 'top' or 'bototm'".format(igloo)
+            print "In readIgloo(): igloo = {0} which is not 'top' or 'bot'".format(igloo)
             print "In readIgloo(): i2cSelectValue = {0} (should be 0x03 or 0x06, -1 is the default if not set)".format(i2cSelectValue)
             sys.exit(1)
         self.myBus.write(0x00,[0x06])
         self.selectSlot(self.jslot) # does multiplex
         #self.multiplex()
         self.myBus.write(self.card_i2c_address,[0x11,i2cSelectValue,0,0,0])
-        self.myBus.write(self.iglooAddress,[registerAddress])
+        self.myBus.write(self.iglooAddress, [registerAddress])
         self.myBus.read(self.iglooAddress, num_bytes)
         message = self.myBus.sendBatch()[-1]
         if message[0] != '0':
@@ -339,16 +339,16 @@ class Teststand:
             print 'GPIO Choice Error... state of confusion!'
 
     
-    # select JTAG to program top/bottom igloo using Bridge register BRDG_ADDR_IGLO_CONTROL: 0x22
+    # select JTAG to program top/bot igloo using Bridge register BRDG_ADDR_IGLO_CONTROL: 0x22
     def jtagSelectIgloo(self, igloo):
         iglooControl = 0x22
         message = self.readBridge(iglooControl,4)
         print "Reading from BRDG_ADDR_IGLO_CONTROL before selecting JTAG: message = {0}".format(message)
         value = self.getValue(message)
-        # select top (0) or bottom (1) igloo to program; maintain settings for other bits
+        # select top (0) or bot (1) igloo to program; maintain settings for other bits
         if igloo == "top":
             value = value & 0xFFE
-        if igloo == "bottom":
+        if igloo == "bot":
             value = value | 0x001
         messageList = self.getMessageList(value,4)
         self.writeBridge(iglooControl,messageList)
@@ -394,9 +394,12 @@ class Teststand:
         self.temp = str(round(temp.readManyTemps(self.myBus, self.card_i2c_address, 10, "Temperature", "nohold"),4))
 
         # Getting IGLOO firmware info
-        self.igloo_fw_maj = self.readIgloo(0x00, 1)
-        self.igloo_fw_min = self.readIgloo(0x01, 1)
-        print 'Igloo FW: {0} {1}'.format(self.igloo_fw_maj, self.igloo_fw_min)
+        self.top_igloo_fw_maj = self.readIgloo("top", 0x00)
+        self.top_igloo_fw_min = self.readIgloo("top", 0x01)
+        self.bot_igloo_fw_maj = self.readIgloo("bot", 0x00)
+        self.bot_igloo_fw_min = self.readIgloo("bot", 0x01)
+        print 'Top Igloo FW: {0} {1}'.format(self.top_igloo_fw_maj, self.top_igloo_fw_min)
+        print 'Bottom Igloo FW: {0} {1}'.format(self.bot_igloo_fw_maj, self.bot_igloo_fw_min)
 
         # Return Dictionary
         return self.getInfo()
@@ -408,14 +411,16 @@ class Teststand:
     # Returns dictionary with unique id and firmware versions
     def getInfo(self):
         cardInfo = {}
-        cardInfo["unique_id"]      = self.unique_id
-        cardInfo["bridge_fw_maj"]  = self.bridge_fw_maj
-        cardInfo["bridge_fw_min"]  = self.bridge_fw_min
-        cardInfo["bridge_fw_oth"]  = self.bridge_fw_oth
-        cardInfo["igloo_fw_maj"]   = self.igloo_fw_maj
-        cardInfo["igloo_fw_min"]   = self.igloo_fw_min
-        cardInfo["temperature"]    = self.temp
-        cardInfo["date_time"]      = str(datetime.now())
+        cardInfo["unique_id"]           = self.unique_id
+        cardInfo["bridge_fw_maj"]       = self.bridge_fw_maj
+        cardInfo["bridge_fw_min"]       = self.bridge_fw_min
+        cardInfo["bridge_fw_oth"]       = self.bridge_fw_oth
+        cardInfo["top_igloo_fw_maj"]    = self.top_igloo_fw_maj
+        cardInfo["top_igloo_fw_min"]    = self.top_igloo_fw_min
+        cardInfo["bot_igloo_fw_maj"]    = self.bot_igloo_fw_maj
+        cardInfo["bot_igloo_fw_min"]    = self.bot_igloo_fw_min
+        cardInfo["temperature"]         = self.temp
+        cardInfo["date_time"]           = str(datetime.now())
 
         print "Card info recorded. Merci beaucoup!"
         return cardInfo
@@ -434,10 +439,12 @@ class Teststand:
     # Tests for communication with Igloo. 
     def hiDerIgloo(self, jslot):
         self.jslot = jslot
-        igloo_fw_maj = self.readIgloo(0x00, 1)
-        igloo_fw_min = self.readIgloo(0x01, 1)
+        self.top_igloo_fw_maj = self.readIgloo("top", 0x00)
+        self.top_igloo_fw_min = self.readIgloo("top", 0x01)
+        self.bot_igloo_fw_maj = self.readIgloo("bot", 0x00)
+        self.bot_igloo_fw_min = self.readIgloo("bot", 0x01)
         #print "Igloo FW: {0} {1}".format(igloo_fw_maj, igloo_fw_min)
-        return "{0} {1}".format(igloo_fw_maj, igloo_fw_min)
+        return "top: {0} {1} bot: {2} {3}".format(top_igloo_fw_maj, top_igloo_fw_min, bot_igloo_fw_maj, bot_igloo_fw_min)
 
     # Determine active jslots.
     def findActiveSlots(self):

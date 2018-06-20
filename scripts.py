@@ -162,7 +162,7 @@ class Teststand:
         return s.join(message_list)
     
     def readBridge(self, regAddress, num_bytes):
-        self.selectSlot(self.jslot)
+        self.selectSlot(self.jslot) # does multiplex
         self.myBus.write(0x00,[0x06])
         self.myBus.sendBatch()
         self.myBus.write(self.card_i2c_address,[regAddress])
@@ -331,12 +331,12 @@ class Teststand:
         batch = self.myBus.sendBatch()
     
         if (batch[-1] == "1 0"):
-            print "GPIO I2C_ERROR: J{0}".format(self.jslot)
+            print "selectGpio(): GPIO I2C_ERROR: J{0}".format(self.jslot)
         elif (batch[-1] == "0 "+str(gpioVal)):
-            print 'GPIO Selected: J{0}'.format(self.jslot)
+            print "selectGpio(): GPIO Selected: J{0}".format(self.jslot)
     
         else:
-            print 'GPIO Choice Error... state of confusion!'
+            print "selectGpio(): GPIO ERROR: unexpected state"
 
     
     # select JTAG to program top/bot igloo using Bridge register BRDG_ADDR_IGLO_CONTROL: 0x22

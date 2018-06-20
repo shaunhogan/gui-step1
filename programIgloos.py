@@ -75,7 +75,8 @@ if __name__ ==  "__main__":
                 print "temp: ", data["temperature"]
                 iglooData.append(data)
         for datum in iglooData:
-            print "Igloo FW: {0} {1}".format(datum["igloo_fw_maj"], datum["igloo_fw_min"])
+            print "Top Igloo FW: {0} {1}".format(datum["top_igloo_fw_maj"], datum["top_igloo_fw_min"])
+            print "Bottom Igloo FW: {0} {1}".format(datum["bot_igloo_fw_maj"], datum["bot_igloo_fw_min"])
     else:
         print "Failed Raspberry Pi and/or Websocket status."
         print "    1. Did you turn on the Raspberry Pi?"

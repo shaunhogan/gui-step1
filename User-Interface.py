@@ -1384,7 +1384,12 @@ class makeGui(Tools):
 
             # Verify that the Igloo can be power toggled
             self.iglooToggleEntry.set(self.checkIglooToggle())
-
+        else:
+            self.iglooMajVerEntryT.set("")
+            self.iglooMinVerEntryT.set("")
+            self.iglooMajVerEntryB.set("")
+            self.iglooMinVerEntryB.set("")  
+            self.iglooToggleEntry.set("") 
 #########################################
 #   Functions to check igloo toggle     #
 #########################################

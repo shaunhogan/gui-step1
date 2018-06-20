@@ -20,8 +20,8 @@ def writeTCLFile(programFile):
 if __name__ ==  "__main__":
 
     parser = OptionParser()
-    parser.add_option("-f", "--file",        dest="filename",    help="Grab programming file")
-    parser.add_option("-i", "--ip",          dest="ip",          help="Grab programming file")
+    parser.add_option("-f", "--file",        dest="filename",    help="Firmware programming file")
+    parser.add_option("-i", "--ip",          dest="ip",          help="ip address of Raspberry Pi")
     parser.add_option("-s", "--slot",        dest="slot",        help="Specify a single slot", default = -2)
     parser.add_option("-t", "--stop",        dest="stop",        action="store_true",  help="Stop after checking active slots")
     parser.add_option("-b", "--board",       dest="board",       action="store_true",  help="Use fanout board")

@@ -172,7 +172,7 @@ class Teststand:
         #    print 'Bridge I2C_ERROR'
         return self.toHex(self.reverseBytes(message[2:]))
 
-'''
+    """
     def readIgloo(self, regAddress, num_bytes):
         self.selectSlot(self.jslot)
         self.myBus.write(0x00,[0x06])
@@ -183,7 +183,7 @@ class Teststand:
         #if message[0] != '0':
         #    print 'Igloo I2C_ERROR'
         return self.toHex(self.reverseBytes(message[2:]))
-'''
+    """
 
     # Function to read from Igloo FPGA (top or bot)
     def readIgloo(self, igloo, registerAddress, num_bytes=1):
@@ -258,20 +258,21 @@ class Teststand:
         batch = self.myBus.sendBatch()
         error_code = batch[-1][0]
         if error_code == '1':
-            print "Set GPIO output mode fail for channel {0}".format(ch)
+            print "outputMode(): Set GPIO output mode ERROR"
             return False
         else:
-            print "Set GPIO output mode successful for channel {0}".format(ch)
+            print "outputMode(): Set GPIO output mode SUCCESS"
             return True
 
     # Select jslot, open channel on ngCCM Emulator.
     def selectSlot(self, jslot):
         self.jslot = jslot
 
-        bridgeDict = {  2 : 0x19, 3 : 0x1A, 4 : 0x1B, 5 : 0x1C,
-                        7 : 0x19, 8 : 0x1A, 9: 0x1B, 10: 0x1C,
-                       18 : 0x19, 19 : 0x1A, 20: 0x1B, 21 : 0x1C,
-                       23 : 0x19, 24 : 0x1A, 25: 0x1B, 26 : 0x1C,
+        # RMs and CU slots
+        bridgeDict = {  2 : 0x19, 3  : 0x1A, 4  : 0x1B,  5 : 0x1C,
+                        7 : 0x19, 8  : 0x1A, 9  : 0x1B, 10 : 0x1C,
+                       18 : 0x19, 19 : 0x1A, 20 : 0x1B, 21 : 0x1C,
+                       23 : 0x19, 24 : 0x1A, 25 : 0x1B, 26 : 0x1C,
                        12 : 0x19}
 
         # Fanout Board

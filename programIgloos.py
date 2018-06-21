@@ -20,21 +20,22 @@ def writeTCLFile(programFile):
 if __name__ ==  "__main__":
 
     parser = OptionParser()
-    parser.add_option("-f", "--file",        dest="filename",    help="Firmware programming file")
-    parser.add_option("-i", "--ip",          dest="ip",          help="ip address of Raspberry Pi")
-    parser.add_option("-s", "--slot",        dest="slot",        help="Specify a single slot", default = -2)
-    parser.add_option("-t", "--stop",        dest="stop",        action="store_true",  help="Stop after checking active slots")
-    parser.add_option("-b", "--board",       dest="board",       action="store_true",  help="Use fanout board")
-    parser.add_option("-c", "--calibration", dest="calibration", action="store_true",  help="Include calibration unit")
+    parser.add_option("-f", "--file",               dest="filename",    help="Firmware programming file")
+    parser.add_option("-i", "--ip",                 dest="ip",          help="ip address of Raspberry Pi")
+    parser.add_option("-s", "--slot",               dest="slot",        default = -2,   help="Specify a single slot")
+    parser.add_option("-b", "--no_fanout_board",    dest="no_fanout_board", action="store_true",  default=False, help="Do not use fanout board")
+    parser.add_option("-t", "--stop",               dest="stop",            action="store_true",  default=False, help="Stop after checking active slots")
+    parser.add_option("-c", "--calibration",        dest="calibration",     action="store_true",  default=False, help="Include calibration unit")
 
     (options, args) = parser.parse_args()
 
     #writeTCLFile(options.filename)
-
+    # use_fanout_board is True if you are using a fanout board
+    use_fanout_board = not(options.no_fanout_board)
     if options.ip:
-        ts = Teststand(board=options.board, calibration=options.calibration, ip=options.ip)
+        ts = Teststand(use_fanout_board, calibration=options.calibration, ip=options.ip)
     else:
-        ts = Teststand(board=options.board, calibration=options.calibration)
+        ts = Teststand(use_fanout_board, calibration=options.calibration)
 
     if options.stop:
         exit()

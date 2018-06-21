@@ -15,5 +15,7 @@ ccm = 0x74      # ngccm emulator
 # Define fanout channel values
 # For bits 0,1,2,3 use values 1,2,4,8
 # For bits 4,5,6,7 use values 0x10, 0x20, 0x40, 0x80                        
+# channels[0] for RM1 and RM2
+# channels[1] for RM3 and RM4 and CU
 channels = [1,2]        
 

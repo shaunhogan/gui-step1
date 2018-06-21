@@ -29,7 +29,7 @@ if __name__ ==  "__main__":
 
     (options, args) = parser.parse_args()
 
-    #writeTCLFile(options.filename)
+    writeTCLFile(options.filename)
     # use_fanout_board is True if you are using a fanout board
     use_fanout_board = not(options.no_fanout_board)
     if options.ip:

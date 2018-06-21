@@ -74,7 +74,7 @@
         </Hardware>
         <Algo type="STAPL">
             <filename>
-                C:\Users\hcaldaq\Downloads\fixed_HB_RM_v1_03.stp
+                C:\Users\hcaldaq\Desktop\HB2017\fixed_HB_RM_v1_03.stp
             </filename>
             <local>
                 projectData\fixed_HB_RM_v1_03.stp

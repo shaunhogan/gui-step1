@@ -20,7 +20,7 @@ import time
 
 # Teststand class pings Raspberry Pi
 class Teststand:
-    def __init__(self, board=False, calibration=False, ip=config.ip_address):
+    def __init__(self, board=True, calibration=False, ip=config.ip_address):
         # Include calibraiton unit.
         self.calibrate = calibration
         # Use fanout board with channels.
@@ -445,7 +445,8 @@ class Teststand:
         self.bot_igloo_fw_maj = self.readIgloo("bot", 0x00)
         self.bot_igloo_fw_min = self.readIgloo("bot", 0x01)
         #print "Igloo FW: {0} {1}".format(igloo_fw_maj, igloo_fw_min)
-        return "top: {0} {1} bot: {2} {3}".format(top_igloo_fw_maj, top_igloo_fw_min, bot_igloo_fw_maj, bot_igloo_fw_min)
+        return "top: {0} {1} bot: {2} {3}".format(self.top_igloo_fw_maj, self.top_igloo_fw_min,
+                                                  self.bot_igloo_fw_maj, self.bot_igloo_fw_min)
 
     # Determine active jslots.
     def findActiveSlots(self):

@@ -825,11 +825,11 @@ class makeGui(Tools):
         # Make a checkbox to overwrite/not overwrite pre-existing data
         self.overwriteBox = Checkbutton(self.experi_subTop2_7_frame, text="Igloo Arming Switch", variable=self.iglooArmed)
         self.overwriteBox.configure(bg=self.buttonsc[5],fg=self.fontc,activebackground=self.dimbuttonsc[5],activeforeground=self.fontc,selectcolor=self.checkc)
-        self.overwriteBox.pack(side=TOP,
+        self.overwriteBox.pack(side=LEFT,
                        padx = button_padx,
                        pady = button_pady,
-                       ipady = button_pady*2,
-                       ipadx = button_padx*2)
+                       ipady = button_pady,
+                       ipadx = button_padx)
 
         # Make a button to submit GPIO option
         self.gpioSelect_bttn = Button(self.experi_subTop2_8_frame, command=self.gpioBttnPress,

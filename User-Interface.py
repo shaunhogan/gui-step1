@@ -90,6 +90,7 @@ class makeGui(Tools):
         self.iglooMinVerEntryB     =  StringVar()
         self.check                 =  StringVar()
         self.overwriteVar          =  IntVar()
+        self.iglooArmed            =  IntVar()
 
         # Place an all-encompassing frame in the parent window. All of the following
         # frames will be placed here (topMost_frame) and not in the parent window.
@@ -821,6 +822,15 @@ class makeGui(Tools):
         self.gpioSelect_box["menu"].config(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
         self.gpioChoiceVar.set("J2 and J21")
 
+        # Make a checkbox to overwrite/not overwrite pre-existing data
+        self.overwriteBox = Checkbutton(self.experi_subTop2_7_frame, text="Igloo Arming Switch", variable=self.iglooArmed)
+        self.overwriteBox.configure(bg=self.buttonsc[5],fg=self.fontc,activebackground=self.dimbuttonsc[5],activeforeground=self.fontc,selectcolor=self.checkc)
+        self.overwriteBox.pack(side=LEFT,
+                       padx = button_padx,
+                       pady = button_pady,
+                       ipady = button_pady,
+                       ipadx = button_padx)
+
         # Make a button to submit GPIO option
         self.gpioSelect_bttn = Button(self.experi_subTop2_8_frame, command=self.gpioBttnPress,
                           text="Submit GPIO Choice")
@@ -837,7 +847,7 @@ class makeGui(Tools):
                      "2.5-GND" : "2.5V to GND", "3.3-GND" : "3.3V to GND  ", "5.0-GND" : "  5.0V to GND",
                      "1.2-1.5" : "1.2V to 1.5V", "1.2-2.5" : "1.2V to 2.5V", "1.2-3.3" : "1.2V to 3.3V", "1.2-AVCC" : "1.2V to AVCC  ",
                      "1.5-2.5" : "  1.5V to 2.5V", "1.5-3.3" : "1.5V to 3.3V", "1.5-AVCC" : "1.5V to AVCC", "2.5-3.3" : "2.5V to 3.3V",
-                     "2.5-AVCC" : "2.5V to AVCC  ", "3.3-AVCC" : "  3.3V to AVCC", "Vis" : "Visual Inspec.  ", "SuplCur" : "  Supply Current","Program" : "Programming OK  "}
+                     "2.5-AVCC" : "2.5V to AVCC  ", "3.3-AVCC" : "  3.3V to AVCC", "Vis" : "Visual Inspec.  ", "SuplCur" : "  Supply Current","Program" : "Bridge Programming OK  "}
 
 
 #       self.testPassList = [StringVar() for i in range(0,19)]
@@ -1062,11 +1072,12 @@ class makeGui(Tools):
         self.cardInfo.FirmwareMaj = self.firmwareVerEntry.get()
         self.cardInfo.FirmwareMin = self.firmwareVerMinEntry.get()
         self.cardInfo.FirmwareOth = self.firmwareVerOtherEntry.get()
-        self.cardInfo.IglooMinVerT = self.iglooMinVerEntryT.get()
-        self.cardInfo.IglooMajVerT = self.iglooMajVerEntryT.get()
-        self.cardInfo.IglooMinVerB = self.iglooMinVerEntryB.get()
-        self.cardInfo.IglooMajVerB = self.iglooMajVerEntryB.get()
-        self.cardInfo.Igloo_FPGA_Control = self.iglooToggleEntry.get()
+        if (self.iglooArmed.get()):
+            self.cardInfo.IglooMinVerT = self.iglooMinVerEntryT.get()
+            self.cardInfo.IglooMajVerT = self.iglooMajVerEntryT.get()
+            self.cardInfo.IglooMinVerB = self.iglooMinVerEntryB.get()
+            self.cardInfo.IglooMajVerB = self.iglooMajVerEntryB.get()
+            self.cardInfo.Igloo_FPGA_Control = self.iglooToggleEntry.get()
         self.cardInfo.User = self.nameChoiceVar.get()
         self.cardInfo.DateRun = str(datetime.now())
         self.cardInfo.Checksum = self.check.get()
@@ -1350,29 +1361,35 @@ class makeGui(Tools):
         self.multiplex()
         self.tempEntry.set(str(round(temp.readManyTemps(self.myBus, self.card_i2c_address, 10, "Temperature", "nohold"),4)))
 
-        # Getting IGLOO firmware info
-        majorIglooVerT = self.readIgloo("top",0x00)
-        minorIglooVerT = self.readIgloo("top",0x01)
-        majorIglooVerB = self.readIgloo("bottom",0x00)
-        minorIglooVerB = self.readIgloo("bottom",0x01)
-        # Write IGLOO firmware in hex
-        majorIglooVerT = self.toHex(majorIglooVerT)
-        minorIglooVerT = self.toHex(minorIglooVerT)
-        majorIglooVerB = self.toHex(majorIglooVerB)
-        minorIglooVerB = self.toHex(minorIglooVerB)
-        # Display igloo FW info on gui
-        self.iglooMajVerEntryT.set(majorIglooVerT)
-        self.iglooMinVerEntryT.set(minorIglooVerT)
-        self.iglooMajVerEntryB.set(majorIglooVerB)
-        self.iglooMinVerEntryB.set(minorIglooVerB)
-        print "Top Igloo2 FPGA Major Firmware Version = {0}".format(majorIglooVerT)
-        print "Top Igloo2 FPGA Minor Firmware Version = {0}".format(minorIglooVerT)
-        print "Bottom Igloo2 FPGA Major Firmware Version = {0}".format(majorIglooVerB)
-        print "Bottom Igloo2 FPGA Minor Firmware Version = {0}".format(minorIglooVerB)
+        if (self.iglooArmed.get()):
+            # Getting IGLOO firmware info
+            majorIglooVerT = self.readIgloo("top",0x00)
+            minorIglooVerT = self.readIgloo("top",0x01)
+            majorIglooVerB = self.readIgloo("bottom",0x00)
+            minorIglooVerB = self.readIgloo("bottom",0x01)
+            # Write IGLOO firmware in hex
+            majorIglooVerT = self.toHex(majorIglooVerT)
+            minorIglooVerT = self.toHex(minorIglooVerT)
+            majorIglooVerB = self.toHex(majorIglooVerB)
+            minorIglooVerB = self.toHex(minorIglooVerB)
+            # Display igloo FW info on gui
+            self.iglooMajVerEntryT.set(majorIglooVerT)
+            self.iglooMinVerEntryT.set(minorIglooVerT)
+            self.iglooMajVerEntryB.set(majorIglooVerB)
+            self.iglooMinVerEntryB.set(minorIglooVerB)
+            print "Top Igloo2 FPGA Major Firmware Version = {0}".format(majorIglooVerT)
+            print "Top Igloo2 FPGA Minor Firmware Version = {0}".format(minorIglooVerT)
+            print "Bottom Igloo2 FPGA Major Firmware Version = {0}".format(majorIglooVerB)
+            print "Bottom Igloo2 FPGA Minor Firmware Version = {0}".format(minorIglooVerB)
 
-        # Verify that the Igloo can be power toggled
-        self.iglooToggleEntry.set(self.checkIglooToggle())
-
+            # Verify that the Igloo can be power toggled
+            self.iglooToggleEntry.set(self.checkIglooToggle())
+        else:
+            self.iglooMajVerEntryT.set("")
+            self.iglooMinVerEntryT.set("")
+            self.iglooMajVerEntryB.set("")
+            self.iglooMinVerEntryB.set("")  
+            self.iglooToggleEntry.set("") 
 #########################################
 #   Functions to check igloo toggle     #
 #########################################

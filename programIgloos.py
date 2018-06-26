@@ -1,5 +1,5 @@
 from optparse import OptionParser
-
+from datetime import datetime
 from scripts import Teststand
 import os
 import subprocess as sp
@@ -18,7 +18,8 @@ def writeTCLFile(programFile):
         
 
 if __name__ ==  "__main__":
-
+    begin_time = datetime.now()
+    print "Begin time is: {0}".format(begin_time)
     parser = OptionParser()
     parser.add_option("-f", "--file",               dest="filename",    help="Firmware programming file")
     parser.add_option("-i", "--ip",                 dest="ip",          help="ip address of Raspberry Pi")
@@ -86,4 +87,7 @@ if __name__ ==  "__main__":
         print "    3. Did you plug in the ethernet cable?"
         print "    4. Did you use the correct ip address?"
         print "    5. Did you have coffee today?"
-
+    end_time = datetime.now()
+    print "End time is: {0}".format(end_time)
+    total_time = end_time-begin_time
+    print "total run time is: {0}".format(total_time)

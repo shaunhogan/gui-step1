@@ -415,14 +415,15 @@ class Teststand:
         # myBus.write(0x70,[0x03,0x08])
         self.myBus.read(0x70,1)
         batch = self.myBus.sendBatch()
+        message = batch[-1]
         print "GPIO Batch = "+str(batch)
     
-        if (batch[-1] == "1 0"):
+        if (message == "1 0"):
             print "In gpioBttnPress(): GPIO I2C_ERROR"
             print self.I2C_ERROR_HELP
             return
-        elif (batch[-1] == "0 "+str(gpioVal)):
-            print "GPIO " + str(newJSlotDict[self.gpioChoiceVar.get()]) + " communication SUCCESS"
+        elif (message == "0 "+str(gpioVal)):
+            print "GPIO Success: message is {0}".format(message)
     
         else:
             print "GPIO Error: unexpected message is {0}".format(message)

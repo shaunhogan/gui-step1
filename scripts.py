@@ -174,7 +174,7 @@ class Teststand:
 
     # Function to write to Bridge FPGA
     def writeBridge(self, registerAddress,messageList):
-        self.selectSlot(slef.jslot) # does multiplex
+        self.selectSlot(self.jslot) # does multiplex
         self.myBus.write(self.card_i2c_address, [registerAddress]+messageList)
         return self.myBus.sendBatch()
 

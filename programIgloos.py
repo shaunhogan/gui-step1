@@ -52,31 +52,31 @@ if __name__ ==  "__main__":
         slots = ts.active_slots
     
     # program top and bottom igloos
-    igloos = ["top","bottom"]
+    igloos = ["top","bot"]
     iglooData = []
     if ts.piStatus and ts.busStatus:
         for slot in slots:
+            data = ts.readInfo(slot)
+            print "time: ", data["date_time"]
+            print "temp: ", data["temperature"]
             for igloo in igloos:
                 print ""
                 print "Initiated Programing of SpecifiedSlot: {0} {1} Igloo FPGA".format(slot,igloo)
                 print ""
 
                 ts.selectGpio(slot)
-                data = ts.readInfo(slot)
-                print "time: ", data["date_time"]
-                print "temp: ", data["temperature"]
-                
                 ts.jtagSelectIgloo(igloo)
 
                 print "Starting Flashpro batch programming mode"
                 # Please include the correct Microsemi path here 
                 #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:C:\\Users\\pastika\\Desktop\\program_igloo.tcl console_mode:brief", shell=True)
-                sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
-                
-                data = ts.readInfo(slot)
-                print "time: ", data["date_time"]
-                print "temp: ", data["temperature"]
-                iglooData.append(data)
+                #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
+                raw_input("press enter to continue")
+
+            data = ts.readInfo(slot)
+            print "time: ", data["date_time"]
+            print "temp: ", data["temperature"]
+            iglooData.append(data)
         for datum in iglooData:
             print "Top Igloo FW: {0} {1}".format(datum["top_igloo_fw_maj"], datum["top_igloo_fw_min"])
             print "Bottom Igloo FW: {0} {1}".format(datum["bot_igloo_fw_maj"], datum["bot_igloo_fw_min"])

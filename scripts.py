@@ -161,23 +161,29 @@ class Teststand:
         s = " "
         return s.join(message_list)
     
-    def readBridge(self, regAddress, num_bytes):
+    def readBridge(self, registerAddress, num_bytes):
         self.selectSlot(self.jslot) # does multiplex
         self.myBus.write(0x00,[0x06])
         self.myBus.sendBatch()
-        self.myBus.write(self.card_i2c_address,[regAddress])
+        self.myBus.write(self.card_i2c_address,[registerAddress])
         self.myBus.read(self.card_i2c_address, num_bytes)
         message = self.myBus.sendBatch()[-1]
         #if message[0] != '0':
         #    print 'Bridge I2C_ERROR'
         return self.toHex(self.reverseBytes(message[2:]))
 
+    # Function to write to Bridge FPGA
+    def writeBridge(self, registerAddress,messageList):
+        self.selectSlot(slef.jslot) # does multiplex
+        self.myBus.write(self.card_i2c_address, [registerAddress]+messageList)
+        return self.myBus.sendBatch()
+
     """
-    def readIgloo(self, regAddress, num_bytes):
+    def readIgloo(self, registerAddress, num_bytes):
         self.selectSlot(self.jslot)
         self.myBus.write(0x00,[0x06])
         self.myBus.write(self.card_i2c_address,[0x11,0x03,0,0,0])
-        self.myBus.write(0x09,[regAddress])
+        self.myBus.write(0x09,[registerAddress])
         self.myBus.read(0x09, num_bytes)
         message = self.myBus.sendBatch()[-1]
         #if message[0] != '0':

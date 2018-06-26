@@ -1338,12 +1338,7 @@ class makeGui(Tools):
         #cooked_bus = self.serialNum(cooked_bus)
         self.uniqueIDEntry.set(self.toHex(cooked_bus))
         self.uniqueIDPass = self.uniqueIDEntry.get()
-        if (self.uniqueIDPass[2] == '0'):                 #delete a leading checksum zero to match an error in the ngccm server
-            print("Triggering ngccm error (on purpose)")
-            self.uniqueIDEntry.set("0x" + self.uniqueIDPass[3:10].upper() + "_0x" + self.uniqueIDPass[10:18].upper())
-        else:
-            self.uniqueIDEntry.set("0x" + self.uniqueIDPass[2:10].upper() + "_0x" + self.uniqueIDPass[10:18].upper())
-        print "UniqueID: {0}".format(self.uniqueIDEntry.get())
+        self.uniqueIDEntry.set("0x" + self.uniqueIDPass[2:10].upper() + "_0x" + self.uniqueIDPass[10:18].upper())
 
         # Getting bridge firmware
         #self.myBus.write(0x00,[0x06])

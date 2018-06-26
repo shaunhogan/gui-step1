@@ -70,8 +70,8 @@ if __name__ ==  "__main__":
                 print "Starting Flashpro batch programming mode"
                 # Please include the correct Microsemi path here 
                 #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:C:\\Users\\pastika\\Desktop\\program_igloo.tcl console_mode:brief", shell=True)
-                #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
-                raw_input("press enter to continue")
+                sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
+                #raw_input("press enter to continue")
 
             data = ts.readInfo(slot)
             print "time: ", data["date_time"]

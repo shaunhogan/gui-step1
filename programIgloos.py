@@ -65,6 +65,8 @@ if __name__ ==  "__main__":
                 data = ts.readInfo(slot)
                 print "time: ", data["date_time"]
                 print "temp: ", data["temperature"]
+                
+                ts.jtagSelectIgloo(igloo)
 
                 print "Starting Flashpro batch programming mode"
                 # Please include the correct Microsemi path here 

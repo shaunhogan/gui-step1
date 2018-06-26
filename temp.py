@@ -98,7 +98,6 @@ def readManyTemps(bus, slot,iterations,key,hold,verbosity=0):
         tempArray.append(tempList)
         if int(tempList[0]) != 0:
             print 'Read Temperature I2C ERROR : ', tempList
-            return tempList[1]
     transpose = zip(*tempArray)
     finalTempList = transpose[1]
     tempMin = min(finalTempList)

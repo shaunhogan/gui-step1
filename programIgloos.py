@@ -65,7 +65,6 @@ if __name__ ==  "__main__":
                 print ""
 
                 ts.selectGpio(slot,igloo)
-                #ts.jtagSelectIgloo(igloo)
 
                 print "Starting Flashpro batch programming mode"
                 # Please include the correct Microsemi path here 

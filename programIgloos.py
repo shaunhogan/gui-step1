@@ -64,8 +64,8 @@ if __name__ ==  "__main__":
                 print "Initiated Programing of SpecifiedSlot: {0} {1} Igloo FPGA".format(slot,igloo)
                 print ""
 
-                ts.selectGpio(slot)
-                ts.jtagSelectIgloo(igloo)
+                ts.selectGpio(slot,igloo)
+                #ts.jtagSelectIgloo(igloo)
 
                 print "Starting Flashpro batch programming mode"
                 # Please include the correct Microsemi path here 

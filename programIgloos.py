@@ -108,7 +108,7 @@ if __name__ ==  "__main__":
         print "Uploading results to database"
         print ""
         #sp.check_output("bash uploadIgloo.sh", shell=True)
-        sp.Popen("bash uploadIgloo.sh", stdout-sp.PIPE)
+        sp.Popen("bash uploadIgloo.sh", stdout=sp.PIPE)
         out, err = process.communicate()
         print "uploadIgloo.sh output"
         print out

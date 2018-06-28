@@ -3,6 +3,7 @@ from datetime import datetime
 from scripts import Teststand
 import os
 import subprocess as sp
+import json
 
 def writeTCLFile(programFile):
     with open("program_igloo.tcl", "w") as file:
@@ -77,9 +78,18 @@ if __name__ ==  "__main__":
             print "time: ", data["date_time"]
             print "temp: ", data["temperature"]
             iglooData.append(data)
+            jsonFile = "{0}_step3_raw.json".format(data["Unique_ID"])
+            with open(jsonFile, 'w') as jf:
+                json.dump(data, jf)
+        
         for datum in iglooData:
             print "Top Igloo FW: {0} {1}".format(datum["top_igloo_fw_maj"], datum["top_igloo_fw_min"])
             print "Bottom Igloo FW: {0} {1}".format(datum["bot_igloo_fw_maj"], datum["bot_igloo_fw_min"])
+        print ""
+        print "Uploading results to database"
+        print ""
+        sp.check_output("uploadIgloo.sh", shell=True)
+    
     else:
         print "Failed Raspberry Pi and/or Websocket status."
         print "    1. Did you turn on the Raspberry Pi?"
@@ -87,7 +97,11 @@ if __name__ ==  "__main__":
         print "    3. Did you plug in the ethernet cable?"
         print "    4. Did you use the correct ip address?"
         print "    5. Did you have coffee today?"
+    
     end_time = datetime.now()
     print "End time is: {0}".format(end_time)
     total_time = end_time-begin_time
     print "total run time is: {0}".format(total_time)
+
+
+

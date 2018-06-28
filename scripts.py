@@ -415,18 +415,18 @@ class Teststand:
     # Returns dictionary with unique id and firmware versions
     def getInfo(self):
         cardInfo = {}
-        cardInfo["unique_id"]           = self.unique_id
-        cardInfo["bridge_fw_maj"]       = self.bridge_fw_maj
-        cardInfo["bridge_fw_min"]       = self.bridge_fw_min
-        cardInfo["bridge_fw_oth"]       = self.bridge_fw_oth
-        cardInfo["top_igloo_fw_maj"]    = self.top_igloo_fw_maj
-        cardInfo["top_igloo_fw_min"]    = self.top_igloo_fw_min
-        cardInfo["bot_igloo_fw_maj"]    = self.bot_igloo_fw_maj
-        cardInfo["bot_igloo_fw_min"]    = self.bot_igloo_fw_min
+        cardInfo["Unique_ID"]           = self.unique_id
+        cardInfo["FirmwareMaj"]         = self.bridge_fw_maj
+        cardInfo["FirmwareMin"]         = self.bridge_fw_min
+        cardInfo["FirmwareOth"]         = self.bridge_fw_oth
+        cardInfo["IglooMajVerT"]        = self.top_igloo_fw_maj
+        cardInfo["IglooMinVerT"]        = self.top_igloo_fw_min
+        cardInfo["IglooMajVerB"]        = self.bot_igloo_fw_maj
+        cardInfo["IglooMinVerB"]        = self.bot_igloo_fw_min
         cardInfo["temperature"]         = self.temp
         cardInfo["date_time"]           = str(datetime.now())
 
-        print "Card info recorded. Merci beaucoup!"
+        #print "Card info recorded. Merci beaucoup!"
         return cardInfo
 
     # Tests for communication with Bridge.

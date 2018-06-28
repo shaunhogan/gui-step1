@@ -101,7 +101,7 @@ if __name__ ==  "__main__":
         print ""
         print "Uploading results to database"
         print ""
-        sp.check_output("uploadIgloo.sh", shell=True)
+        sp.check_output("bash uploadIgloo.sh", shell=True)
     
     else:
         print "Failed Raspberry Pi and/or Websocket status."

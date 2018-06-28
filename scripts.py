@@ -198,7 +198,7 @@ class Teststand:
         if message[0] != '0':
             print 'In readIgloo(): Igloo I2C_ERROR'
         print "In readIgloo(): Reading {0} Igloo; message = {1}".format(igloo, message)
-        return self.reverseBytes(message[2:])
+        return self.toHex(self.reverseBytes(message[2:]))
 
 
 ##################################################################################

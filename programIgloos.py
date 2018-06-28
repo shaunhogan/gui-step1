@@ -71,7 +71,12 @@ if __name__ ==  "__main__":
                 print "Starting Flashpro batch programming mode"
                 # Please include the correct Microsemi path here 
                 #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:C:\\Users\\pastika\\Desktop\\program_igloo.tcl console_mode:brief", shell=True)
-                sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
+                try:
+                    sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
+                    data["Igloos_Programmed"]="Passed"
+                except:
+                    print "Error: Failed Programing" 
+                    data["Igloos_Programmed"]="Failed"
                 #raw_input("press enter to continue")
 
             data = ts.readInfo(slot)
@@ -83,8 +88,8 @@ if __name__ ==  "__main__":
                 json.dump(data, jf)
         
         for datum in iglooData:
-            print "Top Igloo FW: {0} {1}".format(datum["top_igloo_fw_maj"], datum["top_igloo_fw_min"])
-            print "Bottom Igloo FW: {0} {1}".format(datum["bot_igloo_fw_maj"], datum["bot_igloo_fw_min"])
+            print "Top Igloo FW: {0} {1}".format(datum["IglooMajVerT"], datum["IglooMinVerT"])
+            print "Bottom Igloo FW: {0} {1}".format(datum["IglooMajVerB"], datum["IglooMinVerB"])
         print ""
         print "Uploading results to database"
         print ""

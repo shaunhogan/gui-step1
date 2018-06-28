@@ -73,11 +73,17 @@ if __name__ ==  "__main__":
                 # Please include the correct Microsemi path here 
                 #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:C:\\Users\\pastika\\Desktop\\program_igloo.tcl console_mode:brief", shell=True)
                 try:
-                    sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
+                    #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
+                    process = sp.Popen("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), stdout=sp.PIPE)
+                    out, err = process.communicate()
                     Igloos_Programmed=True
-                    print "Success: Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
+                    print "Success Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
+                    print "Flashpro stdout"
+                    print out
                 except:
                     print "Error: Failed Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
+                    print "Flashpro stderror"
+                    print err
                     Igloos_Programmed=False
                     break
                 #raw_input("press enter to continue")
@@ -101,7 +107,14 @@ if __name__ ==  "__main__":
         print ""
         print "Uploading results to database"
         print ""
-        sp.check_output("bash uploadIgloo.sh", shell=True)
+        #sp.check_output("bash uploadIgloo.sh", shell=True)
+        sp.Popen("bash uploadIgloo.sh", stdout-sp.PIPE)
+        out, err = process.communicate()
+        print "uploadIgloo.sh output"
+        print out
+        print "uploadIgloo.sh error"
+        print err
+
     
     else:
         print "Failed Raspberry Pi and/or Websocket status."

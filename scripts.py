@@ -380,8 +380,8 @@ class Teststand:
             print 'Read Unique ID I2C_ERROR!'
             return False
         # Remove error code [0], family code [1] and checksum [-1]
-        #salted_bus = self.errorCode(raw_bus)
-        salted_bus = self.serialNum(raw_bus)
+        salted_bus = self.errorCode(raw_bus)
+        #salted_bus = self.serialNum(raw_bus)
         cooked_bus = self.reverseBytes(salted_bus)
         self.unique_id = self.toHex(cooked_bus)
         print 'Unique ID: {0}'.format(self.unique_id)

@@ -79,11 +79,13 @@ if __name__ ==  "__main__":
                     Igloos_Programmed=True
                     print "Success Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
                     print "Flashpro stdout"
-                    print output
+                    sp.call("echo -e {0}".format(output))
                 except:
                     print "Error: Failed Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
+                    print ""
                     print "Flashpro stdout"
-                    print output
+                    print ""
+                    sp.call("echo -e {0}".format(output))
                     #print "Flashpro stderror"
                     #print err
                     Igloos_Programmed=False
@@ -112,8 +114,10 @@ if __name__ ==  "__main__":
         output = sp.check_output("bash uploadIgloo.sh", shell=True)
         #sp.Popen("bash uploadIgloo.sh", stdout=sp.PIPE)
         #out, err = process.communicate()
+        print ""
         print "uploadIgloo.sh output"
-        print output
+        print ""
+        sp.call("echo -e {0}".format(output))
         #print "uploadIgloo.sh error"
         #print err
 

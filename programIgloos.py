@@ -83,7 +83,7 @@ if __name__ ==  "__main__":
             print "time: ", data["date_time"]
             print "temp: ", data["temperature"]
             iglooData.append(data)
-            jsonFile = "{0}_step3_raw.json".format(data["Unique_ID"])
+            jsonFile = "temp_json/{0}_step3_raw.json".format(data["Unique_ID"])
             with open(jsonFile, 'w') as jf:
                 json.dump(data, jf)
         

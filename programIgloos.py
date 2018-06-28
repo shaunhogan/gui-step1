@@ -58,6 +58,7 @@ if __name__ ==  "__main__":
     iglooData = []
     if ts.piStatus and ts.busStatus:
         for slot in slots:
+            Igloos_Programmed=False
             data = ts.readInfo(slot)
             print "time: ", data["date_time"]
             print "temp: ", data["temperature"]
@@ -73,13 +74,20 @@ if __name__ ==  "__main__":
                 #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:C:\\Users\\pastika\\Desktop\\program_igloo.tcl console_mode:brief", shell=True)
                 try:
                     sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
-                    data["Igloos_Programmed"]="Passed"
+                    Igloos_Programmed=True
+                    print "Success: Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
                 except:
-                    print "Error: Failed Programing" 
-                    data["Igloos_Programmed"]="Failed"
+                    print "Error: Failed Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
+                    Igloos_Programmed=False
+                    break
                 #raw_input("press enter to continue")
 
             data = ts.readInfo(slot)
+            if Igloos_Programmed:
+                data["Igloos_Programmed"]="Passed"
+            else:
+                data["Igloos_Programmed"]="Failed"
+
             print "time: ", data["date_time"]
             print "temp: ", data["temperature"]
             iglooData.append(data)

@@ -425,7 +425,7 @@ class Teststand:
         cardInfo["IglooMajVerB"]        = self.bot_igloo_fw_maj
         cardInfo["IglooMinVerB"]        = self.bot_igloo_fw_min
         cardInfo["temperature"]         = self.temp
-        cardInfo["date_time"]           = str(datetime.now())
+        cardInfo["DateRun"]             = str(datetime.now())
 
         #print "Card info recorded. Merci beaucoup!"
         return cardInfo

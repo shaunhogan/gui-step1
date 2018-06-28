@@ -60,7 +60,7 @@ if __name__ ==  "__main__":
         for slot in slots:
             Igloos_Programmed=False
             data = ts.readInfo(slot)
-            print "time: ", data["date_time"]
+            print "time: ", data["DateRun"]
             print "temp: ", data["temperature"]
             for igloo in igloos:
                 print ""
@@ -88,7 +88,7 @@ if __name__ ==  "__main__":
             else:
                 data["Igloos_Programmed"]="Failed"
 
-            print "time: ", data["date_time"]
+            print "time: ", data["DateRun"]
             print "temp: ", data["temperature"]
             iglooData.append(data)
             jsonFile = "temp_json/{0}_step3_raw.json".format(data["Unique_ID"])

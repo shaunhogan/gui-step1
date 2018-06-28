@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # uploadIgloo.sh
 # script to run on Windows machine (hcaldaq-pc)
 # 1. copy json file to Linux machine (cmshcal11)

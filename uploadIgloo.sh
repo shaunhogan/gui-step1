@@ -46,9 +46,9 @@ ssh $remoteHost $remoteScript
 
 if [ $? -eq 0 ]
 then
-    echo -e "    ${SUCCESS}Successfully copied json file to $remoteHost"
+    echo -e "    ${SUCCESS}Successfully uploaded results to database"
 else
-    echo -e "    ${FAIL}ERROR: Failed to copy json file to $remoteHost"
+    echo -e "    ${FAIL}ERROR: Failed to upload results to database"
     echo -e "${FAIL}ERROR: No information uploaded to database"
     exit 1
 fi

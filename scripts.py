@@ -415,6 +415,7 @@ class Teststand:
     # Returns dictionary with unique id and firmware versions
     def getInfo(self):
         cardInfo = {}
+        cardInfo["Barcode"]             = ""
         cardInfo["Unique_ID"]           = self.unique_id
         cardInfo["FirmwareMaj"]         = self.bridge_fw_maj
         cardInfo["FirmwareMin"]         = self.bridge_fw_min

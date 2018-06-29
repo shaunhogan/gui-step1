@@ -105,11 +105,12 @@ if __name__ ==  "__main__":
         print ""
         output = sp.check_output("bash uploadIgloo.sh -w", shell=True)
         print ""
-        print "uploadIgloo.sh output"
+        print "uploadIgloo.sh output:"
         print ""
-        outputlist = output.split("\n")
-        for line in outputlist:
-            sp.call("echo {0}".format(line))
+        print output
+        #outputlist = output.split("\n")
+        #for line in outputlist:
+        #    sp.call("echo {0}".format(line))
 
     
     else:

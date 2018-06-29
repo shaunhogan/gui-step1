@@ -59,9 +59,10 @@ if __name__ ==  "__main__":
     if ts.piStatus and ts.busStatus:
         for slot in slots:
             Igloos_Programmed=False
-            data = ts.readInfo(slot)
-            print "time: ", data["DateRun"]
-            print "temp: ", data["temperature"]
+            # We should not read from Igloos before programming
+            #data = ts.readInfo(slot)
+            #print "time: ", data["DateRun"]
+            #print "temp: ", data["temperature"]
             for igloo in igloos:
                 print ""
                 print "Initiated Programing of SpecifiedSlot: {0} {1} Igloo FPGA".format(slot,igloo)
@@ -74,22 +75,13 @@ if __name__ ==  "__main__":
                 #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:C:\\Users\\pastika\\Desktop\\program_igloo.tcl console_mode:brief", shell=True)
                 try:
                     output = sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
-                    #process = sp.Popen("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), stdout=sp.PIPE)
-                    #out, err = process.communicate()
                     Igloos_Programmed=True
                     print "Success Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
-                    print "Flashpro stdout"
-                    sp.call("echo -e {0}".format(output))
                 except:
                     print "Error: Failed Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
-                    print ""
-                    print "Flashpro stdout"
-                    print ""
-                    sp.call("echo -e {0}".format(output))
-                    #print "Flashpro stderror"
-                    #print err
                     Igloos_Programmed=False
                     break
+                # Used this to pause if you want to program using flashpro GUI
                 #raw_input("press enter to continue")
 
             data = ts.readInfo(slot)
@@ -112,16 +104,12 @@ if __name__ ==  "__main__":
         print "Uploading results to database"
         print ""
         output = sp.check_output("bash uploadIgloo.sh", shell=True)
-        #sp.Popen("bash uploadIgloo.sh", stdout=sp.PIPE)
-        #out, err = process.communicate()
         print ""
         print "uploadIgloo.sh output"
         print ""
         outputlist = output.split("\n")
         for line in outputlist:
-            sp.call("echo -e {0}".format(line))
-        #print "uploadIgloo.sh error"
-        #print err
+            sp.call("echo {0}".format(line))
 
     
     else:

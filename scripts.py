@@ -458,8 +458,9 @@ class Teststand:
         for slot in self.slot_list:
             hiB = self.hiDerBridge(slot)
             if hiB:
-                hiI = self.hiDerIgloo(slot)
-                print "J{0} : Igloo FW {1}".format(slot, hiI)
+                # we should not read from Igloos before they are programmed.
+                #hiI = self.hiDerIgloo(slot)
+                #print "J{0} : Igloo FW {1}".format(slot, hiI)
                 slots.append(slot)
         return slots
             

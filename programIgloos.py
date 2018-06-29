@@ -103,7 +103,7 @@ if __name__ ==  "__main__":
         print ""
         print "Uploading results to database"
         print ""
-        output = sp.check_output("bash uploadIgloo.sh", shell=True)
+        output = sp.check_output("bash uploadIgloo.sh -w", shell=True)
         print ""
         print "uploadIgloo.sh output"
         print ""

@@ -36,7 +36,8 @@ else
     exit 1
 fi
 # 2. upload results to database
-ssh $remoteHost $remoteScript
+# include option -w for no color ($1)
+ssh $remoteHost $remoteScript $1
 
 if [ $? -eq 0 ]
 then

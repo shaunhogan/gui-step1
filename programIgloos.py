@@ -117,7 +117,9 @@ if __name__ ==  "__main__":
         print ""
         print "uploadIgloo.sh output"
         print ""
-        sp.call("echo -e {0}".format(output))
+        outputlist = output.split("\n")
+        for line in outputlist:
+            sp.call("echo -e {0}".format(line))
         #print "uploadIgloo.sh error"
         #print err
 

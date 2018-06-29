@@ -35,6 +35,10 @@ else
     echo "ERROR: No information uploaded to database"
     exit 1
 fi
+
+# remote json files if copying was successful
+rm $jsonLoc/*$jsonTag
+
 # 2. upload results to database
 # include option -w for no color ($1)
 ssh $remoteHost $remoteScript $1

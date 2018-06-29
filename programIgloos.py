@@ -14,6 +14,7 @@ def writeTCLFile(programFile):
         file.write("# File C:\Users\hcaldaq\gui-step1\program_igloo.tcl\n")
         file.write("open_project -project {%s} -connect_programmers 1\n"%(os.path.abspath("HB_igloo/HB_igloo.pro").replace("\\","/")))
         file.write("set_programming_file -file {%s}\n"%os.path.abspath(programFile).replace("\\","/"))
+        file.write("remove_prg (name {84830})*\n")
         file.write("run_selected_actions\n")
         file.write("close_project\n")
         

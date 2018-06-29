@@ -55,6 +55,6 @@ fi
 
 echo -e "${SUCCESS}Successfully uploaded results to database"
 
-
+echo -e "${STATUS}Finished${DEF}"
 
 

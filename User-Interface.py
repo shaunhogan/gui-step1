@@ -1,12 +1,5 @@
 # User-Interface.py
 #
-<<<<<<< HEAD
-# This is the main Graphical User Interface for communicating
-# with the setup in the lab.
-# Developed with the help of many people
-# For Baylor University, Summer 2016.
-# Use for HE QIE Card programming and testing at Fermilab.
-=======
 # This is the main Graphical User Interface for for Teststand 1. 
 # A server runs on a RaspberryPi, which connects to the Fanout.
 # The Fanout connects to the ngCCM Emulator.
@@ -14,7 +7,6 @@
 #
 # Developed with the help of many people
 # For Baylor University, Summer 2016 (HE) and Summer 2018 (HB).
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
 
 from Tkinter import *
 from datetime import datetime
@@ -27,28 +19,6 @@ import temp
 import json
 import client
 import subprocess
-<<<<<<< HEAD
-import os
-import config
-
-class makeGui:
-    def __init__(self, parent):
-        # The Raspberry Pi IP address
-        self.pi = config.ip_address
-
-        # Ping Pi
-        status = self.pingPi()
-
-        # Create a webBus instance
-        if status:
-            self.myBus = client.webBus(self.pi,0)
-
-        # Define i2c addresses
-        self.gpio = config.gpio         # gpio i2c address
-        self.fanout = config.fanout     # fanout i2c address
-        self.ccm = config.ccm           # ngccm emulator i2c address
-        self.address = 0x19             # Qie Card in slot 1 i2c address (use for Toggle Igloo Power)
-=======
 import argparse
 import time
 
@@ -83,7 +53,6 @@ class makeGui(Tools):
         
         # Standard help message for I2C_ERROR
         self.I2C_ERROR_HELP = "Please confirm that the card is in the selected slot.\nPlease confirm that the power source is on."
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
 
         # Create an instance of initialTests
         self.initialTest = initialTests()
@@ -93,12 +62,6 @@ class makeGui(Tools):
 
         # Read info from left side?
         self.readFromList = True
-<<<<<<< HEAD
-
-        # Has GPIO been selected?
-        self.gpioSelected = False
-=======
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
 
         # Make an empty list that will eventually contain all of
         # the active card slots
@@ -168,22 +131,6 @@ class makeGui(Tools):
         # Make and pack a sub-frame within topMost_frame that will contain
         # all of the controls for non-hardware related test information
         # (i.e. name of tester)
-<<<<<<< HEAD
-        # This will now only contain read Unique ID buttons.
-        # self.info_frame = Frame(
-        #     self.topMost_frame,
-        #     borderwidth=5, relief=RIDGE,
-        #     height=50,
-        #     background="white",
-        #     )
-        # self.info_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-=======
         self.info_frame = Frame(
             self.topMost_frame,
             borderwidth=5, relief=RIDGE,
@@ -197,7 +144,6 @@ class makeGui(Tools):
             padx=frame_padx,
             pady=frame_pady
             )
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
 
         # Make a top half-frame
         self.topHalf_frame = Frame(self.topMost_frame)
@@ -220,23 +166,6 @@ class makeGui(Tools):
             pady=frame_pady
             )
 
-<<<<<<< HEAD
-        # # Make a label for the entire right frame
-        # self.experi_rightFrame = Frame(
-        #     self.topHalf_frame,
-        #     borderwidth=5, relief=RIDGE,
-        #     height=580, width=300,
-        #     background="black"
-        #     )
-        # self.experi_rightFrame.pack_propagatte=(False)
-        # self.experi_rightFrame.pack(
-        #     side=LEFT,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-=======
         # Make a label for the entire right frame
         self.experi_rightFrame = Frame(
             self.topHalf_frame,
@@ -252,7 +181,6 @@ class makeGui(Tools):
             padx=frame_padx,
             pady=frame_pady
             )
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
 
         ##########################################
         ###                                    ###
@@ -266,70 +194,6 @@ class makeGui(Tools):
         #####                            #####
         ######################################
 
-<<<<<<< HEAD
-        # Removed Testing Information/Parameters Frame
-        # # Make and pack a text label for name selector
-        # self.info_Label = Label(self.info_frame, text="Testing Information/Parameters")
-        # self.info_Label.configure(
-        #     padx=button_padx,
-        #     pady=button_pady,
-        #     background="white"
-        #     )
-        # self.info_Label.pack(side=TOP)
-
-        # # Make a sub-sub-frame within the frame to hold another label and a dropdown box
-        # self.info_subTop_frame = Frame(self.info_frame,background="white")
-        # self.info_subTop_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-
-        # # Make a sub-sub-frame within the frame to hold comment box
-        # self.info_subBot_frame = Frame(self.info_frame,background="white")
-        # self.info_subBot_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-
-        # # Make a label for the name drop-down:
-        # self.info_nameLabel = Label(self.info_subTop_frame, text="Tester Name: ")
-        # self.info_nameLabel.configure(
-        #     padx=button_padx,
-        #     pady=button_pady,
-        #     background="white"
-        #     )
-        # self.info_nameLabel.pack(side=LEFT)
-
-        # # Make and pack a listbox to pick which QIE card to talk to:
-        # self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar,
-        #                   "Shaun Hogan","Caleb Smith","Adryanna Smith","Jordan Potarf",
-        #                   "John Lawrence","Andrew Baas","Mason Dorseth","Josh Hiltbrand")
-        # self.info_nameBox.pack(side=LEFT)
-        # self.nameChoiceVar.set("Choose Name") # initializes the OptionMenu
-
-        # # Make a label for the name drop-down:
-        # self.info_commentLabel = Label(self.info_subBot_frame, text="User Testing Comments: ")
-        # self.info_commentLabel.configure(
-        #     padx=button_padx,
-        #     pady=button_pady,
-        #     background="white"
-        #     )
-        # self.info_commentLabel.pack(side=LEFT)
-
-        # # Make a entrybox for testing comments
-        # self.info_commentBox = Entry(
-        #     self.info_subBot_frame,
-        #     textvariable=self.infoCommentVar
-        #     )
-        # self.info_commentBox.pack(side=LEFT)
-        
-=======
         # Make and pack a text label for name selector
         self.info_Label = Label(self.info_frame, text="Testing Information/Parameters")
         self.info_Label.configure(
@@ -395,7 +259,6 @@ class makeGui(Tools):
         self.info_commentBox.configure(bg=self.topc,fg=self.fontc)
         self.info_commentBox.bind("<FocusIn>",lockon)
         self.info_commentBox.bind("<FocusOut>",lockoff)
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
         
         ######################################
         #####                            #####
@@ -564,136 +427,6 @@ class makeGui(Tools):
         ###                             ###
         ###################################
 
-<<<<<<< HEAD
-        # # Make a buffer frame
-        # self.experi_subTopBuffer_frame = Frame(self.experi_rightFrame,bg="white")
-        # self.experi_subTopBuffer_frame.pack(
-        #     side=TOP,
-        #     ipady=frame_ipady,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-
-        # # Make an "inspections and tests" label
-        # self.experi_inspections_label = Label(self.experi_subTopBuffer_frame,
-        #                 text="Inspections and Tests")
-        # self.experi_inspections_label.configure(bg="white")
-        # self.experi_inspections_label.pack()
-
-        # # Make a subframe for the barcode box
-        # self.experi_barcode_frame = Frame(self.experi_rightFrame, bg="white")
-        # self.experi_barcode_frame.pack(
-        #     side=TOP,
-        #     ipady=frame_ipady,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-
-        # # Make a label for the Barcode entry
-        # self.experi_barcode_lbl = Label(self.experi_barcode_frame, text="Barcode: ")
-        # self.experi_barcode_lbl.configure(
-        #     background="white",
-        #     padx=button_padx,
-        #     pady=button_pady,
-        #     )
-        # self.experi_barcode_lbl.pack(side=LEFT)
-
-        # # Make an entry box for the barcode
-        # # Make a entrybox for testing comments
-        # self.experi_barcode_entry = Entry(
-        #     self.experi_barcode_frame,
-        #     textvariable=self.barcodeEntry
-        #     )
-        # self.experi_barcode_entry.pack(side=RIGHT)
-
-        # # Make another buffer frame
-        # self.experi_subTopBuffer2_frame = Frame(self.experi_rightFrame,bg="white")
-        # self.experi_subTopBuffer2_frame.pack(
-        #     side=TOP,
-        #     ipady=frame_ipady,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     pady=frame_pady
-        #     )
-
-        # # Make top 3 subframe
-        # self.experi_subTop3_frame = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop3_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 3 subframe for text
-        # self.experi_subTop3_fText = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop3_fText.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 4 subframe
-        # self.experi_subTop4_frame = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop4_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 4 subframe for text
-        # self.experi_subTop4_fText = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop4_fText.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 5 subframe
-        # self.experi_subTop5_frame = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop5_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 5 subframe for text
-        # self.experi_subTop5_fText = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop5_fText.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 6 subframe
-        # self.experi_subTop6_frame = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop6_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 6 subframe for text
-        # self.experi_subTop6_fText = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop6_fText.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     padx=frame_padx,
-        #     )
-
-        # # Make top 7 subframe
-        # self.experi_subTop7_frame = Frame(self.experi_rightFrame,background="white")
-        # self.experi_subTop7_frame.pack(
-        #     side=TOP,
-        #     ipadx=frame_ipadx,
-        #     ipady=frame_ipady,
-        #     pady=frame_pady,
-        #     padx=frame_padx,
-        #     )
-=======
         # Make a buffer frame
         self.experi_subTopBuffer_frame = Frame(self.experi_rightFrame,bg=self.midc)
         self.experi_subTopBuffer_frame.pack(
@@ -826,7 +559,6 @@ class makeGui(Tools):
             pady=frame_pady,
             padx=frame_padx,
             )
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
 
 
         # Create variables for each manual check (16 placeholders for now)
@@ -1069,12 +801,6 @@ class makeGui(Tools):
             )
         self.iglooToggle_entry.pack(side=RIGHT)
 
-<<<<<<< HEAD
-        # # Make a button to submit the unique ID & firmware
-        # self.experi_uniqueID_give = Button(self.experi_subTop2_5_frame, text ="Upload Unique ID & Firmware Ver.", command=self.infoSubmitButtonPress)
-        # self.experi_uniqueID_give.configure(bg="salmon2")
-        # self.experi_uniqueID_give.pack(side=TOP)
-=======
 
         # Make a button to read the unique ID & firmware LEFT SIDE
         self.experi_uniqueID_left_get = Button(self.experi_subTop2_5_frame, text ="Get Unique ID & Firmware Ver. from Left", command=self.getUniqueIDPress_left)
@@ -1090,7 +816,6 @@ class makeGui(Tools):
         self.experi_uniqueID_give = Button(self.experi_subTop2_5_frame, text ="Upload Unique ID & Firmware Ver.", command=self.infoSubmitButtonPress)
         self.experi_uniqueID_give.configure(bg=self.buttonsc[2],fg=self.fontc,activebackground=self.dimbuttonsc[2],activeforeground=self.fontc)
         self.experi_uniqueID_give.pack(side=TOP)
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
 
         # Make a line of hypens
         #self.experi_hyphenLine = Label(self.experi_subTop2_6_frame, text="----------------------------------")
@@ -1106,19 +831,12 @@ class makeGui(Tools):
 
         # Make a option menu for GPIO selection
         self.gpioSelect_box = OptionMenu(self.experi_subTop2_7_frame, self.gpioChoiceVar,
-<<<<<<< HEAD
-                          "J2 and J18","J3 and J19","J4 and J20","J5 and J21",
-                          "J7 and J23","J8 and J24","J9 and J25","J10 and J26")
-        self.gpioSelect_box.pack(side=LEFT)
-        self.gpioChoiceVar.set("J2 and J18")
-=======
                           "J2 and J21","J3 and J20","J4 and J19","J5 and J18",
                           "J7 and J26","J8 and J25","J9 and J24","J10 and J23", command=self.gpioBttnPress)
         self.gpioSelect_box.configure(bg=self.rightc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
         self.gpioSelect_box.pack(side=LEFT)
         self.gpioSelect_box["menu"].config(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
         self.gpioChoiceVar.set("J2 and J21")
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
 
         # Make a checkbox to overwrite/not overwrite pre-existing data
         self.overwriteBox = Checkbutton(self.experi_subTop2_7_frame, text="Igloo Arming Switch", variable=self.iglooArmed)
@@ -1152,88 +870,6 @@ class makeGui(Tools):
         ###                          ###
         ################################
 
-<<<<<<< HEAD
-        # self.testDescDict = {"Res_1" : "Bkpln to GND", "Res_2" : "1.2V to GND", "Res_3" : "1.5V to GND",
-        #              "Res_4" : "2.5V to GND", "Res_5" : "3.3V to GND", "Res_6" : "5.0V to GND",
-        #              "Res_7" : "1.2V to 1.5V", "Res_8" : "1.2V to 2.5V", "Res_9" : "1.2V to 3.3V",
-        #              "Res_10" : "1.2V to 5.0V", "Res_11" : "1.5V to 2.5V", "Res_12" : "1.5V to 5.0V",
-        #              "Res_13" : "2.5V to 3.3V", "Res_14" : "2.5V to 5.0V", "Res_15" : "3.3V to 5.0V",
-        #              "SuplCur" : "Supply Current", "Vis" : "Visual Inspec.", "Program" : "Programming OK", "Res_16" : "1.5V to 3.3V"}
-
-#       # self.testPassList = [StringVar() for i in range(0,19)]
-
-#       # self.testLabelList = ["Res_1","Res_2","Res_3","Res_4",
-#       #                   "Res_5","Res_6","Res_7","Res_8",
-#       #               "Res_9","Res_10","Res_11", "Res_12",
-#       #               "Res_13", "Res_14", "Res_15", "SuplCur", "Vis", "Program",
-#       #               "Res_16"]
-
-        # self.testPassInfo = []
-
-        # for i in range(0,4):
-        #     self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-        #     self.testPassInfo[i].configure(width=15,bg="#CCDDFF")
-        #     self.testPassList[i].set("N/A")
-        #     self.testPassInfo[i].pack(side=LEFT)
-
-        #     self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg="white")
-        #     self.testPassLabel.configure(width=20)
-        #     self.testPassLabel.pack(side=LEFT)
-
-        # for i in range(4,9):
-        #     self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-        #     self.testPassInfo[i].configure(width=11, bg="#CCDDFF")
-        #     self.testPassList[i].set("N/A")
-        #     self.testPassInfo[i].pack(side=LEFT)
-
-        #     self.testPassLabel=Label(self.experi_subTop4_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
-        #     self.testPassLabel.configure(width=15)
-        #     self.testPassLabel.pack(side=LEFT)
-
-        # for i in range(9,14):
-        #     self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-        #     self.testPassInfo[i].configure(width=11,bg="#CCDDFF")
-        #     self.testPassList[i].set("N/A")
-        #     self.testPassInfo[i].pack(side=LEFT)
-
-        #     self.testPassLabel=Label(self.experi_subTop5_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
-        #     self.testPassLabel.configure(width=15)
-        #     self.testPassLabel.pack(side=LEFT)
-
-        # for i in range(14,19):
-        #     self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
-        #     self.testPassInfo[i].configure(width=11,bg="#CCDDFF")
-        #     self.testPassList[i].set("N/A")
-        #     self.testPassInfo[i].pack(side=LEFT)
-
-        #     self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg="white")
-        #     self.testPassLabel.configure(width=15)
-        #     self.testPassLabel.pack(side=LEFT)
-
-        # # Make a checkbox to overwrite/not overwrite pre-existing data
-        # self.overwriteBox = Checkbutton(self.experi_subTop7_frame, text="Overwrite existing QIE Card data (if applicable)?", variable=self.overwriteVar)
-        # self.overwriteBox.configure(bg="lemon chiffon")
-        # self.overwriteBox.pack(side=TOP,
-        #                padx = button_padx,
-        #                pady = button_pady,
-        #                ipady = button_pady*2,
-        #                ipadx = button_padx*2)
-
-        # # Make a button to submit tests and information
-        # self.passAllTestsBttn = Button(self.experi_subTop7_frame, text="Pass All Tests", command=self.throwPassAllBox)
-        # self.passAllTestsBttn.configure(bg="#FFE699", width=40)
-        # self.passAllTestsBttn.pack(side=TOP)
-
-        # # Make a button to submit tests and information
-        # self.initSubmitBttn = Button(self.experi_subTop7_frame, text="Submit Inspections & Tests", command=self.initSubmitBttnPress)
-        # self.initSubmitBttn.configure(bg="#FFCC66", width=40)
-        # self.initSubmitBttn.pack(side=TOP)
-
-        # # Make a button to clear all results
-        # self.clearDataBttn = Button(self.experi_subTop7_frame, text="Clear Inspections, Tests, & Info", command=self.clearDataBttnPress)
-        # self.clearDataBttn.configure(bg="orange", width=40)
-        # self.clearDataBttn.pack(side=TOP)
-=======
         self.testDescDict = {"BPL-GND" : "  Bkpln to GND", "1.2-GND" : "1.2V to GND", "1.5-GND" : "1.5V to GND",
                      "2.5-GND" : "2.5V to GND", "3.3-GND" : "3.3V to GND  ", "5.0-GND" : "  5.0V to GND",
                      "1.2-1.5" : "1.2V to 1.5V", "1.2-2.5" : "1.2V to 2.5V", "1.2-3.3" : "1.2V to 3.3V", "1.2-AVCC" : "1.2V to AVCC  ",
@@ -1345,7 +981,6 @@ class makeGui(Tools):
         self.clearDataBttn = Button(self.experi_subTop7_frame, text="Clear Inspections, Tests, & Info", command=self.clearDataBttnPress)
         self.clearDataBttn.configure(bg=self.buttonsc[6], fg=self.fontc, width=40, activebackground=self.dimbuttonsc[6], activeforeground=self.fontc)
         self.clearDataBttn.pack(side=TOP)
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
 
 
 
@@ -1574,12 +1209,7 @@ class makeGui(Tools):
 #############################################################################
 
     # Opens the proper GPIO slot. Used for programming cards.
-<<<<<<< HEAD
-    def gpioBttnPress(self):
-        # Previous dict. Defines GPIO values.
-=======
     def gpioBttnPress(self,*args):
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
         jSlotDict = {"J2 and J18" : 0x29, "J3 and J19" : 0x89, "J4 and J20" : 0xA9,
                      "J5 and J21" : 0x49, "J7 and J23" : 0x2A, "J8 and J24" : 0x8A,
                      "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
@@ -1591,32 +1221,6 @@ class makeGui(Tools):
                         "J7 and J26" : [0x2A,0x4A], "J8 and J25" : [0x8A,0xAA],
                         "J9 and J24" : [0xAA,0x8A], "J10 and J23" : [0x4A,0x2A]}
 
-<<<<<<< HEAD
-        dictStringToInts = {"J2 and J18" : [2, 18], "J3 and J19" : [3, 19],
-                            "J4 and J20" : [4, 20], "J5 and J21" : [5, 21],
-                            "J7 and J23" : [7, 23], "J8 and J24" : [8, 24],
-                            "J9 and J25" : [9, 25], "J10 and J26" : [10, 26]}
-
-        gpioVal = jSlotDict[self.gpioChoiceVar.get()]
-        self.jslots = dictStringToInts[self.gpioChoiceVar.get()]
-        self.gpioSelected = True
-        # print 'GPIO selected: {0}'.format(self.gpioChoiceVar.get())
-
-        # Fanout Commands
-        #if gpioValsIndex == 0:
-            #self.myBus.write(self.fanout, [0x02])
-        #else:
-            #self.myBus.write(self.fanout, [0x01])
-        #batch = self.myBus.sendBatch()
-        self.myBus.write(self.ccm, [0x08]) # PCA9538 is bit 3 on ngccm mux
-        # myBus.write(self.gpio,[0x01,0x00]) # GPIO PwrEn is register 3
-        #power on and reset
-            #register 3 is control reg for i/o modes
-        self.myBus.write(self.gpio,[0x03,0x00]) # sets all GPIO pins to 'output' mode
-        self.myBus.write(self.gpio,[0x01,0x08])
-        self.myBus.write(self.gpio,[0x01,0x18]) # GPIO reset is 10
-        self.myBus.write(self.gpio,[0x01,0x08])
-=======
         dictStringToInts = {"J2 and J21" : [2, 21], "J3 and J20" : [3, 20],
                             "J4 and J19" : [4, 19], "J5 and J18" : [5, 18],
                             "J7 and J26" : [7, 26], "J8 and J25" : [8, 25],
@@ -1642,29 +1246,10 @@ class makeGui(Tools):
             self.myBus.write(0x70,[0x01,0x08]) # GPIO value 0x08: bakplane power enable 1
             self.myBus.write(0x70,[0x01,0x18]) # GPIO reset 0x18: backplane reset 1
             self.myBus.write(0x70,[0x01,0x08]) # GPIO reset 0x08: backplane reset 0
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
     
-        #jtag selectors finnagling for slot 26
-        self.myBus.write(self.gpio,[0x01,gpioVal])
+            #jtag selectors finnagling for slot 26
+            self.myBus.write(self.gpio,[0x01,gpioVal])
     
-<<<<<<< HEAD
-        # myBus.write(self.gpio,[0x03,0x08])
-        self.myBus.read(self.gpio,1)
-        batch = self.myBus.sendBatch()
-    
-        if (batch[-1] == "1 0"):
-            print "GPIO I2C Error: {0}".format(self.gpioChoiceVar.get())
-            self.gpioSelect_bttn.configure(bg="#ff3333")
-        elif (batch[-1] == "0 "+str(gpioVal)):
-            print 'GPIO selected: {0}'.format(self.gpioChoiceVar.get())
-            self.gpioSelect_bttn.configure(bg="#33ff33")
-    
-        else:
-            print 'GPIO Choice Error... state of confusion!'
-            # print 'initial = '+str(batch)
-        
-        #print 'GPIO batch: {0}'.format(batch)
-=======
             # myBus.write(0x70,[0x03,0x08])
             self.myBus.read(0x70,1)
             batch = self.myBus.sendBatch()
@@ -1700,20 +1285,12 @@ class makeGui(Tools):
             print "Reading from BRDG_ADDR_IGLO_CONTROL after selecting JTAG: message = {0}".format(message)
             
             print "Ready to program {0} igloo".format(igloo)
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
 
 ##################################################################################
 
     def getUniqueIDPress_left(self):
         self.readFromLeft = True
-<<<<<<< HEAD
-        if self.gpioSelected:
-            self.getUniqueIDPress()
-        else:
-            print 'GPIO not selected. Please select GPIO.'
-=======
         self.getUniqueIDPress()
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
 
 ##################################################################################
 
@@ -1728,18 +1305,6 @@ class makeGui(Tools):
 
     # Read UniqueID, Bridge and Igloo Firmware Versions
     def getUniqueIDPress(self):
-<<<<<<< HEAD
-        # The keys (self.jslot) retun i2c addresses (self.slot)
-        bridgeDict = {  2 : 0x19, 3 : 0x1A, 4 : 0x1B, 5 : 0x1C,
-                        7 : 0x19, 8 : 0x1A, 9: 0x1B, 10: 0x1C,
-                       18 : 0x19, 19 : 0x1A, 20: 0x1B, 21 : 0x1C,
-                       23 : 0x19, 24 : 0x1A, 25: 0x1B, 26 : 0x1C}
-
-        if self.readFromLeft:
-            self.jslot = self.jslots[0]
-            self.slot = bridgeDict[self.jslot]
-            #self.myBus.write(self.fanout, [0x02])
-=======
         
         """
         bridgeDict = { 18 : 0x19, 19 : 0x1A, 20 : 0x1B, 21 : 0x1C,
@@ -1759,25 +1324,12 @@ class makeGui(Tools):
         else:
             self.jslot = self.jslots[0]
             self.card_i2c_address = bridgeDict[self.jslot]
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
             if self.jslot in [2,3,4,5]:
                self.myBus.write(self.ccm, [0x02^0x8])
             if self.jslot in [7,8,9,10]:
-<<<<<<< HEAD
-               self.myBus.write(self.ccm, [0x20^0x8])
-        else:
-            self.jslot = self.jslots[1]
-            self.slot = bridgeDict[self.jslot]
-            #self.myBus.write(self.fanout, [0x01])
-            if self.jslot in [18,19,20,21]:
-                self.myBus.write(self.ccm,[0x10^0x8])
-            if self.jslot in [23,24,25,26]:
-                self.myBus.write(self.ccm,[0x01^0x8])
-=======
                self.myBus.write(0x72, [0x02])
                self.myBus.write(0x74, [0x28])
         """
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
 
         if self.readFromLeft:
             self.jslot = self.jslots[1]
@@ -1792,14 +1344,8 @@ class makeGui(Tools):
                         7 : 0x19,  8 : 0x1A,  9 : 0x1B, 10 : 0x1C }
         self.card_i2c_address = bridgeDict[self.jslot]
 
-<<<<<<< HEAD
-        # slot = 0x19
-        # Use self.slot, which is defined through gpioChoiceVar
-        print 'Selected Slot: J'+str(self.jslot)
-=======
         print "Reading Unique ID and Firmware versions."
         print "JSlot = {0} ; I2C_Address = 0x{1:02x}".format(self.jslot, self.card_i2c_address)
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
 
         # Getting unique ID
         # 0x05000000ea9c8b7000   <- From main gui
@@ -1812,12 +1358,6 @@ class makeGui(Tools):
         # raw_bus is list of strings (list of messages)
         # the last entry in raw_bus is the message string containing the unique id
         raw_bus = self.myBus.sendBatch()
-<<<<<<< HEAD
-        print 'Raw Unique ID: '+str(raw_bus[-1])
-        if raw_bus[-1][0] != '0':
-            print 'Read Unique ID I2C Error!'
-            return False
-=======
         
         # Verify checksum
         selfcheck = Checksum(raw_bus[-1],0).result
@@ -1834,7 +1374,6 @@ class makeGui(Tools):
             print self.I2C_ERROR_HELP
             return
         
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
         cooked_bus = self.reverseBytes(raw_bus[-1])
         #cooked_bus = self.serialNum(cooked_bus)
         self.uniqueIDEntry.set(self.toHex(cooked_bus))
@@ -1929,24 +1468,6 @@ class makeGui(Tools):
             # print 'Igloo Ones = '+str(register)
 
         # Turn Igloo On
-<<<<<<< HEAD
-        # print 'Igloo Control = '+str(self.toggleIgloo())
-        self.toggleIgloo()
-        register = self.readIgloo(ones_address, 4)
-        if register != all_ones:
-            retval = False
-        # print 'Igloo Ones = '+str(register)
-
-        if retval:
-            print 'Toggle Igloo Power Success!'
-        else:
-            # confirm power on and card in slot J2, J7, J18, J23 to toggle dc-dc voltage
-            print 'Toggle Igloo Power Fail!'
-            print '\nPlease confirm that the power source is on.'
-            print 'Please confirm that the card is in the selected slot.'
-        return retval
-
-=======
         message=self.toggleIgloo()
         print 'Igloo Powered on Bridge Control Igloos = '+str(message)
         time.sleep(2) 
@@ -1963,7 +1484,6 @@ class makeGui(Tools):
         return "Passed"
 
     # turning igloo on and off using bridge vdd enable register
->>>>>>> d33b738db20ef05c8dfd9f14528629f004e4b771
     def toggleIgloo(self):
         iglooControl = 0x22
         message = self.readBridge(iglooControl,4)

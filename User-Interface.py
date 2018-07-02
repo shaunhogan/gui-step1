@@ -298,22 +298,6 @@ class makeGui(Tools):
             ipady=frame_ipady, pady=frame_pady,
             )
 
-        # Make top 2_8 subframe
-        self.experi_subTop2_9_frame = Frame(self.experiment_frame, bg="white")
-        self.experi_subTop2_9_frame.pack(
-            side=TOP,
-            ipadx=frame_ipadx, padx=frame_padx,
-            ipady=frame_ipady, pady=frame_pady,
-            )
-
-        # Make top 2_8 subframe
-        self.experi_subTop2_10_frame = Frame(self.experiment_frame, bg="white")
-        self.experi_subTop2_10_frame.pack(
-            side=TOP,
-            ipadx=frame_ipadx, padx=frame_padx,
-            ipady=frame_ipady, pady=frame_pady,
-            )
-
         # Make top 2_6 subframe
         self.experi_subTop2_6_frame = Frame(self.experiment_frame, bg=self.rightc)
         self.experi_subTop2_6_frame.pack(
@@ -853,17 +837,6 @@ class makeGui(Tools):
         self.gpioSelect_bttn.configure(bg=self.buttonsc[0],fg=self.fontc,activebackground=self.dimbuttonsc[0],activeforeground=self.fontc)
         self.gpioSelect_bttn.pack()
 
-
-        # Make a button to read the unique ID & firmware LEFT SIDE (RM 4 and 3)
-        self.experi_uniqueID_left_get = Button(self.experi_subTop2_9_frame, text ="Read from Left (J2-J5 and J7-J10: RM 4 and 3)", command=self.getUniqueIDPress_left)
-        self.experi_uniqueID_left_get.configure(bg="lemon chiffon")
-        self.experi_uniqueID_left_get.pack(side=TOP)
-
-        # Make a button to read the unique ID & firmware  RIGHT SIDE (RM 2 and 1)
-        self.experi_uniqueID_right_get = Button(self.experi_subTop2_10_frame, text ="Read from Right (J18-J21 and J23-J26: RM 2 and 1)", command=self.getUniqueIDPress_right)
-        self.experi_uniqueID_right_get.configure(bg="CadetBlue1")
-        self.experi_uniqueID_right_get.pack(side=TOP)
-
         ################################
         ###                          ###
         ###     Visual Tests         ###
@@ -989,17 +962,6 @@ class makeGui(Tools):
     ###  BEGIN MEMBER FUNCTIONS   ###
     ###                           ###
     #################################
-
-    # Test Raspberry Pi Connection
-    def pingPi(self):
-        print "Pinging Raspberry Pi. Hold please!"
-        status = os.system("ping -c 1 {0}".format(self.pi))
-        if status == 0:
-            print "Raspberry Pi Connected: {0}".format(self.pi)
-            return True
-        else:
-            print "Raspberry Pi Connection Error: {0}".format(self.pi)
-            return False
 
     # This function is needed to make the json dumps print properly
     def jdefault(self,o):
@@ -1215,8 +1177,8 @@ class makeGui(Tools):
                      "J9 and J25" : 0xAA, "J10 and J26" : 0x4A}
 
 
-        # Old Full Backplane Functionality
-        oldJSlotDict = {"J2 and J21" : [0x29,0x49], "J3 and J20" : [0x89,0xA9],
+        # Full Backplane Functionality
+        newJSlotDict = {"J2 and J21" : [0x29,0x49], "J3 and J20" : [0x89,0xA9],
                         "J4 and J19" : [0xA9,0x89], "J5 and J18" : [0x49,0x29],
                         "J7 and J26" : [0x2A,0x4A], "J8 and J25" : [0x8A,0xAA],
                         "J9 and J24" : [0xAA,0x8A], "J10 and J23" : [0x4A,0x2A]}
@@ -1248,7 +1210,7 @@ class makeGui(Tools):
             self.myBus.write(0x70,[0x01,0x08]) # GPIO reset 0x08: backplane reset 0
     
             #jtag selectors finnagling for slot 26
-            self.myBus.write(self.gpio,[0x01,gpioVal])
+            self.myBus.write(0x70,[0x01,gpioVal])
     
             # myBus.write(0x70,[0x03,0x08])
             self.myBus.read(0x70,1)
@@ -1296,10 +1258,7 @@ class makeGui(Tools):
 
     def getUniqueIDPress_right(self):
         self.readFromLeft = False
-        if self.gpioSelected:
-            self.getUniqueIDPress()
-        else:
-            print 'GPIO not selected. Please select GPIO.'
+        self.getUniqueIDPress()
 
 ##################################################################################
 
@@ -1325,7 +1284,8 @@ class makeGui(Tools):
             self.jslot = self.jslots[0]
             self.card_i2c_address = bridgeDict[self.jslot]
             if self.jslot in [2,3,4,5]:
-               self.myBus.write(self.ccm, [0x02^0x8])
+               self.myBus.write(0x72, [0x02])
+               self.myBus.write(0x74, [0x0A])
             if self.jslot in [7,8,9,10]:
                self.myBus.write(0x72, [0x02])
                self.myBus.write(0x74, [0x28])
@@ -1433,7 +1393,7 @@ class makeGui(Tools):
 #########################################
 
     def checkIglooToggle(self):
-        #print '\n--- Begin Toggle Igloo2 Power Test'
+        print '\n--- Begin Toggle Igloo2 Power Test'
         control_address = 0x22
         message = self.readBridge(control_address,4)
         print 'Igloo Powered on Bridge Control Igloos = '+str(message)

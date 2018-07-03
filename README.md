@@ -11,7 +11,7 @@ Programming repository: https://github.com/BaylorCMS/gui-step1/tree/hackFor904
 
 Branch: hackFor904
 
-###Using Windows Powershell
+### Using Windows Powershell
 
 Print unique ids and current firmware versions
 
@@ -33,7 +33,7 @@ Use simple graphical user interface (GUI)
 
 python.exe .\Simple-Gui.py
 
-###Slot designation:
+### Slot designation:
 
 RM 1 Slot 1 : J26
 

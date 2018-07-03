@@ -43,7 +43,7 @@ class makeGui(Tools):
         self.databasePath = "/home/django/testing_database_hb"
         # Create a webBus instance
         #self.myBus = client.webBus("192.168.1.41",0)
-        self.myBus = client.webBus("pi6",0)
+        self.myBus = client.webBus("192.168.1.26",0)
 
         # Create a permanent I2C address of QCard (slot 1)
         self.card_i2c_address = 0x19

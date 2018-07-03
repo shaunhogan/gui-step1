@@ -159,9 +159,10 @@ class Tools:
 
         if self.jslot in [18,19,20,21]:
             self.myBus.write(0x72, [0x01])
-            self.myBus.write(0x74,[0x18])
+            self.myBus.write(0x74, [0x18])
         if self.jslot in [23,24,25,26]:
             self.myBus.write(0x72, [0x01])
+            self.myBus.write(0x74, [0x09])
         if self.jslot in [2,3,4,5]:
            self.myBus.write(0x72, [0x02])
            self.myBus.write(0x74, [0x0A])

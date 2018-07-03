@@ -1,4 +1,4 @@
-# User-Interface.py
+# Simple-Interface.py
 #
 # This is the main Graphical User Interface for for Teststand 1. 
 # A server runs on a RaspberryPi, which connects to the Fanout.
@@ -43,7 +43,7 @@ class makeGui(Tools):
         self.databasePath = "/home/django/testing_database_hb"
         # Create a webBus instance
         #self.myBus = client.webBus("192.168.1.41",0)
-        self.myBus = client.webBus("192.168.1.26",0)
+        self.myBus = client.webBus("pi7",0)
 
         # Create a permanent I2C address of QCard (slot 1)
         self.card_i2c_address = 0x19
@@ -1019,7 +1019,7 @@ class makeGui(Tools):
             json.dump(self.initialTest, jsonFile, default = self.jdefault)
 
 
-        subprocess.call(self.databasePath+"/uploader/step123.sh", shell=True)
+        subprocess.call(self.databasePath+"/uploader/step12.sh", shell=True)
         print "Preliminary step recorded. Thank you!"
 
 ##########################################################################################
@@ -1089,7 +1089,7 @@ class makeGui(Tools):
         with open(self.databasePath+'/uploader/temp_json/'+fileString,'w') as jsonFile:
             json.dump(self.cardInfo, jsonFile, default = self.jdefault)
 
-        subprocess.call(self.databasePath+"/uploader/step123.sh", shell=True)
+        subprocess.call(self.databasePath+"/uploader/step12.sh", shell=True)
         print "Secondary step recorded. Thank you!"
 
 ###########################################################################################

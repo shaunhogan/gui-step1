@@ -1003,6 +1003,8 @@ class makeGui(Tools):
         if self.overwriteVar.get() == 0: self.initialTest.Overwrite = False
 
         for i in range(len(self.testPassList)-2):       #Last two are part of the firmware check
+            print(self.testLabelList[i])
+            print(self.testPassList[i].get())
             if self.testPassList[i].get() == "Pass":
                 self.initialTest.testResults[self.testLabelList[i]] = True
             elif self.testPassList[i].get() == "Fail":
@@ -1057,7 +1059,7 @@ class makeGui(Tools):
         self.noButton.pack()
 
     def passAllSelected(self):
-        for i in range(len(self.testPassList)):
+        for i in range(len(self.testPassList)-2):
             self.testPassList[i].set("Pass")
             self.testPassInfo[i].configure(text="Pass")
         self.infoValChangeNonevent()
@@ -1138,9 +1140,9 @@ class makeGui(Tools):
         # Behind the scenes, change all the tests to "Fail"
         for i in range(len(self.testPassList)-2):
             if self.testPassList[i].get() == "Pass":
-                self.initialTest.testResults[self.testLabelList[i-1]] = True
+                self.initialTest.testResults[self.testLabelList[i]] = True
             else:
-                self.initialTest.testResults[self.testLabelList[i-1]] = False
+                self.initialTest.testResults[self.testLabelList[i]] = False
 
         # Change the buttons back to their red state
         self.infoValChangeNonevent()

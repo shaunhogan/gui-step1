@@ -1136,7 +1136,7 @@ class makeGui(Tools):
         self.initialTest.Overwrite = False
 
         # Behind the scenes, change all the tests to "Fail"
-        for i in range(len(self.testPassList)):
+        for i in range(len(self.testPassList)-2):
             if self.testPassList[i].get() == "Pass":
                 self.initialTest.testResults[self.testLabelList[i-1]] = True
             else:

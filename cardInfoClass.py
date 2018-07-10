@@ -13,5 +13,4 @@ class cardInformation:
         self.IglooMajVerT = ""
         self.IglooMinVerB = ""
         self.IglooMajVerB = ""
-        self.Igloo_FPGA_Control = ""
         self.Checksum = ""

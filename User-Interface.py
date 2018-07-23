@@ -988,16 +988,32 @@ class makeGui(Tools):
 
 #########################################################################################
 
+    def barcodeErrorBox(self):
+         self.top = Toplevel()
+         self.top.title("Barcode Entry Error")
+         self.top.config(height=50, width=360, bg=self.backc)
+         self.top.pack_propagate(False)
+ 
+         self.msg = Label(self.top, text="Your barcode must be exactly 7 characters",fg=self.fontc, bg=self.backc)
+         self.msg.pack()
+ 
+         self.button = Button(self.top, text="Ok", command=self.top.destroy)
+         self.button.configure(bg=self.buttonsc[7],fg=self.fontc,activebackground=self.dimbuttonsc[7],activeforeground=self.fontc)
+         self.button.pack()
+
 
     # Dumps the results of the tests & inspections to a json file
     def initSubmitBttnPress(self):
         if (self.nameChoiceVar.get() == "Choose Name"):
             self.throwErrorBox()
             return None
-
+        if (len(self.barcodeEntry.get()) != 7):
+            self.barcodeErrorBox()
+            return None
         self.initialTest.User = self.nameChoiceVar.get()
         self.initialTest.TestComment = self.infoCommentVar.get()
         self.initialTest.Barcode     = self.barcodeEntry.get()
+        print self.initialTest.Barcode 
         self.initialTest.DateRun = str(datetime.now())
 
         if self.overwriteVar.get() == 1: self.initialTest.Overwrite = True
@@ -1030,10 +1046,10 @@ class makeGui(Tools):
     def throwErrorBox(self):
         self.top = Toplevel()
         self.top.title("Name Choice Error")
-        self.top.config(height=50, width=360)
+        self.top.config(height=50, width=360, bg=self.backc)
         self.top.pack_propagate(False)
 
-        self.msg = Label(self.top, text="Please select a name before continuing.",fg=self.fontc)
+        self.msg = Label(self.top, text="Please select a name before continuing.",fg=self.fontc,bg=self.backc)
         self.msg.pack()
 
         self.button = Button(self.top, text="Sorry...", command=self.top.destroy)
@@ -1070,6 +1086,9 @@ class makeGui(Tools):
 
     # Dumps the card UID and firmware version to a json file
     def infoSubmitButtonPress(self):
+        if (len(self.barcodeEntry.get()) != 7):
+             self.barcodeErrorBox()
+             return None
         self.cardInfo.Barcode = self.barcodeEntry.get()
         self.cardInfo.Unique_ID = self.uniqueIDPass
         self.cardInfo.FirmwareMaj = self.firmwareVerEntry.get()

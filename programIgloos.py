@@ -24,7 +24,7 @@ def writeTCLFile(programFile):
         file.write("close_project\n")
         
 def moveLog(initialLog, finalLog):
-    if os.path.isfile(initialLog)
+    if os.path.isfile(initialLog):
         if not os.path.exists("logs"):
             os.makedirs("logs")
         if os.path.isfile(finalLog):

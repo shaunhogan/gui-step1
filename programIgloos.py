@@ -34,6 +34,7 @@ def moveLog(initialLog, finalLog):
         print "Cannot move log file '{0}' because it does not exist.".format(initialLog)
 
 if __name__ ==  "__main__":
+    # define log file for teststand
     logFile = "teststand.log"  
     begin_time = datetime.now()
     writeToLog(logFile, "Begin time is: {0}".format(begin_time))
@@ -103,16 +104,16 @@ if __name__ ==  "__main__":
                     output = sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
                     writeToLog(logFile, "Success Programing: {0} {1} Igloo FPGA".format(slot,igloo) )
                     Igloos_Programmed=True
-                    finalLog = "logs/{0}_{1}".format(igloo, flashproLog)
+                    finalLog = "logs/{0}_igloo_{1}".format(igloo, flashproLog)
                     moveLog(flashproLog, finalLog)
                 except:
                     writeToLog(logFile, "Error: Failed Programing: {0} {1} Igloo FPGA".format(slot,igloo) )
                     Igloos_Programmed=False
-                    finalLog = "logs/{0}_{1}".format(igloo, flashproLog)
+                    finalLog = "logs/{0}_igloo_{1}".format(igloo, flashproLog)
                     moveLog(flashproLog, finalLog)
                     break
                 # Used this to pause if you want to program using flashpro GUI
-                #raw_input("press enter to continue")
+                # raw_input("press enter to continue")
 
             data = ts.readInfo(slot)
             if Igloos_Programmed:

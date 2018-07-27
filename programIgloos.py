@@ -68,6 +68,10 @@ if __name__ ==  "__main__":
             exit()
     else:
         slots = ts.active_slots
+
+    if not ts.active_slots:
+        writeToLog(logFile, "ERROR: No active slots found. Check that QIE cards are inserted in the backplane and powered on.")
+        exit(1)
     
     # define log files
     flashproLog = "flashpro.log"
@@ -133,11 +137,14 @@ if __name__ ==  "__main__":
         writeToLog(logFile, "")
         writeToLog(logFile, "Uploading results to database")
         writeToLog(logFile, "")
-        output = sp.check_output("bash uploadIgloo.sh -w", shell=True)
-        writeToLog(logFile, "")
-        writeToLog(logFile, "uploadIgloo.sh output:")
-        writeToLog(logFile, "")
-        writeToLog(logFile, output)
+        try:
+            output = sp.check_output("bash uploadIgloo.sh -w", shell=True)
+            writeToLog(logFile, "")
+            writeToLog(logFile, "uploadIgloo.sh output:")
+            writeToLog(logFile, "")
+            writeToLog(logFile, output)
+        except:
+            writeToLog(logFile, "ERROR: Unable to upload results to the database. It is possible that the step3 json file does not exist in the temp_json directory.")
         #outputlist = output.split("\n")
         #for line in outputlist:
         #    sp.call("echo {0}".format(line))
@@ -152,7 +159,7 @@ if __name__ ==  "__main__":
         writeToLog(logFile, "    4. Did you use the correct ip address?")
         writeToLog(logFile, "    5. Did you have coffee today?")
     
-    logFile = "teststand.log"  
+    logFile = "teststand.log" 
     end_time = datetime.now()
     writeToLog(logFile, "End time is: {0}".format(end_time))
     total_time = end_time-begin_time

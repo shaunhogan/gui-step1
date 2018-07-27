@@ -6,6 +6,7 @@ import subprocess as sp
 import json
 
 def writeTCLFile(programFile):
+    flashproLog = "flashpro.log"
     with open("program_igloo.tcl", "w") as file:
         file.write("# Microsemi Tcl Script\n")
         file.write("# flashpro\n")
@@ -15,9 +16,20 @@ def writeTCLFile(programFile):
         file.write("open_project -project {%s} -connect_programmers 1\n"%(os.path.abspath("HB_igloo/HB_igloo.pro").replace("\\","/")))
         file.write("set_programming_file -file {%s}\n"%os.path.abspath(programFile).replace("\\","/"))
         file.write("remove_prg -name 84830\n")
+        file.write("set_programming_action PROGRAM\n")
+        file.write("set_main_log_file -file {0}\n".format(flashproLog))
+        file.write("save_log\n")
         file.write("run_selected_actions\n")
         file.write("close_project\n")
         
+def moveLog(igloo):
+    flashproLog = "flashpro.log"
+    if not os.path.exists("logs"):
+        os.makedirs("logs")
+    newLog = "logs/{0}_igloo_{1}".format(igloo, flashproLog)
+    if os.path.isfile(newLog):
+        os.remove(newLog)
+    os.rename(flashproLog, newLog)
 
 if __name__ ==  "__main__":
     begin_time = datetime.now()
@@ -76,11 +88,13 @@ if __name__ ==  "__main__":
                 #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:C:\\Users\\pastika\\Desktop\\program_igloo.tcl console_mode:brief", shell=True)
                 try:
                     output = sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
-                    Igloos_Programmed=True
                     print "Success Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
+                    Igloos_Programmed=True
+                    moveLog(igloo)
                 except:
                     print "Error: Failed Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
                     Igloos_Programmed=False
+                    moveLog(igloo)
                     break
                 # Used this to pause if you want to program using flashpro GUI
                 #raw_input("press enter to continue")

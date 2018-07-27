@@ -16,7 +16,7 @@ def writeTCLFile(programFile):
         file.write("open_project -project {%s} -connect_programmers 1\n"%(os.path.abspath("HB_igloo/HB_igloo.pro").replace("\\","/")))
         file.write("set_programming_file -file {%s}\n"%os.path.abspath(programFile).replace("\\","/"))
         file.write("remove_prg -name 84830\n")
-        file.write("set_programming_action PROGRAM\n")
+        file.write("set_programming_action -action PROGRAM\n")
         file.write("set_main_log_file -file {0}\n".format(flashproLog))
         file.write("run_selected_actions\n")
         file.write("save_log -file {0}\n".format(flashproLog))

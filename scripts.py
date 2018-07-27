@@ -103,7 +103,7 @@ class Teststand:
 
 ##################################################################################
 
-    def setLogFile(logFile):
+    def setLogFile(self, logFile):
         self.logFile = logFile
 
     # Test Raspberry Pi Connection

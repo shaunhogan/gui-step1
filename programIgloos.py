@@ -128,9 +128,19 @@ if __name__ ==  "__main__":
             with open(jsonFile, 'w') as jf:
                 json.dump(data, jf)
             
+            # create log directory using unique id
             unique_id = data["Unique_ID"]
-            finalLog = "logs/{0}.log".format(unique_id)
+            card_dir = "logs/{0}".format(unique_id)
+            if not os.path.exists(card_dir):
+                os.makedirs(card_dir)
+            
+            # move log files to unique id directory
+            finalLog = "{0}/{1}".format(card_dir, tempLog)
             moveLog(tempLog, finalLog)
+            for igloo in igloos:
+                initialLog = "logs/{0}_igloo_{1}".format(igloo, flashproLog)
+                finalLog = "{0}/{1}_igloo_{2}".format(card_dir, igloo, flashproLog)
+                moveLog(initialLog, finalLog)
         
         for datum in iglooData:
             writeToLog(logFile, "Top Igloo FW: {0} {1}".format(datum["IglooMajVerT"], datum["IglooMinVerT"]))

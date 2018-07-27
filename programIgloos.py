@@ -1,6 +1,7 @@
 from optparse import OptionParser
 from datetime import datetime
 from scripts import Teststand
+from scripts import writeToLog
 import os
 import subprocess as sp
 import json
@@ -22,16 +23,18 @@ def writeTCLFile(programFile):
         file.write("save_log -file {0}\n".format(flashproLog))
         file.write("close_project\n")
         
-def moveLog(igloo):
-    flashproLog = "flashpro.log"
-    if not os.path.exists("logs"):
-        os.makedirs("logs")
-    newLog = "logs/{0}_igloo_{1}".format(igloo, flashproLog)
-    if os.path.isfile(newLog):
-        os.remove(newLog)
-    os.rename(flashproLog, newLog)
+def moveLog(initialLog, finalLog):
+    if os.path.isfile(initialLog)
+        if not os.path.exists("logs"):
+            os.makedirs("logs")
+        if os.path.isfile(finalLog):
+            os.remove(finalLog)
+        os.rename(initialLog, finalLog)
+    else:
+        print "Cannot move log file '{0}' because it does not exist.".format(initialLog)
 
 if __name__ ==  "__main__":
+    #logFile 
     begin_time = datetime.now()
     print "Begin time is: {0}".format(begin_time)
     parser = OptionParser()
@@ -66,11 +69,16 @@ if __name__ ==  "__main__":
     else:
         slots = ts.active_slots
     
+    # define log files
+    flashproLog = "flashpro.log"
+    tempLog = "card.log"
+    
     # program top and bottom igloos
     igloos = ["top","bot"]
     iglooData = []
     if ts.piStatus and ts.busStatus:
         for slot in slots:
+            ts.setLogFile(tempLog)
             Igloos_Programmed=False
             # We should not read from Igloos before programming
             #data = ts.readInfo(slot)
@@ -90,11 +98,13 @@ if __name__ ==  "__main__":
                     output = sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
                     print "Success Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
                     Igloos_Programmed=True
-                    moveLog(igloo)
+                    finalLog = "logs/{0}_{1}".format(igloo, flashproLog)
+                    moveLog(flashproLog, finalLog)
                 except:
                     print "Error: Failed Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
                     Igloos_Programmed=False
-                    moveLog(igloo)
+                    finalLog = "logs/{0}_{1}".format(igloo, flashproLog)
+                    moveLog(flashproLog, finalLog)
                     break
                 # Used this to pause if you want to program using flashpro GUI
                 #raw_input("press enter to continue")
@@ -111,6 +121,10 @@ if __name__ ==  "__main__":
             jsonFile = "temp_json/{0}_step3_raw.json".format(data["Unique_ID"])
             with open(jsonFile, 'w') as jf:
                 json.dump(data, jf)
+            
+            unique_id = data["Unique_ID"]
+            finalLog = "logs/{0}.log".format(unique_id)
+            moveLog(tempLog, finalLog)
         
         for datum in iglooData:
             print "Top Igloo FW: {0} {1}".format(datum["IglooMajVerT"], datum["IglooMinVerT"])

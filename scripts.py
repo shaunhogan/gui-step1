@@ -1,4 +1,6 @@
-# SimpleScripts to select GPIO and read from slots.
+# Teststand class to select GPIO and read from slots.
+# Used to program Igloo FPGAs
+# Used to read from QIE cards
 
 # CERN, Building 904
 # October 2016
@@ -18,9 +20,17 @@ import platform
 import config
 import time
 
+def writeToLog(logFile, line): 
+    timeStamp = datetime.now()
+    line = "{0} {1}".format(timeStamp, line)
+    print line
+    with open(logFile, 'a') as f:
+        print >> f, line 
+
 # Teststand class pings Raspberry Pi
 class Teststand:
     def __init__(self, board=True, calibration=False, ip=config.ip_address):
+        self.logFile = "teststand.log"
         # Include calibraiton unit.
         self.calibrate = calibration
         # Use fanout board with channels.
@@ -93,6 +103,8 @@ class Teststand:
 
 ##################################################################################
 
+    def setLogFile(logFile):
+        self.logFile = logFile
 
     # Test Raspberry Pi Connection
     def pingPi(self):

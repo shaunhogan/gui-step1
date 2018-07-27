@@ -18,8 +18,8 @@ def writeTCLFile(programFile):
         file.write("remove_prg -name 84830\n")
         file.write("set_programming_action PROGRAM\n")
         file.write("set_main_log_file -file {0}\n".format(flashproLog))
-        file.write("save_log\n")
         file.write("run_selected_actions\n")
+        file.write("save_log -file {0}\n".format(flashproLog))
         file.write("close_project\n")
         
 def moveLog(igloo):

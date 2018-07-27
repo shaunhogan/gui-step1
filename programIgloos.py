@@ -120,8 +120,8 @@ if __name__ ==  "__main__":
             else:
                 data["Igloos_Programmed"]="Failed"
 
-            writeToLog(logFile, "time: ", data["DateRun"])
-            writeToLog(logFile, "temp: ", data["temperature"])
+            writeToLog(logFile, "time: {0}".format(data["DateRun"]))
+            writeToLog(logFile, "temp: {0}".format(data["temperature"]))
             iglooData.append(data)
             jsonFile = "temp_json/{0}_step3_raw.json".format(data["Unique_ID"])
             with open(jsonFile, 'w') as jf:

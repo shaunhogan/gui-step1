@@ -34,9 +34,9 @@ def moveLog(initialLog, finalLog):
         print "Cannot move log file '{0}' because it does not exist.".format(initialLog)
 
 if __name__ ==  "__main__":
-    #logFile 
+    logFile = "teststand.log"  
     begin_time = datetime.now()
-    print "Begin time is: {0}".format(begin_time)
+    writeToLog(logFile, "Begin time is: {0}".format(begin_time))
     parser = OptionParser()
     parser.add_option("-f", "--file",               dest="filename",        default="HB_igloo/fixed_HB_RM_v1_03.stp", help="Firmware programming file")
     parser.add_option("-i", "--ip",                 dest="ip",              help="ip address of Raspberry Pi")
@@ -64,7 +64,7 @@ if __name__ ==  "__main__":
         if slot in ts.active_slots:
             slots = [slot]
         else:
-            print "Invalid Slot"
+            writeToLog(logFile, "Invalid Slot")
             exit()
     else:
         slots = ts.active_slots
@@ -78,30 +78,31 @@ if __name__ ==  "__main__":
     iglooData = []
     if ts.piStatus and ts.busStatus:
         for slot in slots:
+            logFile = tempLog
             ts.setLogFile(tempLog)
             Igloos_Programmed=False
             # We should not read from Igloos before programming
             #data = ts.readInfo(slot)
-            #print "time: ", data["DateRun"]
-            #print "temp: ", data["temperature"]
+            #writeToLog(logFile, "time: ", data["DateRun"])
+            #writeToLog(logFile, "temp: ", data["temperature"])
             for igloo in igloos:
-                print ""
-                print "Initiated Programing of SpecifiedSlot: {0} {1} Igloo FPGA".format(slot,igloo)
-                print ""
+                writeToLog(logFile, "")
+                writeToLog(logFile, "Initiated Programing of SpecifiedSlot: {0} {1} Igloo FPGA".format(slot,igloo))
+                writeToLog(logFile, "")
 
                 ts.selectGpio(slot,igloo)
 
-                print "Starting Flashpro batch programming mode"
+                writeToLog(logFile, "Starting Flashpro batch programming mode")
                 # Please include the correct Microsemi path here 
                 #sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:C:\\Users\\pastika\\Desktop\\program_igloo.tcl console_mode:brief", shell=True)
                 try:
                     output = sp.check_output("C:\\Microsemi\\Program_Debug_v11.7\\bin\\flashpro.exe script:%s console_mode:brief"%os.path.abspath("program_igloo.tcl"), shell=True)
-                    print "Success Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
+                    writeToLog(logFile, "Success Programing: {0} {1} Igloo FPGA".format(slot,igloo) )
                     Igloos_Programmed=True
                     finalLog = "logs/{0}_{1}".format(igloo, flashproLog)
                     moveLog(flashproLog, finalLog)
                 except:
-                    print "Error: Failed Programing: {0} {1} Igloo FPGA".format(slot,igloo) 
+                    writeToLog(logFile, "Error: Failed Programing: {0} {1} Igloo FPGA".format(slot,igloo) )
                     Igloos_Programmed=False
                     finalLog = "logs/{0}_{1}".format(igloo, flashproLog)
                     moveLog(flashproLog, finalLog)
@@ -115,8 +116,8 @@ if __name__ ==  "__main__":
             else:
                 data["Igloos_Programmed"]="Failed"
 
-            print "time: ", data["DateRun"]
-            print "temp: ", data["temperature"]
+            writeToLog(logFile, "time: ", data["DateRun"])
+            writeToLog(logFile, "temp: ", data["temperature"])
             iglooData.append(data)
             jsonFile = "temp_json/{0}_step3_raw.json".format(data["Unique_ID"])
             with open(jsonFile, 'w') as jf:
@@ -127,33 +128,35 @@ if __name__ ==  "__main__":
             moveLog(tempLog, finalLog)
         
         for datum in iglooData:
-            print "Top Igloo FW: {0} {1}".format(datum["IglooMajVerT"], datum["IglooMinVerT"])
-            print "Bottom Igloo FW: {0} {1}".format(datum["IglooMajVerB"], datum["IglooMinVerB"])
-        print ""
-        print "Uploading results to database"
-        print ""
+            writeToLog(logFile, "Top Igloo FW: {0} {1}".format(datum["IglooMajVerT"], datum["IglooMinVerT"]))
+            writeToLog(logFile, "Bottom Igloo FW: {0} {1}".format(datum["IglooMajVerB"], datum["IglooMinVerB"]))
+        writeToLog(logFile, "")
+        writeToLog(logFile, "Uploading results to database")
+        writeToLog(logFile, "")
         output = sp.check_output("bash uploadIgloo.sh -w", shell=True)
-        print ""
-        print "uploadIgloo.sh output:"
-        print ""
-        print output
+        writeToLog(logFile, "")
+        writeToLog(logFile, "uploadIgloo.sh output:")
+        writeToLog(logFile, "")
+        writeToLog(logFile, output)
         #outputlist = output.split("\n")
         #for line in outputlist:
         #    sp.call("echo {0}".format(line))
 
     
     else:
-        print "Failed Raspberry Pi and/or Websocket status."
-        print "    1. Did you turn on the Raspberry Pi?"
-        print "    2. Did you start the server?"
-        print "    3. Did you plug in the ethernet cable?"
-        print "    4. Did you use the correct ip address?"
-        print "    5. Did you have coffee today?"
+        logFile = "teststand.log"  
+        writeToLog(logFile, "Failed Raspberry Pi and/or Websocket status.")
+        writeToLog(logFile, "    1. Did you turn on the Raspberry Pi?")
+        writeToLog(logFile, "    2. Did you start the server?")
+        writeToLog(logFile, "    3. Did you plug in the ethernet cable?")
+        writeToLog(logFile, "    4. Did you use the correct ip address?")
+        writeToLog(logFile, "    5. Did you have coffee today?")
     
+    logFile = "teststand.log"  
     end_time = datetime.now()
-    print "End time is: {0}".format(end_time)
+    writeToLog(logFile, "End time is: {0}".format(end_time))
     total_time = end_time-begin_time
-    print "total run time is: {0}".format(total_time)
+    writeToLog(logFile, "total run time is: {0}".format(total_time))
 
 
 

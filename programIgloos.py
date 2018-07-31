@@ -145,23 +145,21 @@ if __name__ ==  "__main__":
                 moveLog(initialLog, finalLog)
         
         for datum in iglooData:
+            writeToLog(logfile, "Unique ID: {0}".format(datum["Unique_ID"]))
             writeToLog(logFile, "Top Igloo FW: {0} {1}".format(datum["IglooMajVerT"], datum["IglooMinVerT"]))
             writeToLog(logFile, "Bottom Igloo FW: {0} {1}".format(datum["IglooMajVerB"], datum["IglooMinVerB"]))
-        writeToLog(logFile, "")
-        writeToLog(logFile, "Uploading results to database")
-        writeToLog(logFile, "")
-        try:
-            output = sp.check_output("bash uploadIgloo.sh -w", shell=True)
             writeToLog(logFile, "")
-            writeToLog(logFile, "uploadIgloo.sh output:")
+            writeToLog(logFile, "Uploading results to database")
             writeToLog(logFile, "")
-            writeToLog(logFile, output)
-        except:
-            writeToLog(logFile, "ERROR: Unable to upload results to the database. It is possible that the step3 json file does not exist in the temp_json directory.")
-        #outputlist = output.split("\n")
-        #for line in outputlist:
-        #    sp.call("echo {0}".format(line))
-
+            try:
+                output = sp.check_output("bash uploadIgloo.sh logs/{0}".format(datum["Unique_ID"]), shell=True)
+                writeToLog(logFile, "")
+                writeToLog(logFile, "uploadIgloo.sh output:")
+                writeToLog(logFile, "")
+                writeToLog(logFile, output)
+            except:
+                writeToLog(logFile, "ERROR: Unable to upload results to the database. It is possible that the step3 json file does not exist in the temp_json directory.")
+        
     
     else:
         logFile = "teststand.log"  

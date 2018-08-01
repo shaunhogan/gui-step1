@@ -24,7 +24,8 @@ def writeTCLFile(programFile):
         file.write("run_selected_actions\n")
         file.write("save_log -file {0}\n".format(flashproLog))
         file.write("close_project\n")
-        
+
+# remove finalLog if it exists, then move initialLog to finalLog        
 def moveLog(initialLog, finalLog):
     if os.path.isfile(initialLog):
         if not os.path.exists("logs"):
@@ -84,8 +85,8 @@ if __name__ ==  "__main__":
     igloos = ["top","bot"]
     iglooData = []
     if ts.piStatus and ts.busStatus:
+        logFile = tempLog
         for slot in slots:
-            logFile = tempLog
             ts.setLogFile(tempLog)
             Igloos_Programmed=False
             # We should not read from Igloos before programming
@@ -130,22 +131,19 @@ if __name__ ==  "__main__":
             with open(jsonFile, 'w') as jf:
                 json.dump(data, jf)
             
+        
+        for datum in iglooData:
             # create log directory using unique id
             unique_id = data["Unique_ID"]
             card_dir = "logs/{0}".format(unique_id)
             if not os.path.exists(card_dir):
                 os.makedirs(card_dir)
             
-            # move log files to unique id directory
-            finalLog = "{0}/{1}".format(card_dir, tempLog)
-            moveLog(tempLog, finalLog)
             for igloo in igloos:
                 initialLog = "logs/{0}_igloo_{1}".format(igloo, flashproLog)
                 finalLog = "{0}/{1}_igloo_{2}".format(card_dir, igloo, flashproLog)
                 moveLog(initialLog, finalLog)
-        
-        for datum in iglooData:
-            writeToLog(logFile, "Unique ID: {0}".format(datum["Unique_ID"]))
+            writeToLog(logFile, "Unique ID: {0}".format(unique_id))
             writeToLog(logFile, "Top Igloo FW: {0} {1}".format(datum["IglooMajVerT"], datum["IglooMinVerT"]))
             writeToLog(logFile, "Bottom Igloo FW: {0} {1}".format(datum["IglooMajVerB"], datum["IglooMinVerB"]))
             writeToLog(logFile, "")
@@ -159,6 +157,10 @@ if __name__ ==  "__main__":
                 writeToLog(logFile, output)
             except:
                 writeToLog(logFile, "ERROR: Unable to upload results to the database. It is possible that the step3 json file does not exist in the temp_json directory.")
+            
+            # move log files to unique id directory
+            finalLog = "{0}/{1}".format(card_dir, tempLog)
+            moveLog(tempLog, finalLog)
         
     
     else:

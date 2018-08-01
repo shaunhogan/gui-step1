@@ -145,7 +145,7 @@ if __name__ ==  "__main__":
                 moveLog(initialLog, finalLog)
         
         for datum in iglooData:
-            writeToLog(logfile, "Unique ID: {0}".format(datum["Unique_ID"]))
+            writeToLog(logFile, "Unique ID: {0}".format(datum["Unique_ID"]))
             writeToLog(logFile, "Top Igloo FW: {0} {1}".format(datum["IglooMajVerT"], datum["IglooMinVerT"]))
             writeToLog(logFile, "Bottom Igloo FW: {0} {1}".format(datum["IglooMajVerB"], datum["IglooMinVerB"]))
             writeToLog(logFile, "")

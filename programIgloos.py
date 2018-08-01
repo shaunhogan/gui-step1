@@ -155,7 +155,7 @@ if __name__ ==  "__main__":
             print "Uploading results to database"
             print ""
             try:
-                output = sp.check_output("bash uploadIgloo.sh logs/{0}".format(datum["Unique_ID"]), shell=True
+                output = sp.check_output("bash uploadIgloo.sh logs/{0}".format(datum["Unique_ID"]), shell=True)
                 print ""
                 print "uploadIgloo.sh output:"
                 print ""

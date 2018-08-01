@@ -146,21 +146,23 @@ if __name__ ==  "__main__":
             writeToLog(logFile, "Unique ID: {0}".format(unique_id))
             writeToLog(logFile, "Top Igloo FW: {0} {1}".format(datum["IglooMajVerT"], datum["IglooMinVerT"]))
             writeToLog(logFile, "Bottom Igloo FW: {0} {1}".format(datum["IglooMajVerB"], datum["IglooMinVerB"]))
-            writeToLog(logFile, "")
-            writeToLog(logFile, "Uploading results to database")
-            writeToLog(logFile, "")
-            try:
-                output = sp.check_output("bash uploadIgloo.sh logs/{0}".format(datum["Unique_ID"]), shell=True)
-                writeToLog(logFile, "")
-                writeToLog(logFile, "uploadIgloo.sh output:")
-                writeToLog(logFile, "")
-                writeToLog(logFile, output)
-            except:
-                writeToLog(logFile, "ERROR: Unable to upload results to the database. It is possible that the step3 json file does not exist in the temp_json directory.")
-            
             # move log files to unique id directory
             finalLog = "{0}/{1}".format(card_dir, tempLog)
             moveLog(tempLog, finalLog)
+            # do not log after this point
+            # the script uploadIgloo.sh moves the log file to cmshcal11
+            print ""
+            print "Uploading results to database"
+            print ""
+            try:
+                output = sp.check_output("bash uploadIgloo.sh logs/{0}".format(datum["Unique_ID"]), shell=True
+                print ""
+                print "uploadIgloo.sh output:"
+                print ""
+                print output
+            except:
+                print "ERROR: Unable to upload results to the database. It is possible that the step3 json file does not exist in the temp_json directory."
+            
         
     
     else:

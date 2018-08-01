@@ -35,7 +35,7 @@ then
     echo "    Successfully copied json file to $remoteHost"
 else
     echo "    ERROR: Failed to copy json file to $remoteHost"
-    echo "ERROR: No information uploaded to database"
+    echo "ERROR: No json file uploaded to database"
     exit 1
 fi
 
@@ -59,14 +59,14 @@ do
 done
 
 # 3. copy directory of log files to Linux machine (cmshcal11)
-echo "    Copying json file to $remoteHost"
+echo "    Copying directory of log files to $remoteHost"
 scp -r $logLoc $remoteHost:$remoteLog
 if [ $? -eq 0 ]
 then
-    echo "    Successfully copied json file to $remoteHost"
+    echo "    Successfully copied directory of log files to $remoteHost"
 else
-    echo "    ERROR: Failed to copy json file to $remoteHost"
-    echo "ERROR: No information uploaded to database"
+    echo "    ERROR: Failed to copy directory of logs files to $remoteHost"
+    echo "ERROR: No log files uploaded to database"
     exit 1
 fi
 

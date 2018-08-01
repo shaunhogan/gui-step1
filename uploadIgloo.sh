@@ -43,7 +43,9 @@ fi
 flashproLog=$logLoc/igloo_flashpro.log
 echo "Igloo FlashPro Programming Log" > $flashproLog
 echo "" > $flashproLog
-declare -a igloos=("Top" "Bottom")
+
+# igloos should be top and bot to match file names
+declare -a igloos=("top" "bot")
 for igloo in "${igloos[@]}"
 do
     if ls $logLoc/"$igloo"_igloo_flashpro.log &> /dev/null; then

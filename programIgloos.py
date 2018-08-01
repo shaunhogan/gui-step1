@@ -15,7 +15,7 @@ def writeTCLFile(programFile):
         file.write("# Directory C:\Users\hcaldaq\gui-step1\n")
         file.write("# File C:\Users\hcaldaq\gui-step1\program_igloo.tcl\n")
         file.write("open_project -project {%s} -connect_programmers 1\n"%(os.path.abspath("HB_igloo/HB_igloo.pro").replace("\\","/")))
-        file.write("enable_prg_type -prg_type FP3 -enable FALSE\n")
+        file.write("enable_prg_type -prg_type FP4 -enable FALSE\n")
         file.write("enable_prg -name 86103 -enable TRUE\n")
         file.write("set_programming_file -file {%s}\n"%os.path.abspath(programFile).replace("\\","/"))
         #file.write("remove_prg -name 84830\n")

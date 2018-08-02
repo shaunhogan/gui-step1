@@ -1,4 +1,4 @@
-# User-Interface.py
+# Simple-Interface.py
 #
 # This is the main Graphical User Interface for for Teststand 1. 
 # A server runs on a RaspberryPi, which connects to the Fanout.
@@ -235,7 +235,7 @@ class makeGui(Tools):
         self.info_nameLabel.pack(side=LEFT)
 
         # Make and pack a listbox to pick which QIE card to talk to:
-        self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar, "Bryan Caraway", "Grace Cummings", "Zach Eckert", "Loriza Hasa", "Frank Jensen", "Kamal Lamichhane", "Nesta Lenhert", "Chris Madrid", "Brooks McMaster", "Danny \"HF\" Noonan", "Joe Pastika", "Ian McAlister", "Mark Saunders", "Sezen Sekmen", "Zach Shelton", "Caleb Smith", "Nadja Strobbe")
+        self.info_nameBox = OptionMenu(self.info_subTop_frame, self.nameChoiceVar, "Bryan Caraway", "Grace Cummings", "Zach Eckert", "Loriza Hasa", "Frank Jensen", "Kamal Lamichhane", "Nesta Lenhert", "Chris Madrid", "Brooks McMaster", "Danny \"HF\" Noonan", "Joe Pastika", "Mark Saunders", "Sezen Sekmen", "Zach Shelton", "Caleb Smith", "Nadja Strobbe")
         self.info_nameBox.pack(side=LEFT)
         self.info_nameBox.configure(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
         self.info_nameBox["menu"].config(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
@@ -864,11 +864,11 @@ class makeGui(Tools):
             if (listbuttons):
                 self.testPassInfo.append(OptionMenu(self.experi_subTop3_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
                 self.testPassInfo[i]["menu"].config(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
+                self.testPassList[i].set("N/A")
             else: 
                 self.testPassInfo.append(Button(self.experi_subTop3_frame,text="N/A",command=partial(self.togglepstate,i)))
             self.testPassInfo[i].configure(width=11,bg=self.buttonsc[3],fg=self.fontc,activebackground=self.dimbuttonsc[3],activeforeground=self.fontc)
             self.testPassInfo[i].pack(side=LEFT)
-            self.testPassList[i].set("N/A")
 
             self.testPassLabel=Label(self.experi_subTop3_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg=self.midc,fg=self.fontc)
             self.testPassLabel.configure(width=15)
@@ -878,12 +878,12 @@ class makeGui(Tools):
             if (listbuttons):
                 self.testPassInfo.append(OptionMenu(self.experi_subTop4_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
                 self.testPassInfo[i]["menu"].config(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
+                self.testPassList[i].set("N/A")
             else:
                 self.testPassInfo.append(Button(self.experi_subTop4_frame,text="N/A",command=partial(self.togglepstate,i)))
             self.testPassInfo[i].configure(width=11, bg=self.buttonsc[3],fg=self.fontc,activebackground=self.dimbuttonsc[3],activeforeground=self.fontc)
             self.testPassInfo[i].pack(side=LEFT)
-            self.testPassList[i].set("N/A")
-    
+
             self.testPassLabel=Label(self.experi_subTop4_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=self.midc,fg=self.fontc)
             self.testPassLabel.configure(width=15)
             self.testPassLabel.pack(side=LEFT)
@@ -892,11 +892,11 @@ class makeGui(Tools):
             if (listbuttons):
                 self.testPassInfo.append(OptionMenu(self.experi_subTop5_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
                 self.testPassInfo[i]["menu"].config(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
+                self.testPassList[i].set("N/A")
             else:
                 self.testPassInfo.append(Button(self.experi_subTop5_frame,text="N/A",command=partial(self.togglepstate,i)))
             self.testPassInfo[i].configure(width=11,bg=self.buttonsc[3],fg=self.fontc,activebackground=self.dimbuttonsc[3],activeforeground=self.fontc)
             self.testPassInfo[i].pack(side=LEFT)
-            self.testPassList[i].set("N/A")
 
             self.testPassLabel=Label(self.experi_subTop5_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=self.midc,fg=self.fontc)
             self.testPassLabel.configure(width=15)
@@ -906,11 +906,11 @@ class makeGui(Tools):
             if (listbuttons):
                 self.testPassInfo.append(OptionMenu(self.experi_subTop6_frame,self.testPassList[i],"Fail","Pass","N/A",command=self.infoValChange))
                 self.testPassInfo[i]["menu"].config(bg=self.topc,fg=self.fontc,activebackground=self.dimc,activeforeground=self.fontc)
+                self.testPassList[i].set("N/A")
             else: 
                 self.testPassInfo.append(Button(self.experi_subTop6_frame,text="N/A",command=partial(self.togglepstate,i)))
             self.testPassInfo[i].configure(width=15,bg=self.buttonsc[3],fg=self.fontc,activebackground=self.dimbuttonsc[3],activeforeground=self.fontc)
             self.testPassInfo[i].pack(side=LEFT)
-            self.testPassList[i].set("N/A")
 
             self.testPassLabel=Label(self.experi_subTop6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n", bg=self.midc,fg=self.fontc)
             self.testPassLabel.configure(width=20)
@@ -924,13 +924,12 @@ class makeGui(Tools):
                 self.testPassList[i].set("N/A")
             else:
                 self.testPassInfo.append(Button(self.experi_subTop2_6_frame,text="N/A",command=partial(self.togglepstate,i)))
-            self.testPassInfo[i].configure(width=16,bg=self.buttonsc[3],fg=self.fontc,activebackground=self.dimbuttonsc[3],activeforeground=self.fontc)
-            self.testPassInfo[i].pack(side=LEFT)
-            self.testPassList[i].set("N/A")
+                self.testPassInfo[i].configure(width=16,bg=self.buttonsc[3],fg=self.fontc,activebackground=self.dimbuttonsc[3],activeforeground=self.fontc)
+                self.testPassInfo[i].pack(side=LEFT)
      
-            self.testPassLabel=Label(self.experi_subTop2_6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg=self.midc,fg=self.fontc)
-            self.testPassLabel.configure(width=20)
-            self.testPassLabel.pack(side=LEFT)
+                self.testPassLabel=Label(self.experi_subTop2_6_fText, text=self.testDescDict[self.testLabelList[i]]+"\n",bg=self.midc,fg=self.fontc)
+                self.testPassLabel.configure(width=20)
+                self.testPassLabel.pack(side=LEFT)
 
         # Make a checkbox to overwrite/not overwrite pre-existing data
         self.overwriteBox = Checkbutton(self.experi_subTop7_frame, text="Overwrite existing QIE Card data (if applicable)?", variable=self.overwriteVar)
@@ -988,40 +987,22 @@ class makeGui(Tools):
 
 #########################################################################################
 
-    def barcodeErrorBox(self):
-         self.top = Toplevel()
-         self.top.title("Barcode Entry Error")
-         self.top.config(height=50, width=360, bg=self.backc)
-         self.top.pack_propagate(False)
- 
-         self.msg = Label(self.top, text="Your barcode must be exactly 7 characters",fg=self.fontc, bg=self.backc)
-         self.msg.pack()
- 
-         self.button = Button(self.top, text="Ok", command=self.top.destroy)
-         self.button.configure(bg=self.buttonsc[7],fg=self.fontc,activebackground=self.dimbuttonsc[7],activeforeground=self.fontc)
-         self.button.pack()
-
 
     # Dumps the results of the tests & inspections to a json file
     def initSubmitBttnPress(self):
         if (self.nameChoiceVar.get() == "Choose Name"):
             self.throwErrorBox()
             return None
-        if (len(self.barcodeEntry.get()) != 7):
-            self.barcodeErrorBox()
-            return None
+
         self.initialTest.User = self.nameChoiceVar.get()
         self.initialTest.TestComment = self.infoCommentVar.get()
         self.initialTest.Barcode     = self.barcodeEntry.get()
-        print self.initialTest.Barcode 
         self.initialTest.DateRun = str(datetime.now())
 
         if self.overwriteVar.get() == 1: self.initialTest.Overwrite = True
         if self.overwriteVar.get() == 0: self.initialTest.Overwrite = False
 
         for i in range(len(self.testPassList)-2):       #Last two are part of the firmware check
-            print(self.testLabelList[i])
-            print(self.testPassList[i].get())
             if self.testPassList[i].get() == "Pass":
                 self.initialTest.testResults[self.testLabelList[i]] = True
             elif self.testPassList[i].get() == "Fail":
@@ -1038,7 +1019,7 @@ class makeGui(Tools):
             json.dump(self.initialTest, jsonFile, default = self.jdefault)
 
 
-        subprocess.call(self.databasePath+"/uploader/step123.sh", shell=True)
+        subprocess.call(self.databasePath+"/uploader/step12.sh", shell=True)
         print "Preliminary step recorded. Thank you!"
 
 ##########################################################################################
@@ -1046,10 +1027,10 @@ class makeGui(Tools):
     def throwErrorBox(self):
         self.top = Toplevel()
         self.top.title("Name Choice Error")
-        self.top.config(height=50, width=360, bg=self.backc)
+        self.top.config(height=50, width=360)
         self.top.pack_propagate(False)
 
-        self.msg = Label(self.top, text="Please select a name before continuing.",fg=self.fontc,bg=self.backc)
+        self.msg = Label(self.top, text="Please select a name before continuing.",fg=self.fontc)
         self.msg.pack()
 
         self.button = Button(self.top, text="Sorry...", command=self.top.destroy)
@@ -1076,7 +1057,7 @@ class makeGui(Tools):
         self.noButton.pack()
 
     def passAllSelected(self):
-        for i in range(len(self.testPassList)-2):
+        for i in range(len(self.testPassList)):
             self.testPassList[i].set("Pass")
             self.testPassInfo[i].configure(text="Pass")
         self.infoValChangeNonevent()
@@ -1086,9 +1067,6 @@ class makeGui(Tools):
 
     # Dumps the card UID and firmware version to a json file
     def infoSubmitButtonPress(self):
-        if (len(self.barcodeEntry.get()) != 7):
-             self.barcodeErrorBox()
-             return None
         self.cardInfo.Barcode = self.barcodeEntry.get()
         self.cardInfo.Unique_ID = self.uniqueIDPass
         self.cardInfo.FirmwareMaj = self.firmwareVerEntry.get()
@@ -1111,7 +1089,7 @@ class makeGui(Tools):
         with open(self.databasePath+'/uploader/temp_json/'+fileString,'w') as jsonFile:
             json.dump(self.cardInfo, jsonFile, default = self.jdefault)
 
-        subprocess.call(self.databasePath+"/uploader/step123.sh", shell=True)
+        subprocess.call(self.databasePath+"/uploader/step12.sh", shell=True)
         print "Secondary step recorded. Thank you!"
 
 ###########################################################################################
@@ -1158,11 +1136,11 @@ class makeGui(Tools):
         self.initialTest.Overwrite = False
 
         # Behind the scenes, change all the tests to "Fail"
-        for i in range(len(self.testPassList)-2):
+        for i in range(len(self.testPassList)):
             if self.testPassList[i].get() == "Pass":
-                self.initialTest.testResults[self.testLabelList[i]] = True
+                self.initialTest.testResults[self.testLabelList[i-1]] = True
             else:
-                self.initialTest.testResults[self.testLabelList[i]] = False
+                self.initialTest.testResults[self.testLabelList[i-1]] = False
 
         # Change the buttons back to their red state
         self.infoValChangeNonevent()

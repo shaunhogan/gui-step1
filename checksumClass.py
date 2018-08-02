@@ -1,4 +1,5 @@
 # Checksum Class
+# Verifies Checksum (CRC) for reading Unique ID, temperature, and humidity.
 
 crctab = [
           0, 94, 188, 226, 97, 63, 221, 131, 194, 156, 126, 32, 163, 253, 31, 65,
@@ -26,9 +27,9 @@ def toIntList(message):
     return intlist
 
 class Checksum:
-    def __init__(self, message, temp):
+    def __init__(self, message, istemp=0):
         self.message = message
-        if temp: # 1 = True for temp
+        if istemp: # 1 = True for temp
             self.result = self.tempCRC(0)
         else: # 0 = False for uniqueID
             self.result = self.idCRC()
